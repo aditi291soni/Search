@@ -124,11 +124,22 @@
 .sidebar {
    width: 250px;
    background-color: var(--neutral-light);
-   padding: 20px;
+   padding: 10px 20px;
    height: 100vh;
    position: fixed;
    top: 0;
    transition: transform 0.3s ease-in-out;
+}
+
+.sidebar-logo-container {
+   height: 90px;
+   display: flex;
+   justify-content: center;
+   align-items: flex-end;
+}
+
+.sidebar-logo {
+   height: 120px;
 }
 
 /* Sidebar hidden class for mobile */
@@ -143,7 +154,8 @@
 }
 
 .sidebar ul li {
-   margin: 10px 0;
+   margin: 16px 0;
+   padding: 8px;
 }
 
 .sidebar ul li a {
@@ -154,6 +166,14 @@
 
 .sidebar ul li a.active {
    color: var(--primary-main);
+   /* border: 1px solid var(--primary-main); */
+}
+
+.sidebar ul li a i {
+   margin-right: 12px;
+   /* Adds space between the icon and text */
+   display: inline-flex;
+   align-items: center;
 }
 
 /* Content styling */

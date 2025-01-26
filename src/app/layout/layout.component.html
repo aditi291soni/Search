@@ -7,11 +7,6 @@
          <button pButton icon="pi pi-search" class="search-btn"></button>
       </div>
 
-      <!-- <div class="search-bar-mobile">
-         <input type="text" placeholder="Search..." [(ngModel)]="searchQuery" />
-         <button pButton icon="pi pi-search" class="search-btn"></button>
-      </div> -->
-
       <!-- Left-aligned icons for smaller devices (hamburger and search) -->
       <div class="topbar-left" *ngIf="isSmallDevice">
          <button pButton icon="pi pi-bars" class="menu-toggle" (click)="toggleSidebar()"></button>
@@ -29,10 +24,18 @@
    <div class="main-layout">
       <!-- Sidebar -->
       <div class="sidebar" [class.hidden]="!isSidebarVisible && isSmallDevice">
+         <div class="sidebar-logo-container">
+            <img class="sidebar-logo" src="assets/brand/logo.png" alt="logo-png">
+         </div>
          <ul>
-            <li><a routerLink="/home" routerLinkActive="active">Home</a></li>
-            <li><a routerLink="/about" routerLinkActive="active">About</a></li>
+            <li><a routerLink="/dashboard" routerLinkActive="active"><i class="pi pi-home"></i> Dashboard</a></li>
+            <li><a routerLink="/orders" routerLinkActive="active"><i class="pi pi-box"></i> Orders</a></li>
+            <li><a routerLink="/customers" routerLinkActive="active"><i class="pi pi-users"></i> Customers</a></li>
+            <li><a routerLink="/transactions" routerLinkActive="active"><i class="pi pi-credit-card"></i>
+                  Transactions</a></li>
+            <li><a routerLink="/settings" routerLinkActive="active"><i class="pi pi-cog"></i> Settings</a></li>
          </ul>
+
       </div>
 
       <!-- Content -->

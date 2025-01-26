@@ -4,7 +4,7 @@ import { LayoutComponent } from './layout/layout.component';
 export const routes: Routes = [
    {
       path: '',
-      redirectTo: '/home',
+      redirectTo: '/dashboard',
       pathMatch: 'full',
    },
    {
@@ -12,12 +12,24 @@ export const routes: Routes = [
       component: LayoutComponent,
       children: [
          {
-            path: 'home',
-            loadComponent: () => import('./home/home.component').then(m => m.HomeComponent),
+            path: 'dashboard',
+            loadComponent: () => import('./dashboard/dashboard.component').then(m => m.DashboardComponent),
          },
          {
-            path: 'about',
-            loadComponent: () => import('./about/about.component').then(m => m.AboutComponent),
+            path: 'orders',
+            loadComponent: () => import('./orders/orders.component').then(m => m.OrdersComponent),
+         },
+         {
+            path: 'customers',
+            loadComponent: () => import('./customers/customers.component').then(m => m.CustomersComponent),
+         },
+         {
+            path: 'transactions',
+            loadComponent: () => import('./transactions/transactions.component').then(m => m.TransactionsComponent),
+         },
+         {
+            path: 'settings',
+            loadComponent: () => import('./settings/settings.component').then(m => m.SettingsComponent),
          },
       ],
    },

@@ -1,0 +1,128 @@
+.banner-img {
+   width: 100%;
+   height: auto;
+   aspect-ratio: 3 / 1;
+   /* Default for mobile */
+   object-fit: cover;
+   object-position: center;
+}
+
+
+.option-container {
+   /* border: 1px solid red; */
+   /* height: 100px; */
+   display: grid;
+   grid-template-columns: repeat(3, 1fr);
+   /* 3 equal-width columns */
+}
+
+/* .option-container-item {
+   border: 1px solid blue;
+} */
+
+.full-height {
+   height: 90%;
+   /* flex-direction: column; */
+   /* justify-content: space-between; */
+   /* align-items: center; */
+   /* display: block; */
+}
+
+.option-item {
+   display: flex;
+   align-items: center;
+   border: 1px solid var(--primary-light);
+   border-radius: 8px;
+   padding: 1rem;
+   margin: 0.4rem;
+   gap: 0.5rem;
+   cursor: pointer;
+   /* Add pointer cursor */
+   transition: background-color 0.3s ease, color 0.3s ease;
+   /* Smooth transition */
+}
+
+.option-item:hover {
+   background-color: var(--primary-light, #f0f0f0);
+   /* Change background color on hover */
+   color: var(--primary-dark, #333);
+   /* Change text and icon color */
+}
+
+.option-item i,
+.option-item .icon {
+   transition: color 0.3s ease;
+   /* Smooth transition for icons */
+}
+
+.option-item:hover i,
+.option-item:hover .icon {
+   color: var(--primary-dark, #333);
+   /* Change icon color on hover */
+}
+
+/* .recent-orders-container {
+   border: 1px solid var(--primary-light);
+} */
+
+.recent-order-item {
+   border: 1px solid var(--primary-light);
+   border-radius: 8px;
+   margin: 10px 0px;
+   min-height: 90px;
+   cursor: pointer;
+   padding: 8px 12px;
+}
+
+.recent-order-item:hover {
+   box-shadow: 0px 0px 0.5px 1px var(--primary-light);
+}
+
+.recent-order-flex {
+   display: flex;
+   justify-content: space-between;
+   align-items: flex-start;
+   /* border: 1px solid var(--primary-light); */
+}
+
+.subtext {
+   font-size: 0.9rem;
+   margin-bottom: 10px;
+}
+
+.maintext {
+   font-size: large;
+   font-weight: 500;
+}
+
+.address {
+   font-size: 16px;
+   width: 60%;
+   display: -webkit-box;
+   line-clamp: 2;
+   -webkit-box-orient: vertical;
+   -webkit-line-clamp: 2;
+   overflow: hidden;
+   text-overflow: ellipsis;
+}
+
+@media screen and (max-width: 768px) {
+
+   /* Desktop screens */
+   .banner-img {
+      aspect-ratio: 16 / 9;
+   }
+
+   .option-item {
+      padding: 0.8rem;
+   }
+
+   .full-height {
+      height: 88%;
+      flex-direction: column;
+      /* justify-content: space-between; */
+      align-items: center;
+      text-align: center;
+      /* display: block; */
+   }
+}

@@ -23,7 +23,7 @@ const Noir = definePreset(Aura, {
             primary: {
                color: palette.primary.main,  // Set color for primary in light mode
                inverseColor: '#ffffff',  // White for contrast
-               hoverColor: palette.primary.light,  // Primary dark color for hover
+               // hoverColor: palette.primary.light,  // Primary dark color for hover
                activeColor: palette.primary.main,  // Primary dark color for active
             },
             highlight: {
@@ -39,7 +39,7 @@ const Noir = definePreset(Aura, {
             primary: {
                color: palette.primary.light,  // Light color for primary in dark mode
                inverseColor: palette.primary.main,  // Inverse of primary main color
-               hoverColor: palette.primary.light,  // Lighter color for hover
+               // hoverColor: palette.primary.light,  // Lighter color for hover
                activeColor: palette.primary.light,  // Lighter color for active
             },
             highlight: {
