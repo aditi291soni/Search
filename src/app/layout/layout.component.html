@@ -1,0 +1,23 @@
+<div class="layout-wrapper">
+   <!-- Topbar -->
+   <div class="topbar">
+      <button pButton icon="pi pi-bars" class="menu-toggle" (click)="toggleSidebar()" label="Menu"></button>
+      <h1 class="title">App Title</h1>
+   </div>
+
+   <!-- Main Layout -->
+   <div class="main-layout">
+      <!-- Sidebar -->
+      <div class="sidebar" [class.hidden]="!isSidebarVisible && isSmallDevice">
+         <ul>
+            <li><a routerLink="/home" routerLinkActive="active">Home</a></li>
+            <li><a routerLink="/about" routerLinkActive="active">About</a></li>
+         </ul>
+      </div>
+
+      <!-- Content -->
+      <div class="content">
+         <router-outlet></router-outlet>
+      </div>
+   </div>
+</div>
