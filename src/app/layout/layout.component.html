@@ -1,8 +1,28 @@
 <div class="layout-wrapper">
    <!-- Topbar -->
    <div class="topbar">
-      <button pButton icon="pi pi-bars" class="menu-toggle" (click)="toggleSidebar()" label="Menu"></button>
-      <h1 class="title">App Title</h1>
+      <!-- Search bar (visible on larger screens) -->
+      <div class="search-bar" *ngIf="!isSmallDevice">
+         <input type="text" placeholder="Search..." [(ngModel)]="searchQuery" />
+         <button pButton icon="pi pi-search" class="search-btn"></button>
+      </div>
+
+      <!-- <div class="search-bar-mobile">
+         <input type="text" placeholder="Search..." [(ngModel)]="searchQuery" />
+         <button pButton icon="pi pi-search" class="search-btn"></button>
+      </div> -->
+
+      <!-- Left-aligned icons for smaller devices (hamburger and search) -->
+      <div class="topbar-left" *ngIf="isSmallDevice">
+         <button pButton icon="pi pi-bars" class="menu-toggle" (click)="toggleSidebar()"></button>
+         <button pButton icon="pi pi-search" class="menu-toggle search-icon" (click)="toggleSearch()"></button>
+      </div>
+
+      <!-- Right-aligned icons for notification and user profile -->
+      <div class="topbar-right">
+         <button pButton icon="pi pi-bell" class="topbar-btn"></button>
+         <button pButton icon="pi pi-user" class="topbar-btn"></button>
+      </div>
    </div>
 
    <!-- Main Layout -->

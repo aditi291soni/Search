@@ -7,8 +7,8 @@ const palette = {
       dark: gray[900],
    },
    primary: {
-      light: purple[300],
-      main: purple[500],
+      light: skyblue[300],
+      main: skyblue[500],
    },
    secondary: {
       light: skyblue[300],

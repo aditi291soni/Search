@@ -31,6 +31,8 @@ const Noir = definePreset(Aura, {
                focusBackground: palette.primary.light,  // Use primary light color for focus background
                color: '#ffffff',  // White text color
                focusColor: '#ffffff',  // White focus color
+               headingColor: palette.secondary.main,  // Set custom heading color for light mode
+               textColor: '#415b61',  // Set custom text color for light mode
             },
          },
          dark: {
@@ -45,6 +47,8 @@ const Noir = definePreset(Aura, {
                focusBackground: 'rgba(250, 250, 250, .24)',  // A bit darker for focus background
                color: 'rgba(255,255,255,.87)',  // Light color for text in dark mode
                focusColor: 'rgba(255,255,255,.87)',  // Focus text color
+               headingColor: 'rgba(255, 255, 255, 0.9)',  // Set custom heading color for dark mode
+               textColor: 'rgba(255, 255, 255, 0.87)',  // Set custom text color for dark mode
             },
          },
       },
