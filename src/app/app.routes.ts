@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 import { LayoutComponent } from './layout/layout.component';
+import { AuthLayoutComponent } from './auth-layout/auth-layout.component';
+import { authGuard } from './auth.guard';
 
 export const routes: Routes = [
    {
@@ -10,6 +12,7 @@ export const routes: Routes = [
    {
       path: '',
       component: LayoutComponent,
+      canActivate: [authGuard],
       children: [
          {
             path: 'dashboard',
@@ -31,6 +34,28 @@ export const routes: Routes = [
             path: 'settings',
             loadComponent: () => import('./settings/settings.component').then(m => m.SettingsComponent),
          },
+         {
+            path: 'customers/new-customer',
+            loadComponent: () => import('./new-customer/new-customer.component').then(m => m.NewCustomerComponent),
+         },
+         {
+            path: 'orders/new-order',
+            loadComponent: () => import('./new-order/new-order.component').then(m => m.NewOrderComponent),
+         },
       ],
    },
+   {
+      path: 'auth',
+      component: AuthLayoutComponent,
+      children: [
+         {
+            path: 'sign-in',
+            loadComponent: () => import('./signin/signin.component').then(m => m.SigninComponent),
+         },
+         {
+            path: 'sign-up',
+            loadComponent: () => import('./signup/signup.component').then(m => m.SignupComponent),
+         }
+      ]
+   }
 ];

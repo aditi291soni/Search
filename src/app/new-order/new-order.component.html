@@ -1,0 +1,46 @@
+<!-- <h2>New Order</h2>
+<div class="thin">Create and place a new order</div> -->
+<!-- <br><br> -->
+
+<h3>Select Vehicle<span class="mandatory">*</span></h3>
+<div class="card-container">
+   <input pInputText type="text" placeholder="Vehicle Name" />
+   <input class="hidden" pInputText type="text" placeholder="Vehicle Number" />
+</div>
+<br>
+
+<h3>Select Pickup Location<span class="mandatory">*</span></h3>
+<div class="card-container">
+   <input class="mb" pInputText type="text" placeholder="Pickup Address" />
+   <button pButton type="button" icon="pi pi-map-marker" label="Select on Map" class="map-button"></button>
+</div>
+<br>
+
+<h3>Select Drop Location<span class="mandatory">*</span></h3>
+<div class="card-container">
+   <input class="mb" pInputText type="text" placeholder="Drop Address" />
+   <div class="drop-location">
+      <button pButton type="button" icon="pi pi-map-marker" label="Select on Map" class="map-button"></button>
+      <button pButton type="button" icon="pi pi-user" label="By Customer" class="map-button"></button>
+   </div>
+</div>
+<br>
+
+<h3>Enter Receiver Details<span class="mandatory">*</span></h3>
+<div class="card-container">
+   <input class="mb" pInputText type="text" placeholder="Receiver Name" />
+   <input pInputText type="text" placeholder="Receiver Contact" />
+</div>
+<br>
+
+<h3>Enter Parcel Details</h3>
+<div class="card-container">
+   <input class="mb" pInputText type="text" placeholder="Parcel Weight" />
+   <input pInputText type="text" placeholder="Parcel Description" />
+</div>
+
+<!-- Bottom Buttons -->
+<div class="button-group bottom-buttons">
+   <button pButton type="button" label="Cancel" class="p-button-outlined p-button-danger"></button>
+   <button pButton type="button" label="Continue" class="p-button-contained p-button-success"></button>
+</div>

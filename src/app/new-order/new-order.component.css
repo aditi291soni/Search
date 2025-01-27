@@ -1,0 +1,83 @@
+.thin {
+   font-weight: 300;
+   font-size: 16px;
+}
+
+.thin2 {
+   font-weight: 200;
+   font-size: 14px;
+}
+
+.card-container {
+   height: auto;
+   display: grid;
+   grid-template-columns: 1fr 1fr;
+   gap: 10px;
+   padding: 10px;
+}
+
+.card-container input {
+   padding: 8px;
+   font-size: 14px;
+   border: 1px solid #ccc;
+   border-radius: 4px;
+   width: 100%;
+}
+
+.map-button {
+   width: 100%;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   padding: 8px;
+   font-size: 14px;
+   border: 1px solid #ccc;
+   border-radius: 4px;
+   background-color: var(--info-main);
+   color: var(--text-secondary);
+}
+
+.drop-location {
+   display: grid;
+   grid-template-columns: 1fr 1fr;
+   gap: 10px;
+   justify-content: space-between;
+   align-items: center;
+   font-size: 14px;
+   border-radius: 4px;
+}
+
+.button-group {
+   display: flex;
+   justify-content: flex-end;
+   gap: 10px;
+   margin-top: 10px;
+}
+
+.bottom-buttons {
+   display: flex;
+   justify-content: center;
+   margin-top: 20px;
+   gap: 20px;
+}
+
+.mandatory {
+   color: red;
+   font-size: 16px;
+   margin-left: 5px;
+}
+
+@media screen and (max-width: 768px) {
+   .card-container {
+      height: auto;
+      display: block;
+   }
+
+   .mb {
+      margin-bottom: 6px;
+   }
+
+   .hidden {
+      display: none;
+   }
+}

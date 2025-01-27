@@ -1,44 +1,68 @@
 <!-- Original content -->
-<h2>👋 Welcome Back, User</h2>
+<h2 *ngIf="!loading">Welcome Back, User👋 </h2>
+<p-skeleton *ngIf="loading" height="2rem" width="50%"></p-skeleton>
 <br>
-<img class="banner-img" src="https://ik.imagekit.io/praveenarbs/api-images/super-announcement/24/17368555934940400.jpg"
-   alt="banner" />
+
+<!-- Banner with Skeleton -->
+<div *ngIf="loading">
+   <p-skeleton class="banner-img" height="150px"></p-skeleton>
+</div>
+<img *ngIf="!loading" class="banner-img"
+   src="https://ik.imagekit.io/praveenarbs/api-images/super-announcement/24/17368555934940400.jpg" alt="banner" />
 <br><br>
 
 <!-- Options as Actions -->
 <div class="option-container">
-   <div>
-      <div class="option-item"><i class="pi pi-box"></i> Orders</div>
-      <div class="option-item"><i class="pi pi-users"></i> Customers</div>
-   </div>
-   <div class="option-container-item">
-      <div class="option-item full-height"><i class="pi pi-user-plus"></i> New Customer</div>
-   </div>
-   <div class="option-container-item">
-      <div class="option-item full-height"><i class="pi pi-plus-circle"></i> New Order</div>
-   </div>
+   <ng-container *ngIf="loading; else optionsContent">
+      <p-skeleton class="option-item" *ngFor="let item of [1, 2, 3]" width="90%" height="40px"></p-skeleton>
+   </ng-container>
+   <ng-template #optionsContent>
+      <div>
+         <div routerLink="/orders/new-order" class="option-item"><i class="pi pi-box"></i> Orders</div>
+         <div routerLink="/customers/new-customer" class="option-item"><i class="pi pi-users"></i> Customers</div>
+      </div>
+      <div class="option-container-item" routerLink="/customers/new-customer">
+         <div class="option-item full-height">
+            <i class="pi pi-user-plus"></i>
+            <a class="router-link">New Customer</a>
+         </div>
+      </div>
+      <div class="option-container-item" routerLink="/orders/new-order">
+         <div class="option-item full-height">
+            <i class="pi pi-plus-circle"></i>
+            <a class="router-link">New Order</a>
+         </div>
+      </div>
+   </ng-template>
 </div>
 
 <!-- Recent Orders -->
 <br>
-<h3>Recent Orders</h3>
-<div class="recent-orders-container">
+<h3 *ngIf="!loading">Recent Orders</h3>
+<div class="recent-orders-container" *ngIf="loading">
+   <div class="recent-order-item" *ngFor="let item of [1, 2, 3]">
+      <p-skeleton width="60%" height="20px"></p-skeleton>
+      <p-skeleton width="40%" height="20px"></p-skeleton>
+      <p-skeleton width="90%" height="40px"></p-skeleton>
+   </div>
+</div>
+<div class="recent-orders-container" *ngIf="!loading">
    <div class="recent-order-item">
       <div class="recent-order-flex">
          <div>
             <div class="maintext">Visitor</div>
-            <div class="subtext">+91 9876543210</div>
+            <div class="subtext2">+91 9876543210</div>
          </div>
-         <div>
-            Order No: #1006
+         <div class="order-no">
+            <div class="subtext2">Order No.</div>
+            <div class="maintext2">#1006</div>
          </div>
       </div>
       <div class="recent-order-flex">
          <div class="address">
             Lorem ipsum dolor sit amet consectetur adipisicing elit.
          </div>
-         <button severity="warn" pButton type="button" label="Pending" class="p-button-outlined"
-            size="small"></button>
+         <button severity="warn" pButton type="button" label="Pending" class="p-button-outlined" size="small"></button>
       </div>
    </div>
    <div class="recent-order-item">
@@ -47,16 +71,16 @@
             <div class="maintext">Visitor</div>
             <div class="subtext">+91 9876543210</div>
          </div>
-         <div>
-            Order No: #1006
+         <div class="order-no">
+            <div class="subtext2">Order No.</div>
+            <div class="maintext2">#1006</div>
          </div>
       </div>
       <div class="recent-order-flex">
          <div class="address">
             Lorem ipsum dolor sit amet consectetur adipisicing elit.
          </div>
-         <button severity="warn" pButton type="button" label="Pending" class="p-button-outlined"
-            size="small"></button>
+         <button severity="warn" pButton type="button" label="Pending" class="p-button-outlined" size="small"></button>
       </div>
    </div>
    <div class="recent-order-item">
@@ -65,22 +89,24 @@
             <div class="maintext">Visitor</div>
             <div class="subtext">+91 9876543210</div>
          </div>
-         <div>
-            Order No: #1006
+         <div class="order-no">
+            <div class="subtext2">Order No.</div>
+            <div class="maintext2">#1006</div>
          </div>
       </div>
       <div class="recent-order-flex">
          <div class="address">
             Lorem ipsum dolor sit amet consectetur adipisicing elit.
          </div>
-         <button severity="warn" pButton type="button" label="Pending" class="p-button-outlined"
-            size="small"></button>
+         <button severity="warn" pButton type="button" label="Pending" class="p-button-outlined" size="small"></button>
       </div>
    </div>
 </div>
-
 <br>
 
 <!-- Coupons -->
-<img class="banner-img" src="https://dropzonevendor.magicqr.in/assets/img/theme/coupan.jpg"
+<div *ngIf="loading">
+   <p-skeleton class="banner-img" height="150px"></p-skeleton>
+</div>
+<img *ngIf="!loading" class="banner-img" src="https://dropzonevendor.magicqr.in/assets/img/theme/coupan.jpg"
    alt="coupon" />

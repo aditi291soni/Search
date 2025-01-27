@@ -42,7 +42,6 @@ export class LayoutComponent {
    // Toggle search field visibility on small devices
    toggleSearch() {
       const searchBar = document.querySelector('.search-bar-mobile') as HTMLElement;
-      console.log("search", searchBar);
       
       if (searchBar) {
          searchBar.style.display = searchBar.style.display === 'flex' ? 'none' : 'flex';

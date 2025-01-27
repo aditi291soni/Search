@@ -1,0 +1,21 @@
+<div>
+   <p-card class="signin-card">
+      <h2>Sign in</h2>
+      <div>Welcome back to Dropzone</div>
+      <form (ngSubmit)="onSubmit()" class="signin-form">
+         <div class="p-field">
+            <div class="thin">Email</div>
+            <input class="full-width" id="email" type="email" pInputText placeholder="Enter your email" [(ngModel)]="email" name="email"
+               required />
+         </div>
+         <div class="p-field">
+            <div class="thin">Password</div>
+            <input class="full-width" id="password" type="password" pInputText placeholder="Enter your password" [(ngModel)]="password"
+               name="password" required />
+         </div>
+         <div class="form-actions">
+            <button type="submit" pButton label="Sign In" class="p-button-primary"></button>
+         </div>
+      </form>
+   </p-card>
+</div>

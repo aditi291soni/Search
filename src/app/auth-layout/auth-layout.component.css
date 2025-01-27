@@ -1,0 +1,20 @@
+.layout-wrapper {
+   display: flex;
+   flex-direction: column;
+   height: 100vh;
+}
+
+.topbar {
+   text-align: center;
+}
+
+.logo {
+   height: 150px;
+}
+
+.auth-form {
+   height: 100%;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}

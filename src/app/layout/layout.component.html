@@ -28,14 +28,17 @@
             <img class="sidebar-logo" src="assets/brand/logo.png" alt="logo-png">
          </div>
          <ul>
-            <li><a routerLink="/dashboard" routerLinkActive="active"><i class="pi pi-home"></i> Dashboard</a></li>
-            <li><a routerLink="/orders" routerLinkActive="active"><i class="pi pi-box"></i> Orders</a></li>
-            <li><a routerLink="/customers" routerLinkActive="active"><i class="pi pi-users"></i> Customers</a></li>
-            <li><a routerLink="/transactions" routerLinkActive="active"><i class="pi pi-credit-card"></i>
-                  Transactions</a></li>
-            <li><a routerLink="/settings" routerLinkActive="active"><i class="pi pi-cog"></i> Settings</a></li>
+            <li><a routerLink="/dashboard" routerLinkActive="active" (click)="toggleSidebar()"><i
+                     class="pi pi-home"></i> Dashboard</a></li>
+            <li><a routerLink="/orders" routerLinkActive="active" (click)="toggleSidebar()"><i class="pi pi-box"></i>
+                  Orders</a></li>
+            <li><a routerLink="/customers" routerLinkActive="active" (click)="toggleSidebar()"><i
+                     class="pi pi-users"></i> Customers</a></li>
+            <li><a routerLink="/transactions" routerLinkActive="active" (click)="toggleSidebar()"><i
+                     class="pi pi-credit-card"></i> Transactions</a></li>
+            <li><a routerLink="/settings" routerLinkActive="active" (click)="toggleSidebar()"><i class="pi pi-cog"></i>
+                  Settings</a></li>
          </ul>
-
       </div>
 
       <!-- Content -->

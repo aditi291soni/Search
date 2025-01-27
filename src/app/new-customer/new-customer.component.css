@@ -1,0 +1,81 @@
+.thin {
+   font-weight: 300;
+   font-size: 16px;
+}
+
+.mb8 {
+   margin-bottom: 8px;
+}
+
+.row {
+   display: flex;
+   align-items: flex-end;
+}
+
+.col {
+   display: block;
+   margin-bottom: 16px;
+}
+
+.right {
+   margin-right: 10px;
+}
+
+.form-container {
+   display: grid;
+   grid-template-columns: repeat(2, 1fr);
+   gap: 16px;
+}
+
+label {
+   font-size: 14px;
+   font-weight: 600;
+   margin-bottom: 4px;
+   display: block;
+}
+
+input {
+   width: 100%;
+   padding: 8px;
+   border: 1px solid #ccc;
+   border-radius: 4px;
+   font-size: 14px;
+   transition: all 0.3s ease;
+}
+
+input:focus {
+   border-color: #007bff;
+   outline: none;
+}
+
+input:not(:placeholder-shown)+label,
+input:focus+label {
+   font-size: 12px;
+   color: #007bff;
+   transform: translateY(-18px);
+}
+
+button {
+   align-self: flex-end;
+}
+
+/* Example CSS to adjust positioning */
+.ui-datepicker {
+   z-index: 9999 !important;
+   top: -250px !important;
+   /* Adjust the value as needed */
+}
+
+.button-group {
+   display: flex;
+   justify-content: flex-end;
+   gap: 10px;
+   margin-top: 10px;
+}
+
+.bottom-buttons {
+   display: flex;
+   justify-content: center;
+   margin-top: 20px;
+   gap: 20px;
+}

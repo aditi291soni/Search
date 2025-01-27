@@ -1,14 +1,15 @@
 :root {
+   --pure-white: #fff;
    --neutral-light: #f9f9f9;
    --neutral-main: #bdbdbd;
    --neutral-dark: #212121;
 
-   --primary-light: #81d4fa;
-   --primary-main: #0288d1;
+   --primary-light: rgb(25, 139, 205);
+   --primary-main: #198CCD;
 
-   --secondary-light: #81d4fa;
-   --secondary-main: #0288d1;
-   --secondary-dark: #5c6bc0;
+   --secondary-light: rgba(25, 140, 205, 0.1);
+   --secondary-main: #198CCD;
+   --secondary-dark: rgb(8, 54, 81);
 
    --info-lighter: #fafafa;
    --info-light: #f0f0f0;
