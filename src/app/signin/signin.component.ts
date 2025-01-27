@@ -5,7 +5,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { CardModule } from 'primeng/card';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
-import { ToastNotificationService } from '../services/toast-notification.service';  // Import ToastNotificationService
+import { ToastNotificationService } from '../services/toast-notification.service';
 
 /**
  * SigninComponent handles the user sign-in process.
@@ -19,49 +19,74 @@ import { ToastNotificationService } from '../services/toast-notification.service
    imports: [CardModule, FormsModule, ButtonModule, InputTextModule],
 })
 export class SigninComponent {
-   email_or_phone: string = ''; // The email or phone number entered by the user for sign-in
-   password: string = ''; // The password entered by the user for sign-in
+   /** The email or phone number entered by the user for sign-in */
+   email_or_phone: string = '';
 
+   /** The password entered by the user for sign-in */
+   password: string = '';
+
+   /** State to track whether the API call is in progress */
+   loading: boolean = false;
+
+   /**
+    * Constructor to inject required services.
+    * 
+    * @param apiService - ApiService to handle API requests for sign-in
+    * @param router - Router to navigate to other pages
+    * @param toastService - ToastNotificationService to display notifications
+    */
    constructor(
-      private apiService: ApiService, // ApiService to handle sign-in
-      private router: Router, // Router to navigate to the home page upon successful login
-      private toastService: ToastNotificationService // Inject ToastNotificationService
+      private apiService: ApiService,
+      private router: Router,
+      private toastService: ToastNotificationService
    ) { }
 
    /**
     * Handles the form submission for sign-in.
-    * It calls the ApiService's signIn method with the provided email_or_phone and password.
+    * It calls the ApiService's `signIn` method with the provided email_or_phone and password.
     * On successful sign-in, the authentication token is stored in localStorage,
     * and the user is redirected to the home page.
+    * If the sign-in fails, an error message is shown using the ToastNotificationService.
     * 
-    * @returns void
+    * @returns {void}
     */
    onSubmit(): void {
+      // Start the loading state
+      this.loading = true;
+
+      // Call the API for sign-in
       this.apiService.signIn(this.email_or_phone, this.password).subscribe({
          next: (response) => {
-            // Check if response.status is true
+            // Handle successful sign-in
             if (response.status === true) {
-               // Store token in localStorage
+               // Store token and user data in localStorage
                localStorage.setItem('authToken', response.data.token);
                localStorage.setItem('userData', JSON.stringify(response.data));
 
-               // Show success toast using ToastNotificationService
+               // Show success notification
                this.toastService.showSuccess('Login successful!');
 
-               // Redirect to home
+               // Redirect to the home page
                this.router.navigate(['/']);
             } else {
-               // Show error toast if response.status is not true
+               // Show error notification if credentials are invalid
                this.toastService.showError('Sign-in failed. Invalid credentials or other error.');
             }
          },
          error: (error) => {
+            // Handle error during the API call
             console.error('Sign-in failed:', error);
 
-            // Show error toast if the request fails
+            // Stop the loading state in case of an error
+            this.loading = false;
+
+            // Show error notification
             this.toastService.showError('Sign-in failed. Please try again.');
-         }
+         },
+         complete: () => {
+            // Stop the loading state when the API call is complete
+            this.loading = false;
+         },
       });
    }
-
 }

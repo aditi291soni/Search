@@ -5,16 +5,18 @@
       <form (ngSubmit)="onSubmit()" class="signin-form">
          <div class="p-field">
             <div class="thin">Email</div>
-            <input class="full-width" id="email" type="email" pInputText placeholder="Enter your email" [(ngModel)]="email_or_phone" name="email"
-               required />
+            <input class="full-width" id="email" type="email" pInputText placeholder="Enter your email"
+               [(ngModel)]="email_or_phone" name="email" required />
          </div>
          <div class="p-field">
             <div class="thin">Password</div>
-            <input class="full-width" id="password" type="password" pInputText placeholder="Enter your password" [(ngModel)]="password"
-               name="password" required />
+            <input class="full-width" id="password" type="password" pInputText placeholder="Enter your password"
+               [(ngModel)]="password" name="password" required />
          </div>
          <div class="form-actions">
-            <button type="submit" pButton label="Sign In" class="p-button-primary"></button>
+            <button type="submit" pButton label="Sign In" class="p-button-primary" [disabled]="loading"
+               [loading]="loading">
+            </button>
          </div>
       </form>
    </p-card>
