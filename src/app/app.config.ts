@@ -6,6 +6,8 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import Noir from '../themes/mypreset';
 import { authInterceptor } from './auth.interceptor'; // Import the interceptor
+import { MessageService } from 'primeng/api'; // Import MessageService
+import { ToastModule } from 'primeng/toast';  // Import ToastModule
 
 export const appConfig: ApplicationConfig = {
    providers: [
@@ -17,5 +19,7 @@ export const appConfig: ApplicationConfig = {
       }),
       provideRouter(routes),
       provideHttpClient(withInterceptors([authInterceptor])), // Register the interceptor here
+      MessageService,  // Provide MessageService globally
+      // ToastModule,     // Ensure ToastModule is available globally
    ],
 };

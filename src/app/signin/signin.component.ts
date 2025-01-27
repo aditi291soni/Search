@@ -5,6 +5,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { CardModule } from 'primeng/card';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
+import { ToastNotificationService } from '../services/toast-notification.service';  // Import ToastNotificationService
 
 /**
  * SigninComponent handles the user sign-in process.
@@ -18,23 +19,14 @@ import { ButtonModule } from 'primeng/button';
    imports: [CardModule, FormsModule, ButtonModule, InputTextModule],
 })
 export class SigninComponent {
-   /**
-    * The email or phone number entered by the user for sign-in.
-    */
-   email_or_phone: string = '';
+   email_or_phone: string = ''; // The email or phone number entered by the user for sign-in
+   password: string = ''; // The password entered by the user for sign-in
 
-   /**
-    * The password entered by the user for sign-in.
-    */
-   password: string = '';
-
-   /**
-    * Constructs the SigninComponent with the necessary dependencies.
-    * 
-    * @param apiService - The ApiService used to make API calls for sign-in.
-    * @param router - The Angular Router used to navigate the user to different views.
-    */
-   constructor(private apiService: ApiService, private router: Router) { }
+   constructor(
+      private apiService: ApiService, // ApiService to handle sign-in
+      private router: Router, // Router to navigate to the home page upon successful login
+      private toastService: ToastNotificationService // Inject ToastNotificationService
+   ) { }
 
    /**
     * Handles the form submission for sign-in.
@@ -46,28 +38,30 @@ export class SigninComponent {
     */
    onSubmit(): void {
       this.apiService.signIn(this.email_or_phone, this.password).subscribe({
-         /**
-          * Called when the sign-in request is successful.
-          * Stores the authentication token in localStorage and navigates the user to the home page.
-          * 
-          * @param response - The response returned from the sign-in API containing the token.
-          */
          next: (response) => {
-            // Store token in localStorage
-            localStorage.setItem('authToken', response.data.token);
-            localStorage.setItem('userData', JSON.stringify(response.data));
-            this.router.navigate(['/']);
-         },
+            // Check if response.status is true
+            if (response.status === true) {
+               // Store token in localStorage
+               localStorage.setItem('authToken', response.data.token);
+               localStorage.setItem('userData', JSON.stringify(response.data));
 
-         /**
-          * Called when the sign-in request fails.
-          * Logs the error for debugging purposes.
-          * 
-          * @param error - The error returned from the sign-in API.
-          */
+               // Show success toast using ToastNotificationService
+               this.toastService.showSuccess('Login successful!');
+
+               // Redirect to home
+               this.router.navigate(['/']);
+            } else {
+               // Show error toast if response.status is not true
+               this.toastService.showError('Sign-in failed. Invalid credentials or other error.');
+            }
+         },
          error: (error) => {
             console.error('Sign-in failed:', error);
+
+            // Show error toast if the request fails
+            this.toastService.showError('Sign-in failed. Please try again.');
          }
       });
    }
+
 }
