@@ -11,12 +11,22 @@
       <div class="topbar-left" *ngIf="isSmallDevice">
          <button pButton icon="pi pi-bars" class="menu-toggle" (click)="toggleSidebar()"></button>
          <button pButton icon="pi pi-search" class="menu-toggle search-icon" (click)="toggleSearch()"></button>
+
+         
       </div>
 
       <!-- Right-aligned icons for notification and user profile -->
       <div class="topbar-right">
          <button pButton icon="pi pi-bell" class="topbar-btn"></button>
          <button pButton icon="pi pi-user" class="topbar-btn"></button>
+         <p-confirmDialog></p-confirmDialog>
+         <button
+            pButton
+            icon="pi pi-sign-out"
+            class="topbar-btn"
+            type="button" (click)="logout()"
+   >
+         </button>
       </div>
    </div>
 

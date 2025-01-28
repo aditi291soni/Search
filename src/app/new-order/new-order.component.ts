@@ -129,7 +129,7 @@ export class NewOrderComponent {
       try {
         this.apiService.createDelivery(payload).subscribe({
           next: (data: any) => {
-    
+            this.router.navigate(['orders/new-order/order-preview']);
             let ApiResponse: any = data;
       //       this.delivery_id=data.data.id
       //       localStorage.setItem('delivery_id', JSON.stringify(this.delivery_id));
@@ -216,7 +216,8 @@ export class NewOrderComponent {
       this.apiService.createDelivery(payload).subscribe({
          next: (response) => {
             if (response.status === true) {
-        
+               this.router.navigate(['orders/new-order/order-preview']);
+               
             } else {
                console.error('Error fetching list of business:', response.message);
                this.loading = false;

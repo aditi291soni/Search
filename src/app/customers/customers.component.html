@@ -14,7 +14,7 @@
    <!-- Card 1 -->
    <p-card *ngFor="let customer of customerList">
       <div class="customer-card">
-         <p-avatar image="https://images.unsplash.com/photo-1494790108377-be9c29b29330?crop=faces&fit=crop&w=100&h=100"
+         <p-avatar [image]="customer.image"
             size="large" shape="circle">
          </p-avatar>
          <div class="customer-info">

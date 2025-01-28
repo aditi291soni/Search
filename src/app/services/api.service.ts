@@ -73,7 +73,15 @@ export class ApiService {
          })
       );
    }
-
+   getTransactionList(params:object): Observable<any> {
+     
+      return this.http.post(`${this.baseUrl}/get-transaction-list`, params, this.getHttpOptions()).pipe(
+         catchError((error) => {
+            console.error('Error fetching the list of addresses:', error); // Log error for debugging
+            return throwError(() => new Error('Failed to fetch the list of addresses')); // Return a user-friendly error message
+         })
+      );
+   }
    /**
  * Fetches the list of vehicle types from the API.
  *
