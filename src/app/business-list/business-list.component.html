@@ -1,0 +1,36 @@
+<div class="header">
+    <div>
+       <h2>All Business</h2>
+       <div class="thin">List of all your business</div>
+    </div>
+    <button routerLink="/add-business" pButton type="button" icon="pi pi-plus" label="New Business"
+       class="p-button-outlined p-button-secondary">
+    </button>
+ </div>
+ 
+ <br>
+ 
+ <div class="card-container">
+    <!-- Card 1 -->
+    <p-card *ngFor="let business of businessList">
+       <div class="customer-card">
+        <p-avatar 
+        *ngIf="business.image" 
+        [image]="business.image" 
+        size="large" 
+        shape="circle">
+      </p-avatar>
+      <p-avatar 
+        *ngIf="!business.image" 
+        [label]="business.name?.charAt(0).toUpperCase()" 
+        size="large" 
+        shape="circle">
+      </p-avatar>
+          <div class="customer-info">
+             <span class="customer-name">{{business.name | titlecase}}</span>
+             <span class="customer-mobile">{{business.address}}</span>
+          </div>
+       </div>
+    </p-card>
+ 
+ </div>

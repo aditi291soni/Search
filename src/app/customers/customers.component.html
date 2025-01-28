@@ -12,106 +12,16 @@
 
 <div class="card-container">
    <!-- Card 1 -->
-   <p-card>
+   <p-card *ngFor="let customer of customerList">
       <div class="customer-card">
          <p-avatar image="https://images.unsplash.com/photo-1494790108377-be9c29b29330?crop=faces&fit=crop&w=100&h=100"
             size="large" shape="circle">
          </p-avatar>
          <div class="customer-info">
-            <span class="customer-name">John Doe</span>
-            <span class="customer-mobile">+1 123-456-7890</span>
+            <span class="customer-name">{{customer.first_name |titlecase}}</span>
+            <span class="customer-mobile">{{customer.phone}}</span>
          </div>
       </div>
    </p-card>
 
-   <!-- Card 2 -->
-   <p-card>
-      <div class="customer-card">
-         <p-avatar image="https://images.unsplash.com/photo-1517841905240-472988babdf9?crop=faces&fit=crop&w=100&h=100"
-            size="large" shape="circle">
-         </p-avatar>
-         <div class="customer-info">
-            <span class="customer-name">Jane Smith</span>
-            <span class="customer-mobile">+1 987-654-3210</span>
-         </div>
-      </div>
-   </p-card>
-
-   <!-- Card 3 -->
-   <p-card>
-      <div class="customer-card">
-         <p-avatar image="https://images.unsplash.com/photo-1534528741775-53994a69daeb?crop=faces&fit=crop&w=100&h=100"
-            size="large" shape="circle">
-         </p-avatar>
-         <div class="customer-info">
-            <span class="customer-name">Alice Johnson</span>
-            <span class="customer-mobile">+1 555-123-4567</span>
-         </div>
-      </div>
-   </p-card>
-
-   <!-- Card 4 -->
-   <p-card>
-      <div class="customer-card">
-         <p-avatar image="https://images.unsplash.com/photo-1527980965255-d3b416303d12?crop=faces&fit=crop&w=100&h=100"
-            size="large" shape="circle">
-         </p-avatar>
-         <div class="customer-info">
-            <span class="customer-name">Bob Brown</span>
-            <span class="customer-mobile">+1 111-222-3333</span>
-         </div>
-      </div>
-   </p-card>
-
-   <!-- Card 5 -->
-   <p-card>
-      <div class="customer-card">
-         <p-avatar image="https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?crop=faces&fit=crop&w=100&h=100"
-            size="large" shape="circle">
-         </p-avatar>
-         <div class="customer-info">
-            <span class="customer-name">Charlie Davis</span>
-            <span class="customer-mobile">+1 222-333-4444</span>
-         </div>
-      </div>
-   </p-card>
-
-   <!-- Card 6 -->
-   <p-card>
-      <div class="customer-card">
-         <p-avatar image="https://images.unsplash.com/photo-1544005313-94ddf0286df2?crop=faces&fit=crop&w=100&h=100"
-            size="large" shape="circle">
-         </p-avatar>
-         <div class="customer-info">
-            <span class="customer-name">Diana Evans</span>
-            <span class="customer-mobile">+1 333-444-5555</span>
-         </div>
-      </div>
-   </p-card>
-
-   <!-- Card 7 -->
-   <p-card>
-      <div class="customer-card">
-         <p-avatar image="https://images.unsplash.com/photo-1517365830460-955ce3ccd263?crop=faces&fit=crop&w=100&h=100"
-            size="large" shape="circle">
-         </p-avatar>
-         <div class="customer-info">
-            <span class="customer-name">Evan Green</span>
-            <span class="customer-mobile">+1 444-555-6666</span>
-         </div>
-      </div>
-   </p-card>
-
-   <!-- Card 8 -->
-   <p-card>
-      <div class="customer-card">
-         <p-avatar image="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?crop=faces&fit=crop&w=100&h=100"
-            size="large" shape="circle">
-         </p-avatar>
-         <div class="customer-info">
-            <span class="customer-name">Fiona White</span>
-            <span class="customer-mobile">+1 555-666-7777</span>
-         </div>
-      </div>
-   </p-card>
 </div>
