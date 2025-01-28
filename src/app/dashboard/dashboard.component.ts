@@ -48,7 +48,7 @@ export class DashboardComponent implements OnInit {
          next: (response) => {
             if (response.status === true) {
                this.business = response.data || [];
-               const defaultBusiness = this.business.find((i) => i.id === 488);
+               const defaultBusiness = this.business.find((i) => i.id === 837);
                // TODO: Setting 488 as default Business. Change it to the default business id.
                localStorage.setItem('defaultBusiness', JSON.stringify(defaultBusiness));
             } else {
