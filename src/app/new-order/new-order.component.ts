@@ -1,47 +1,56 @@
 import { Component } from '@angular/core';
-import { InputTextModule } from 'primeng/inputtext';
-import { ButtonModule } from 'primeng/button';
 import { ApiService } from '../services/api.service';
 import { CommonModule } from '@angular/common';
-import { environment } from '../../environments/environment';
+import { Router } from '@angular/router';
 import { SkeletonModule } from 'primeng/skeleton';
-import { FormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { environment } from '../../environments/environment';
+
+interface Location {
+   person_name: string;
+   person_phone_no: string;
+   house_no: string;
+   landmark: string;
+   address_details: string;
+}
+
 
 @Component({
    selector: 'app-new-order',
    standalone: true,
-   imports: [InputTextModule, ButtonModule, CommonModule, SkeletonModule, FormsModule],
+   imports: [CommonModule, SkeletonModule, ButtonModule, ReactiveFormsModule, FormsModule],
    templateUrl: './new-order.component.html',
    styleUrls: ['./new-order.component.css'],
 })
 export class NewOrderComponent {
-   vehicleTypeList: any[] = []; // List of vehicle types
-   loading: boolean = true; // Indicates whether data is currently loading
-   selectedVehicle: number | null = null; // Store selected vehicle's ID
-   pickupLocation: string = ''; // Store the pickup location address
-   dropLocation: string = ''; // Store the drop location address
-   receiverName: string = ''; // Store the receiver's name
-   receiverContact: string = ''; // Store the receiver's contact
-   parcelWeight: string = ''; // Store the parcel's weight
-   parcelDescription: string = ''; // Store the parcel's description
+   vehicleTypeList: any[] = [];
+   loading: boolean = true;
+   selectedVehicle: number | null = null;
+   selectedPickup: Location | null = JSON.parse(localStorage.getItem('selectedPickup') || 'null');
+   selectedDrop: Location | null = JSON.parse(localStorage.getItem('selectedDrop') || 'null');
+   addressList: any[] = []; // List of available addresses for pickup/drop
 
-   /**
-    * Creates an instance of NewOrderComponent.
-    * @param {ApiService} apiService - The service to interact with the API.
-    */
-   constructor(private apiService: ApiService) { }
+   form: FormGroup;
+
+   constructor(private apiService: ApiService, private router: Router, private fb: FormBuilder) {
+      // Initialize form group with default values
+      this.form = this.fb.group({
+         vehicleType: ['', Validators.required],
+         pickupLocation: [this.selectedPickup ? this.selectedPickup.house_no : '', Validators.required],
+         dropLocation: [this.selectedDrop ? this.selectedDrop.house_no : '', Validators.required],
+         parcelWeight: [''],
+         parcelDescription: [''],
+      });
+   }
 
    ngOnInit(): void {
       this.fetchVehicleTypeList();
    }
 
-   /**
-    * Fetches the list of vehicle types from the API.
-    */
    fetchVehicleTypeList(): void {
       const superAdminId = environment.superAdminId;
-
-      this.apiService.getVehicleTypeList(superAdminId.toString()).subscribe({
+      this.apiService.getVehicleTypeList(superAdminId).subscribe({
          next: (response) => {
             if (response.status === true) {
                this.vehicleTypeList = response.data || [];
@@ -58,31 +67,46 @@ export class NewOrderComponent {
       });
    }
 
-   /**
-    * Selects a vehicle by setting the selected vehicle ID.
-    * @param vehicleId The ID of the selected vehicle.
-    */
    selectVehicle(vehicleId: number): void {
-      this.selectedVehicle = vehicleId; // Set the selected vehicle's ID
+      this.selectedVehicle = vehicleId;
+      this.form.get('vehicleType')?.setValue(vehicleId);
    }
 
-   /**
-    * Handles the form submission.
-    */
    submitForm(): void {
-      if (this.selectedVehicle && this.pickupLocation && this.dropLocation && this.receiverName && this.receiverContact) {
-         // Handle form submission logic here, e.g., sending the data to the API
-         console.log({
-            selectedVehicle: this.selectedVehicle,
-            pickupLocation: this.pickupLocation,
-            dropLocation: this.dropLocation,
-            receiverName: this.receiverName,
-            receiverContact: this.receiverContact,
-            parcelWeight: this.parcelWeight,
-            parcelDescription: this.parcelDescription
-         });
+      if (this.form.valid) {
+         console.log(this.form.value);
       } else {
          console.error('Please fill in all required fields');
       }
+   }
+
+   navigateToPickupSelect(): void {
+      this.router.navigate(['orders/new-order/select-pickup']);
+   }
+
+   navigateToDropSelect(): void {
+      this.router.navigate(['orders/new-order/select-drop']);
+   }
+
+   saveAddressToLocalStorage(address: any): void {
+      if (this.selectedPickup) {
+         localStorage.setItem('selectedPickup', JSON.stringify(address));
+         this.selectedPickup = address;
+      } else if (this.selectedDrop) {
+         localStorage.setItem('selectedDrop', JSON.stringify(address));
+         this.selectedDrop = address;
+      }
+   }
+
+   clearPickupAddress(): void {
+      this.selectedPickup = null;
+      localStorage.removeItem('selectedPickup');
+      this.form.get('pickupLocation')?.reset();
+   }
+
+   clearDropAddress(): void {
+      this.selectedDrop = null;
+      localStorage.removeItem('selectedDrop');
+      this.form.get('dropLocation')?.reset();
    }
 }

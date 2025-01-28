@@ -81,7 +81,7 @@ export class ApiService {
  * @returns An observable that emits the list of vehicle types.
  * @throws Will throw an error if the API request fails.
  */
-   getVehicleTypeList(superAdminId: string): Observable<any> {
+   getVehicleTypeList(superAdminId: string | number): Observable<any> {
       const payload = { super_admin_id: superAdminId }; // Add super_admin_id to payload
       return this.http.post(`${this.baseUrl}/get-vehicle-type-list`, payload, this.getHttpOptions()).pipe(
          catchError((error) => {

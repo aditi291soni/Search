@@ -136,3 +136,56 @@
    display: flex;
    justify-content: space-between;
 }
+
+/* Address Card Styling */
+.address-card {
+   /* background: #f9f9f9; */
+   border: 1px solid #ddd;
+   border-radius: 8px;
+   padding: 8px;
+   margin-top: 6px;
+   margin-bottom: 10px;
+}
+
+.address-info h3 {
+   margin: 0;
+   font-size: 1.2rem;
+   font-weight: 600;
+}
+
+.address-info p {
+   font-size: 1rem;
+   margin: 0;
+}
+
+.personal-info {
+   display: flex;
+   justify-content: space-between;
+   align-items: flex-start;
+   /* Align items to the top */
+   font-size: 1rem;
+   margin-bottom: 6px;
+}
+
+.personal-info-text {
+   font-weight: 600;
+   font-size: 18px;
+}
+
+.mb-6 {
+   margin-bottom: 6px;
+}
+
+.close-button {
+   background: none;
+   border: none;
+   font-size: 16px;
+   color: #f44336;
+   /* Red color for the close icon */
+   cursor: pointer;
+}
+
+.close-button i {
+   font-size: 18px;
+   /* Adjust icon size */
+}
