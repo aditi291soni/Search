@@ -66,8 +66,15 @@ export class SigninComponent {
                // Show success notification
                this.toastService.showSuccess('Login successful!');
 
-               // Redirect to the home page
-               this.router.navigate(['/']);
+               if (response.data && response.data.business_id && response.data.business_id.length > 0) {
+                  
+                  // Redirect to the home page
+                  this.router.navigate(['/']);
+               } else {
+                  // TODO: Redirect to the business setup page
+                  // this.router.navigate(['/business-setup']);
+               }
+
             } else {
                // Show error notification if credentials are invalid
                this.toastService.showError('Sign-in failed. Invalid credentials or other error.');

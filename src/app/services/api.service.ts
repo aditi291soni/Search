@@ -43,51 +43,54 @@ export class ApiService {
    }
 
    /**
-    * Fetches the list of orders from the API.
+    * Fetches the list of businesses from the API.
     * 
-    * @returns An observable that emits the list of orders.
+    * @returns An observable that emits the list of businesses.
     * @throws Will throw an error if the API request fails.
     */
-   getOrders(): Observable<any> {
-      return this.http.get(`${this.baseUrl}/orders`).pipe(
+   getListOfBusinesses(): Observable<any> {
+      return this.http.post(`${this.baseUrl}/list-of-business`, this.getHttpOptions()).pipe(
          catchError((error) => {
-            console.error('Error fetching orders:', error); // Log error for debugging
-            return throwError(() => new Error('Failed to fetch orders')); // Return a user-friendly error message
+            console.error('Error fetching the list of businesses:', error); // Log error for debugging
+            return throwError(() => new Error('Failed to fetch the list of businesses')); // Return a user-friendly error message
          })
       );
    }
 
    /**
-    * Creates a new order by sending the provided order data to the API.
-    * 
-    * @param orderData - The data representing the new order.
-    * @returns An observable that emits the response from the create order API.
-    * @throws Will throw an error if the API request fails.
-    */
-   createOrder(orderData: any): Observable<any> {
-      return this.http.post(`${this.baseUrl}/orders`, orderData, this.getHttpOptions()).pipe(
+  * Fetches the list of addresses from the API.
+  *
+  * @param businessId The ID of the business to fetch addresses for.
+  * @returns An observable that emits the list of addresses.
+  * @throws Will throw an error if the API request fails.
+  */
+   getAddressList(businessId: string): Observable<any> {
+      const payload = { business_id: businessId }; // Add business_id to payload
+      return this.http.post(`${this.baseUrl}/getAddressList`, payload, this.getHttpOptions()).pipe(
          catchError((error) => {
-            console.error('Error creating order:', error); // Log error for debugging
-            return throwError(() => new Error('Failed to create order')); // Return a user-friendly error message
+            console.error('Error fetching the list of addresses:', error); // Log error for debugging
+            return throwError(() => new Error('Failed to fetch the list of addresses')); // Return a user-friendly error message
          })
       );
    }
 
    /**
-    * Fetches customer details by ID from the API.
-    * 
-    * @param customerId - The unique identifier of the customer.
-    * @returns An observable that emits the customer details.
-    * @throws Will throw an error if the API request fails.
-    */
-   getCustomerById(customerId: string): Observable<any> {
-      return this.http.get(`${this.baseUrl}/customers/${customerId}`, this.getHttpOptions()).pipe(
+ * Fetches the list of vehicle types from the API.
+ *
+ * @param superAdminId The ID of the super admin to fetch the vehicle types for.
+ * @returns An observable that emits the list of vehicle types.
+ * @throws Will throw an error if the API request fails.
+ */
+   getVehicleTypeList(superAdminId: string): Observable<any> {
+      const payload = { super_admin_id: superAdminId }; // Add super_admin_id to payload
+      return this.http.post(`${this.baseUrl}/get-vehicle-type-list`, payload, this.getHttpOptions()).pipe(
          catchError((error) => {
-            console.error('Error fetching customer:', error); // Log error for debugging
-            return throwError(() => new Error('Failed to fetch customer')); // Return a user-friendly error message
+            console.error('Error fetching the list of vehicle types:', error); // Log error for debugging
+            return throwError(() => new Error('Failed to fetch the list of vehicle types')); // Return a user-friendly error message
          })
       );
    }
+
 
    /**
     * Helper method to retrieve HTTP options with the authorization token.

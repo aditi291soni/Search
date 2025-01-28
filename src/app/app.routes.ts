@@ -42,6 +42,10 @@ export const routes: Routes = [
             path: 'orders/new-order',
             loadComponent: () => import('./new-order/new-order.component').then(m => m.NewOrderComponent),
          },
+         {
+            path: 'orders/new-order/select-address',
+            loadComponent: () => import('./address-select/address-select.component').then(m => m.AddressSelectComponent),
+         },
       ],
    },
    {

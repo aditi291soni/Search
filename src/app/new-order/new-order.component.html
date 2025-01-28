@@ -1,46 +1,55 @@
-<!-- <h2>New Order</h2>
-<div class="thin">Create and place a new order</div> -->
-<!-- <br><br> -->
-
-<h3>Select Vehicle<span class="mandatory">*</span></h3>
-<div class="card-container">
-   <input pInputText type="text" placeholder="Vehicle Name" />
-   <input class="hidden" pInputText type="text" placeholder="Vehicle Number" />
-</div>
-<br>
-
-<h3>Select Pickup Location<span class="mandatory">*</span></h3>
-<div class="card-container">
-   <input class="mb" pInputText type="text" placeholder="Pickup Address" />
-   <button pButton type="button" icon="pi pi-map-marker" label="Select on Map" class="map-button"></button>
-</div>
-<br>
-
-<h3>Select Drop Location<span class="mandatory">*</span></h3>
-<div class="card-container">
-   <input class="mb" pInputText type="text" placeholder="Drop Address" />
-   <div class="drop-location">
-      <button pButton type="button" icon="pi pi-map-marker" label="Select on Map" class="map-button"></button>
-      <button pButton type="button" icon="pi pi-user" label="By Customer" class="map-button"></button>
+<div *ngIf="loading" class="full-page-skeleton">
+   <p-skeleton [width]="'100%'" [height]="'3rem'" class="heading-skeleton"></p-skeleton>
+   <div *ngFor="let i of [1, 2, 3, 4]" class="card-skeleton">
+      <p-skeleton [width]="'100%'" [height]="'6rem'"></p-skeleton>
+   </div>
+   <p-skeleton [width]="'100%'" [height]="'3rem'" class="heading-skeleton"></p-skeleton>
+   <p-skeleton [width]="'100%'" [height]="'2rem'" class="input-skeleton"></p-skeleton>
+   <p-skeleton [width]="'30%'" [height]="'3rem'" class="button-skeleton"></p-skeleton>
+   <br />
+   <div class="button-group">
+      <p-skeleton [width]="'45%'" [height]="'3rem'"></p-skeleton>
+      <p-skeleton [width]="'45%'" [height]="'3rem'"></p-skeleton>
    </div>
 </div>
-<br>
 
-<h3>Enter Receiver Details<span class="mandatory">*</span></h3>
-<div class="card-container">
-   <input class="mb" pInputText type="text" placeholder="Receiver Name" />
-   <input pInputText type="text" placeholder="Receiver Contact" />
-</div>
-<br>
-
-<h3>Enter Parcel Details</h3>
-<div class="card-container">
-   <input class="mb" pInputText type="text" placeholder="Parcel Weight" />
-   <input pInputText type="text" placeholder="Parcel Description" />
-</div>
-
-<!-- Bottom Buttons -->
-<div class="button-group bottom-buttons">
-   <button pButton type="button" label="Cancel" class="p-button-outlined p-button-danger"></button>
-   <button pButton type="button" label="Continue" class="p-button-contained p-button-success"></button>
+<div *ngIf="!loading">
+   <h3>Select Vehicle<span class="mandatory">*</span></h3>
+   <div class="card-container">
+      <div class="vehicle-cards">
+         <div *ngFor="let vehicle of vehicleTypeList" class="vehicle-card"
+            [class.selected]="selectedVehicle === vehicle.id" (click)="selectVehicle(vehicle.id)">
+            <img [src]="vehicle.image" alt="{{ vehicle.vehicle_type }}" class="vehicle-image" />
+            <div class="vehicle-name">{{ vehicle.vehicle_type }}</div>
+         </div>
+      </div>
+   </div>
+   <h3>Select Pickup Location<span class="mandatory">*</span></h3>
+   <div class="card-container">
+      <input class="mb" pInputText type="text" placeholder="Pickup Address" [(ngModel)]="pickupLocation" />
+      <button pButton type="button" icon="pi pi-map-marker" label="Select on Map" class="map-button"></button>
+   </div>
+   <h3>Select Drop Location<span class="mandatory">*</span></h3>
+   <div class="card-container">
+      <input class="mb" pInputText type="text" placeholder="Drop Address" [(ngModel)]="dropLocation" />
+      <div class="drop-location">
+         <button pButton type="button" icon="pi pi-map-marker" label="Select on Map" class="map-button"></button>
+         <button pButton type="button" icon="pi pi-user" label="By Customer" class="map-button"></button>
+      </div>
+   </div>
+   <h3>Enter Receiver Details<span class="mandatory">*</span></h3>
+   <div class="card-container">
+      <input class="mb" pInputText type="text" placeholder="Receiver Name" [(ngModel)]="receiverName" />
+      <input pInputText type="text" placeholder="Receiver Contact" [(ngModel)]="receiverContact" />
+   </div>
+   <h3>Enter Parcel Details</h3>
+   <div class="card-container">
+      <input class="mb" pInputText type="text" placeholder="Parcel Weight" [(ngModel)]="parcelWeight" />
+      <input pInputText type="text" placeholder="Parcel Description" [(ngModel)]="parcelDescription" />
+   </div>
+   <div class="bottom-buttons">
+      <button pButton type="button" label="Cancel" class="p-button-outlined p-button-danger"></button>
+      <button pButton type="button" label="Continue" class="p-button-contained p-button-success"
+         (click)="submitForm()"></button>
+   </div>
 </div>
