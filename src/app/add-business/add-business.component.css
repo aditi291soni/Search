@@ -1,0 +1,138 @@
+/* .vehicle-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 15px;
+    padding: 5px 0;
+    margin-bottom: 10px;
+ }
+ 
+ .vehicle-card {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    max-width: 150px;
+    text-align: center;
+ }
+ 
+ .vehicle-card:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+ } */
+ 
+ .selected {
+    border-color: #007bff;
+    background-color: #e6f7ff;
+ }
+ 
+ .vehicle-image {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+ }
+ 
+ .vehicle-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+ }
+ 
+ .mandatory {
+    color: red;
+    font-size: 16px;
+    margin-left: 5px;
+ }
+ 
+ .card-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 14px;
+ }
+ 
+ .card-container input {
+    padding: 8px;
+    margin: 6px 0px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+ }
+ 
+ .map-button {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: var(--info-main);
+    color: var(--text-secondary);
+ }
+ 
+ .drop-location {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    border-radius: 4px;
+ }
+ 
+ .button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+ }
+ 
+ .bottom-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 20px;
+ }
+ 
+ @media screen and (max-width: 768px) {
+    .card-container {
+       display: block;
+    }
+ 
+    .mb {
+       margin-bottom: 6px;
+    }
+ 
+    .hidden {
+       display: none;
+    }
+ }
+ 
+ /* Skeleton Loader Styles */
+ .full-page-skeleton {
+    padding: 1rem;
+ }
+ 
+ .heading-skeleton {
+    margin-bottom: 1rem;
+ }
+ 
+ .card-skeleton {
+    margin-bottom: 1rem;
+ }
+ 
+ .input-skeleton {
+    margin-bottom: 0.5rem;
+ }
+ 
+ .button-group {
+    display: flex;
+    justify-content: space-between;
+ }

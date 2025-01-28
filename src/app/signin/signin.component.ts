@@ -68,8 +68,18 @@ export class SigninComponent {
 
                if (response.data && response.data.business_id && response.data.business_id.length > 0) {
                   
-                  // Redirect to the home page
-                  this.router.navigate(['/']);
+                  const businessIdLength = response.data.business_id.length;
+
+                  if (businessIdLength == 0) {
+                    // Redirect to the "Add Business" page
+                    this.router.navigate(['/add-business']);
+                  } else if (businessIdLength == 1) {
+                    // Redirect to the Dashboard page
+                    this.router.navigate(['/dashboard']);
+                  } else {
+                    // Redirect to the "List of Businesses" page
+                    this.router.navigate(['/list-of-business']);
+                  }
                } else {
                   // TODO: Redirect to the business setup page
                   // this.router.navigate(['/business-setup']);

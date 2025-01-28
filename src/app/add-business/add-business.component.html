@@ -1,0 +1,224 @@
+<div *ngIf="loading" class="full-page-skeleton">
+    <p-skeleton [width]="'100%'" [height]="'3rem'" class="heading-skeleton"></p-skeleton>
+    <div *ngFor="let i of [1, 2, 3, 4]" class="card-skeleton">
+       <p-skeleton [width]="'100%'" [height]="'6rem'"></p-skeleton>
+    </div>
+    <p-skeleton [width]="'100%'" [height]="'3rem'" class="heading-skeleton"></p-skeleton>
+    <p-skeleton [width]="'100%'" [height]="'2rem'" class="input-skeleton"></p-skeleton>
+    <p-skeleton [width]="'30%'" [height]="'3rem'" class="button-skeleton"></p-skeleton>
+    <br />
+    <div class="button-group">
+       <p-skeleton [width]="'45%'" [height]="'3rem'"></p-skeleton>
+       <p-skeleton [width]="'45%'" [height]="'3rem'"></p-skeleton>
+    </div>
+ </div>
+ <div>
+    <h3>Business Information <span class="mandatory">*</span></h3>
+    <form [formGroup]="businessForm" class="needs-validation" novalidate (ngSubmit)="onSubmit()">
+          <div class="card-container">
+        <!-- Business Name -->
+        <div class="form-group mb-3">
+          <label for="name" class="form-label">Business Name <span class="mandatory">*</span></label>
+          <input
+            id="name"
+            type="text"
+            pInputText
+            formControlName="name"
+            placeholder="Enter Business Name"
+            class="form-control"
+          />
+          <div *ngIf="businessForm.get('name')?.invalid && businessForm.get('name')?.touched" class="mandatory">
+            <small *ngIf="businessForm.get('name')?.hasError('required')">Business name is required.</small>
+            <small *ngIf="businessForm.get('name')?.hasError('pattern')">Only letters and spaces are allowed.</small>
+          </div>
+        </div>
+    
+        <!-- Owner Name -->
+        <div class="form-group mb-3">
+          <label for="owner" class="form-label">Owner Name <span class="mandatory">*</span></label>
+          <input
+            id="owner"
+            type="text"
+            pInputText
+            formControlName="owner"
+            placeholder="Enter Owner Name"
+            class="form-control"
+          />
+          <div *ngIf="businessForm.get('owner')?.invalid && businessForm.get('owner')?.touched" class="mandatory">
+            <small *ngIf="businessForm.get('owner')?.hasError('required')">Owner name is required.</small>
+            <small *ngIf="businessForm.get('owner')?.hasError('pattern')">Only letters and spaces are allowed.</small>
+          </div>
+        </div>
+    
+        <!-- Email -->
+        <div class="form-group mb-3">
+          <label for="email" class="form-label">Email <span class="mandatory">*</span></label>
+          <input
+            id="email"
+            type="email"
+            pInputText
+            formControlName="email"
+            placeholder="Enter Email Address"
+            class="form-control"
+          />
+          <div *ngIf="businessForm.get('email')?.invalid && businessForm.get('email')?.touched" class="mandatory">
+            <small *ngIf="businessForm.get('email')?.hasError('required')">Email is required.</small>
+            <small *ngIf="businessForm.get('email')?.hasError('email')">Enter a valid email address.</small>
+          </div>
+        </div>
+    
+        <!-- Phone -->
+        <div class="form-group mb-3">
+          <label for="phone" class="form-label">Phone Number <span class="mandatory">*</span></label>
+          <input
+            id="phone"
+            type="text"
+            pInputText
+            formControlName="phone"
+            placeholder="Enter Phone Number"
+            maxlength="10"
+            class="form-control"
+          />
+          <div *ngIf="businessForm.get('phone')?.invalid && businessForm.get('phone')?.touched" class="mandatory">
+            <small *ngIf="businessForm.get('phone')?.hasError('required')">Phone number is required.</small>
+            <small *ngIf="businessForm.get('phone')?.hasError('pattern')">Enter only numbers.</small>
+            <small *ngIf="businessForm.get('phone')?.hasError('maxlength')">Phone number must be 10 digits.</small>
+          </div>
+        </div>
+    
+        <!-- Address -->
+        <div class="form-group mb-3">
+          <label for="address" class="form-label">Address <span class="mandatory">*</span></label>
+        
+          <input
+          id="address"
+          type="text"
+          pInputText
+          formControlName="address"
+          placeholder="Enter Business Address"
+          class="form-control"
+        />
+          <div *ngIf="businessForm.get('address')?.invalid && businessForm.get('address')?.touched" class="mandatory">
+            <small>Address is required.</small>
+          </div>
+        </div>
+    
+        <!-- City -->
+        <div class="form-group mb-3">
+          <label for="city" class="form-label">City <span class="mandatory">*</span></label>
+          <input
+            id="city"
+            type="text"
+            pInputText
+            formControlName="city"
+            placeholder="Enter City"
+            class="form-control"
+          />
+          <div *ngIf="businessForm.get('city')?.invalid && businessForm.get('city')?.touched" class="mandatory">
+            <small>City is required.</small>
+          </div>
+        </div>
+    
+        <!-- Pincode -->
+        <div class="form-group mb-3">
+          <label for="pincode" class="form-label">Pincode <span class="mandatory">*</span></label>
+          <input
+            id="pincode"
+            type="text"
+            pInputText
+            formControlName="pincode"
+            placeholder="Enter Pincode"
+            maxlength="6"
+            class="form-control"
+          />
+          <div *ngIf="businessForm.get('pincode')?.invalid && businessForm.get('pincode')?.touched" class="mandatory">
+            <small *ngIf="businessForm.get('pincode')?.hasError('pattern')">Pincode must be 6 digits.</small>
+          </div>
+        </div>
+    
+        <!-- State -->
+        <div class="form-group mb-3">
+          <label for="state_id" class="form-label">State <span class="mandatory">*</span></label>
+          <div class="w-100">
+
+              <p-select [options]="listofState"  optionValue="id"   formControlName="state_id" optionLabel="name" placeholder="Select a City" class="w-full md:w-100 " />
+          </div>
+
+          <!-- <input
+            id="state_id"
+            type="text"
+            pInputText
+            formControlName="state_id"
+            placeholder="Enter State"
+            class="form-control"
+          /> -->
+          <div *ngIf="businessForm.get('state_id')?.invalid && businessForm.get('state_id')?.touched" class="mandatory">
+            <small>State is required.</small>
+          </div>
+        </div>
+    
+        <!-- GST Registration -->
+        <!-- <div class="form-group mb-3">
+          <label for="gst_registration" class="form-label">GST Registration</label>
+          <select
+            id="gst_registration"
+            formControlName="gst_registration"
+            class="form-control"
+          >
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+          </select>
+        </div> -->
+    
+        <!-- GST Number -->
+        <!-- <div class="form-group mb-3">
+          <label for="gst_number" class="form-label">GST Number</label>
+          <input
+            id="gst_number"
+            type="text"
+            pInputText
+            formControlName="gst_number"
+            placeholder="Enter GST Number"
+            class="form-control"
+          />
+        </div> -->
+    
+        <!-- Logo Upload -->
+        <div class="form-group mb-3">
+          <!-- <label for="logo_image" class="form-label">Logo</label> -->
+          <!-- <input
+            id="logo_image"
+            type="file"
+            formControlName="logo_image"
+            class="form-control"
+          /> -->
+          <div class="card flex justify-center">
+            <!-- <div class="col-12 d-flex align-items-center justify-content-center pt-2">                                        
+                <button type="button" class="btn   text-xs font-weight-bold" (click)="file.click()"><input type="file" accept="image/*" (change)="picUploads($event)" #file style="display: none;" />Upload Logo<span class="mandatory"></span></button>
+            </div> -->
+
+         <!-- <p-toast />
+            <p-fileupload mode="basic"   formControlName="logo_image"  chooseIcon="pi pi-upload"  accept="image/*" maxFileSize="1000000" (onUpload)="picUploads($event)" [auto]="true" chooseLabel="Browse" />  -->
+        </div>
+        
+        </div>
+    
+        <!-- Submit Button -->
+        <div class="text-center mt-4">
+          <button
+            pButton
+            type="submit"
+            label="Submit"
+            class="p-button-primary"
+            [disabled]="businessForm.invalid"
+          ></button>
+        </div>
+    </div>
+      </form>
+    
+
+ </div>
+    
+    
+
+      

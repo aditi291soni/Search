@@ -91,7 +91,34 @@ export class ApiService {
       );
    }
 
+   getBusinessList(superAdminId: string): Observable<any> {
+      const payload = { super_admin_id: superAdminId }; // Add super_admin_id to payload
+      return this.http.post(`${this.baseUrl}/list-of-business`, payload, this.getHttpOptions()).pipe(
+         catchError((error) => {
+            console.error('Error fetching the list of business:', error); // Log error for debugging
+            return throwError(() => new Error('Failed to fetch the list of business')); // Return a user-friendly error message
+         })
+      );
+   }
 
+   getStateList(countryId: string): Observable<any> {
+      const payload = { country_id: countryId }; // Add super_admin_id to payload
+      return this.http.get(`${this.baseUrl}/states?country_id=101`,this.getHttpOptions()).pipe(
+         catchError((error) => {
+            console.error('Error fetching the list of business:', error); // Log error for debugging
+            return throwError(() => new Error('Failed to fetch the list of business')); // Return a user-friendly error message
+         })
+      );
+   }
+   addBusiness(params: Object): Observable<any> {
+     
+      return this.http.post(`${this.baseUrl}/add-business`, params, this.getHttpOptions()).pipe(
+         catchError((error) => {
+            console.error('Error fetching the list of business:', error); // Log error for debugging
+            return throwError(() => new Error('Failed to fetch the list of business')); // Return a user-friendly error message
+         })
+      );
+   }
    /**
     * Helper method to retrieve HTTP options with the authorization token.
     * 
@@ -106,4 +133,15 @@ export class ApiService {
          }),
       };
    }
+   getLocalValueInJSON(value: any) {
+      let localValueInString = JSON.stringify(value);
+      try {
+        let localValueConvertInJSONFormat = JSON.parse(localValueInString);      
+        // console.log(localValueConvertInJSONFormat);
+        return JSON.parse(localValueConvertInJSONFormat);
+      } catch (error:any) {
+        // console.error("Error parsing JSON:", error.message);
+        console.error("Error parsing JSON:", error);
+      }
+    }
 }
