@@ -213,6 +213,7 @@
 
    .sidebar {
       position: absolute;
+      z-index: 99999;
       top: 60px;
       height: calc(100vh - 60px);
       transform: translateX(-100%);
