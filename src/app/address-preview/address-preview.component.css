@@ -1,0 +1,61 @@
+.recent-order-item {
+   border: 1px solid var(--primary-light);
+   border-radius: 8px;
+   padding: 12px;
+   margin-top: 10px;
+   position: relative;
+}
+
+.thin {
+   font-weight: 300;
+   font-size: 16px;
+}
+
+.recent-order-flex {
+   display: flex;
+   align-items: center;
+   gap: 10px;
+}
+
+.header {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+}
+
+.add {
+   font-size: 14px;
+   font-weight: 600;
+}
+
+.icon {
+   color: var(--primary-color);
+   font-size: 1.2rem;
+}
+
+.container {
+   display: grid;
+   grid-template-columns: repeat(3, 1fr);
+   gap: 12px;
+}
+
+.address {
+   font-size: 0.9rem;
+   color: gray;
+}
+
+.timeline {
+   border-left: 2px dotted gray;
+   height: 20px;
+   margin: 10px 8px;
+}
+
+.text-center {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.ml-5{
+   margin-right: 10px;
+}

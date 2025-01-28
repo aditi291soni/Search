@@ -1,1 +1,72 @@
-<p>address-preview works!</p>
+<h2>Order Preview</h2>
+<div class="thin">Preview your order</div>
+<br>
+
+<div class="header">
+   <h4>Pickup and Drop Location</h4>
+   <h4 class="add">Distance 4.4 KM</h4>
+</div>
+
+<div class="recent-order-item">
+   <!-- Pickup Location -->
+   <div class="recent-order-flex">
+      <i class="pi pi-map-marker icon"></i>
+      <div>
+         <div class="add">Collect From:- {{ pickup.name }} ({{ pickup.phone }})</div>
+         <div class="address">{{ pickup.address }}</div>
+      </div>
+   </div>
+
+   <div class="timeline"></div>
+
+   <!-- Drop Location -->
+   <div class="recent-order-flex">
+      <i class="pi pi-map-marker icon"></i>
+      <div>
+         <div class="add">Drop To :- {{ drop.name }} ({{ drop.phone }})</div>
+         <div class="address">{{ drop.address }}</div>
+      </div>
+   </div>
+</div>
+
+<br>
+
+<!-- Delivery Types -->
+<h4>Delivery Type</h4>
+<div class="recent-order-item">
+   <div class="header">
+      <h4>Express Delivery</h4>
+      <h4>INR 458.00</h4>
+   </div>
+   <div>Pickup in 70 minutes.</div>
+</div>
+<div class="recent-order-item">
+   <div class="header">
+      <h4>Express Delivery</h4>
+      <h4>INR 458.00</h4>
+   </div>
+   <div>Pickup in 70 minutes.</div>
+</div>
+<br>
+
+<!-- Payment Modes -->
+<h4>Payment Modes</h4>
+<div class="container">
+   <div class="recent-order-item">
+      <i class="pi pi-credit-card"></i> Online
+   </div>
+   <div class="recent-order-item">
+      <i class="pi pi-wallet"></i> Wallet
+   </div>
+   <div class="recent-order-item">
+      <i class="pi pi-money-bill"></i> Cash
+   </div>
+</div>
+<br>
+<br>
+<div class="text-center">
+   <div class="space">
+      <button pButton class="p-button-outlined p-button-danger ml-5" label="Cancel"></button>
+      <button pButton type="submit" label="Submit"></button>
+   </div>
+</div>
