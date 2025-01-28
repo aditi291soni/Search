@@ -3,32 +3,45 @@
       <h2>All Orders</h2>
       <div class="thin">List of all your orders</div>
    </div>
-   <button routerLink="/orders/new-order" pButton type="button" icon="pi pi-plus" label="New Order" class="p-button-outlined p-button-secondary"></button>
+   <button routerLink="/orders/new-order" pButton type="button" icon="pi pi-plus" label="New Order"
+      class="p-button-outlined p-button-secondary"></button>
 </div>
 <br>
 
 <div class="recent-orders-container" *ngIf="!loading">
-   <div class="recent-order-item"  *ngFor="let order of order">
+   <div class="recent-order-item" *ngFor="let order of order">
       <div class="recent-order-flex">
          <div>
-            <div class="subtext2">Drop Address</div>
-            <div class="maintext">{{order.drop_name | titlecase}}</div>
-            <div class="subtext2">{{order.drop_mobile}}</div>
-            <div class="subtext2 mt-2">Pickup Address</div>
-            <div class="maintext">{{order.pickup_name | titlecase}}</div>
-            <div class="subtext2">{{order.pickup_mobile}}</div>
+            <div class="subtext2">Drop Person</div>
+            <div class="maintext">{{ order.drop_name | titlecase }}</div>
+            <div class="mb">{{ order.drop_mobile }}</div>
+            <div class="subtext2 mt-2">Pickup Person</div>
+            <div class="maintext">{{ order.pickup_name | titlecase }}</div>
+            <div>{{ order.pickup_mobile }}</div>
          </div>
          <div class="order-no">
             <div class="subtext2">Order No.</div>
-            <div class="maintext2">#{{order.order_no}}</div>
+            <div class="maintext2">#{{ order.order_no }}</div>
          </div>
       </div>
-      <!-- <div class="recent-order-flex">
-         <div class="address">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-         </div>
-         <button severity="warn" pButton type="button" label="Pending" class="p-button-outlined" size="small"></button>
-      </div> -->
    </div>
+</div>
 
+<!-- Skeleton loader for recent orders -->
+<div class="recent-orders-container" *ngIf="loading">
+   <div class="recent-order-item" *ngFor="let i of [0, 1, 2, 3]">
+      <div class="recent-order-flex">
+         <div>
+            <p-skeleton width="100px" height="16px" styleClass="mb-1"></p-skeleton>
+            <p-skeleton width="200px" height="24px" styleClass="mb-1"></p-skeleton>
+            <p-skeleton width="150px" height="16px"></p-skeleton>
+            <p-skeleton width="100px" height="16px" styleClass="mt-2"></p-skeleton>
+            <p-skeleton width="200px" height="24px"></p-skeleton>
+         </div>
+         <div class="order-no">
+            <p-skeleton width="80px" height="16px" styleClass="mb-1"></p-skeleton>
+            <p-skeleton width="100px" height="24px"></p-skeleton>
+         </div>
+      </div>
+   </div>
 </div>

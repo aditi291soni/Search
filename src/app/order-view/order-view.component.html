@@ -1,0 +1,138 @@
+<h2>Order Details</h2>
+<div class="thin">Details of your order</div>
+<br>
+<div>
+   <h4>Order Information</h4>
+   <h4 class="add">Describes your order details</h4>
+</div>
+
+<div class="recent-order-item">
+   <div class="main-container">
+      <div class="left">
+         <div class="header">Order No.</div>
+         <div class="strong">#103</div>
+      </div>
+      <div class="right">
+         <div class="header">Payment Status</div>
+         <div class="strong error">Unpaid</div>
+      </div>
+   </div>
+
+   <div class="main-container">
+      <div class="left">
+         <div class="header">Drop Person</div>
+         <div class="strong">Aditi Soni</div>
+      </div>
+      <div class="right">
+         <div class="header">Phone Number</div>
+         <div class="strong">9876543210</div>
+      </div>
+   </div>
+
+   <div class="main-container">
+      <div class="left">
+         <div class="header">Pickup Person</div>
+         <div class="strong">Yash Soni</div>
+      </div>
+      <div class="right">
+         <div class="header">Phone Number</div>
+         <div class="strong">9876543210</div>
+      </div>
+   </div>
+
+   <div class="main-container">
+      <div class="left">
+         <div class="header">Delivery Type</div>
+         <div class="strong">Express</div>
+      </div>
+      <div class="right">
+         <div class="header">Time Slot</div>
+         <div class="strong">10:00</div>
+      </div>
+   </div>
+
+   <div class="main-container">
+      <div class="left">
+         <div class="header">Amount</div>
+         <div class="strong">4000 INR</div>
+      </div>
+      <div class="right">
+         <div class="header">Payment Mode</div>
+         <div class="strong">Cash</div>
+      </div>
+   </div>
+</div>
+
+<div>
+   <h4>Rider Information</h4>
+   <h4 class="add">Describes rider details allotted to order</h4>
+   <div class="recent-order-item">
+      <div class="main-container">
+         <div class="left">
+            <div class="header">Rider Name</div>
+            <div class="strong">Yash Soni</div>
+         </div>
+         <div class="right-icons">
+            <!-- Phone Button -->
+            <div class="first">
+               <button pButton type="button" class="custom-button">
+                  <i class="pi pi-phone"></i>
+               </button>
+            </div>
+            <!-- Message Button -->
+            <div>
+               <button pButton type="button" class="custom-button">
+                  <i class="pi pi-envelope"></i>
+               </button>
+            </div>
+         </div>
+      </div>
+   </div>
+
+</div>
+
+<div>
+   <h4>Pickup and Drop Locations</h4>
+   <h4 class="add">Describes your order pickup and drop addresses</h4>
+</div>
+<div class="recent-order-item">
+   <!-- Pickup Location -->
+   <div class="recent-order-flex">
+      <i class="pi pi-map-marker icon"></i>
+      <div>
+         <div class="add">Collect From:</div>
+         <div class="address">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur, inventore?
+         </div>
+      </div>
+   </div>
+
+   <div class="timeline"></div>
+
+   <!-- Drop Location -->
+   <div class="recent-order-flex">
+      <i class="pi pi-map-marker icon"></i>
+      <div>
+         <div class="add">Drop To: </div>
+         <div class="address">
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aspernatur, molestiae?
+         </div>
+      </div>
+   </div>
+</div>
+
+<div>
+   <h4>Track Order</h4>
+   <h4 class="add">Describes your order current position</h4>
+</div>
+<div class="time-con">
+   <p-timeline [value]="events" layout="horizontal" class="small-timeline">
+      <ng-template pTemplate="content" let-event>
+         <div class="p-d-flex p-ai-center">
+            <div class="p-mr-2">
+               <b>{{ event.status }}</b>
+            </div>
+         </div>
+      </ng-template>
+   </p-timeline>
+</div>

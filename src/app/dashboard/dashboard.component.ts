@@ -36,14 +36,14 @@ export class DashboardComponent implements OnInit {
       this.userInfo = this.apiService.getLocalValueInJSON(localStorage.getItem('userInfo'));
       this.businessDetails = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
 
-    }
+   }
 
    /**
     * Lifecycle hook that runs after the component is initialized.
     * Initiates fetching the business list and manages the loading state.
     */
    ngOnInit(): void {
-     this.fetchOrderList();
+      this.fetchOrderList();
    }
 
    /**
@@ -51,15 +51,15 @@ export class DashboardComponent implements OnInit {
     */
    fetchOrderList(): void {
       this.loading = true;
-      let payload :any = {};
-      payload.business_id= this.businessDetails.id;
-      payload.per_page=3
-      payload.page=1
-      
+      let payload: any = {};
+      payload.business_id = this.businessDetails.id;
+      payload.per_page = 3
+      payload.page = 1
+
       this.apiService.getOrderList(payload).subscribe({
          next: (response) => {
             if (response.status === true) {
-         this.order=response.data;
+               this.order = response.data;
             } else {
                console.error('Error fetching list of business:', response.message);
                this.loading = false;

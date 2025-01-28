@@ -1,0 +1,87 @@
+.recent-order-item {
+   border: 1px solid var(--primary-light);
+   border-radius: 8px;
+   padding: 12px;
+   margin-top: 8px;
+   position: relative;
+   margin-bottom: 20px;
+}
+
+.thin {
+   font-weight: 300;
+   font-size: 16px;
+}
+
+.recent-order-flex {
+   display: flex;
+   align-items: center;
+   gap: 10px;
+}
+
+.header {
+   font-size: small;
+}
+
+.right-icons {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+}
+
+.main-container {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   margin-bottom: 8px;
+}
+
+.left {
+   text-align: start;
+}
+
+.first {
+   margin-right: 10px;
+}
+
+.right {
+   text-align: end;
+}
+
+.strong {
+   font-weight: 600;
+}
+
+.add {
+   font-size: 16px;
+   font-weight: 400;
+}
+
+.custom-button {
+   background-color: var(--primary-main);
+   /* Use your primary color */
+   color: white;
+   border: none;
+   padding: 0.5rem 1rem;
+}
+
+.custom-button i {
+   color: white;
+   /* Ensure the icon is white */
+}
+
+.custom-button:hover {
+   opacity: 0.8;
+   /* Optional hover effect */
+}
+
+.address {
+   font-size: 0.7rem;
+   color: gray;
+}
+
+
+.timeline {
+   border-left: 2px dotted gray;
+   height: 20px;
+   margin: 10px 8px;
+}
