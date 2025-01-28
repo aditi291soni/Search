@@ -1,4 +1,4 @@
-<form [formGroup]="form" (ngSubmit)="submitForm()">
+<form [formGroup]="form" >
    <div *ngIf="loading" class="full-page-skeleton">
       <p-skeleton [width]="'100%'" [height]="'3rem'" class="heading-skeleton"></p-skeleton>
       <div *ngFor="let i of [1, 2, 3, 4]" class="card-skeleton">
@@ -25,48 +25,48 @@
       </div>
 
       <h3>Select Pickup Location<span class="mandatory">*</span></h3>
-      <div *ngIf="!selectedPickup" class="card-container">
-         <input class="mb" pInputText type="text" placeholder="Pickup Address" formControlName="pickupLocation"
+      <div *ngIf="!pickupLocation" class="card-container">
+         <input class="mb" pInputText type="text" placeholder="Pickup Address" 
             (click)="navigateToPickupSelect()" />
          <button pButton type="button" icon="pi pi-map-marker" label="Select on Map" class="map-button"></button>
       </div>
-      <div *ngIf="selectedPickup" class="address-card">
+      <div *ngIf="pickupLocation" class="address-card">
          <div class="address-info">
             <div class="personal-info">
                <div>
-                  <div class="personal-info-text">{{ selectedPickup.person_name }}</div>
-                  <div class="mb-6">{{ selectedPickup.person_phone_no }}</div>
+                  <div class="personal-info-text">{{ pickupLocation.person_name }}</div>
+                  <div class="mb-6">{{ pickupLocation.person_phone_no }}</div>
                </div>
                <!-- Close Button for Pickup -->
                <button class="close-button" (click)="clearPickupAddress()">
                   <i class="pi pi-times"></i> <!-- PrimeNG Close Icon -->
                </button>
             </div>
-            <p>{{ selectedPickup.house_no }}, {{ selectedPickup.landmark }}</p>
-            <p>{{ selectedPickup.address_details }}</p>
+            <p>{{ pickupLocation.house_no }}, {{ pickupLocation.landmark }}</p>
+            <p>{{ pickupLocation.address_details }}</p>
          </div>
       </div>
 
       <h3>Select Drop Location<span class="mandatory">*</span></h3>
-      <div *ngIf="!selectedDrop" class="card-container">
-         <input class="mb" pInputText type="text" placeholder="Drop Address" formControlName="dropLocation"
+      <div *ngIf="!dropLocation" class="card-container">
+         <input class="mb" pInputText type="text" placeholder="Drop Address" 
             (click)="navigateToDropSelect()" />
          <button pButton type="button" icon="pi pi-map-marker" label="Select on Map" class="map-button"></button>
       </div>
-      <div *ngIf="selectedDrop" class="address-card">
+      <div *ngIf="dropLocation" class="address-card">
          <div class="address-info">
             <div class="personal-info">
                <div>
-                  <div class="personal-info-text">{{ selectedDrop.person_name }}</div>
-                  <div class="mb-6">{{ selectedDrop.person_phone_no }}</div>
+                  <div class="personal-info-text">{{ dropLocation.person_name }}</div>
+                  <div class="mb-6">{{ dropLocation.person_phone_no }}</div>
                </div>
                <!-- Close Button for Drop -->
                <button class="close-button" (click)="clearDropAddress()">
                   <i class="pi pi-times"></i> <!-- PrimeNG Close Icon -->
                </button>
             </div>
-            <p>{{ selectedDrop.house_no }}, {{ selectedDrop.landmark }}</p>
-            <p>{{ selectedDrop.address_details }}</p>
+            <p>{{ dropLocation.house_no }}, {{ dropLocation.landmark }}</p>
+            <p>{{ dropLocation.address_details }}</p>
          </div>
       </div>
 
@@ -78,7 +78,7 @@
 
       <div class="bottom-buttons">
          <button pButton type="button" label="Cancel" class="p-button-outlined p-button-danger"></button>
-         <button pButton type="submit" label="Continue" class="p-button-contained p-button-success"></button>
+         <button pButton type="submit" label="Continue" class="p-button-contained p-button-success" (click)="calculateDistanceNews()"></button>
       </div>
    </div>
 </form>

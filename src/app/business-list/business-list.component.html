@@ -12,7 +12,7 @@
  
  <div class="card-container">
     <!-- Card 1 -->
-    <p-card *ngFor="let business of businessList">
+    <p-card *ngFor="let business of businessList" (click)="onBusinessClick(business)" class="business-card">
        <div class="customer-card">
         <p-avatar 
         *ngIf="business.image" 

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { AvatarModule } from 'primeng/avatar';
@@ -18,7 +18,7 @@ export class BusinessListComponent {
   loading: boolean = true; 
 //  @param {ApiService} apiService
    
-   constructor(private apiService: ApiService,private route: ActivatedRoute) { }
+   constructor(private apiService: ApiService,private route: ActivatedRoute, private router: Router,) { }
 
    ngOnInit(): void {
       this.fetchBusinessList();
@@ -43,5 +43,8 @@ export class BusinessListComponent {
            },
         });
      }
-  
+     onBusinessClick(business:any){
+      localStorage.setItem('bussinessDetails', JSON.stringify(business));
+      this.router.navigate(['/dashboard']);
+     } 
 }

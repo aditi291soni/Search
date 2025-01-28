@@ -23,34 +23,43 @@ export class DashboardComponent implements OnInit {
     * Indicates whether data is currently loading.
     * @type {boolean}
     */
-   loading: boolean = true;
+   loading: boolean = false;
+   userInfo: any;
+   businessDetails: any;
+   order: any;
 
    /**
     * Creates an instance of DashboardComponent.
     * @param {ApiService} apiService - The service to interact with the API.
     */
-   constructor(private apiService: ApiService) { }
+   constructor(private apiService: ApiService) {
+      this.userInfo = this.apiService.getLocalValueInJSON(localStorage.getItem('userInfo'));
+      this.businessDetails = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
+
+    }
 
    /**
     * Lifecycle hook that runs after the component is initialized.
     * Initiates fetching the business list and manages the loading state.
     */
    ngOnInit(): void {
-      this.fetchBusinessList();
+     this.fetchOrderList();
    }
 
    /**
     * Fetches the list of businesses from the API and updates the component state.
     */
-   fetchBusinessList(): void {
+   fetchOrderList(): void {
       this.loading = true;
-      this.apiService.getListOfBusinesses().subscribe({
+      let payload :any = {};
+      payload.business_id= this.businessDetails.id;
+      payload.per_page=3
+      payload.page=1
+      
+      this.apiService.getOrderList(payload).subscribe({
          next: (response) => {
             if (response.status === true) {
-               this.business = response.data || [];
-               const defaultBusiness = this.business.find((i) => i.id === 837);
-               // TODO: Setting 488 as default Business. Change it to the default business id.
-               localStorage.setItem('defaultBusiness', JSON.stringify(defaultBusiness));
+         this.order=response.data;
             } else {
                console.error('Error fetching list of business:', response.message);
                this.loading = false;

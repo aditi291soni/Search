@@ -44,7 +44,7 @@ export class AddressSelectComponent {
     * If a business ID is not found in localStorage, logs an error and stops loading.
     */
    fetchAddressList(): void {
-      const business = localStorage.getItem('defaultBusiness');
+      const business = localStorage.getItem('bussinessDetails');
       const businessId = business ? JSON.parse(business).id : null;
 
       if (!businessId) {

@@ -14,6 +14,7 @@ import { ToastNotificationService } from '../services/toast-notification.service
  */
 @Component({
    selector: 'app-signin',
+   standalone: true,
    templateUrl: './signin.component.html',
    styleUrls: ['./signin.component.css'],
    imports: [CardModule, FormsModule, ButtonModule, InputTextModule],
@@ -27,6 +28,7 @@ export class SigninComponent {
 
    /** State to track whether the API call is in progress */
    loading: boolean = false;
+   business: any[] = [];
 
    /**
     * Constructor to inject required services.
@@ -65,21 +67,21 @@ export class SigninComponent {
 
                // Show success notification
                this.toastService.showSuccess('Login successful!');
-
+this.fetchBusinessList()
                if (response.data && response.data.business_id && response.data.business_id.length > 0) {
-                  
-                  const businessIdLength = response.data.business_id.length;
 
-                  if (businessIdLength == 0) {
-                    // Redirect to the "Add Business" page
-                    this.router.navigate(['/add-business']);
-                  } else if (businessIdLength == 1) {
-                    // Redirect to the Dashboard page
-                    this.router.navigate(['/dashboard']);
-                  } else {
-                    // Redirect to the "List of Businesses" page
-                    this.router.navigate(['/list-of-business']);
-                  }
+                  // const businessIdLength = response.data.business_id.length;
+
+                  // if (businessIdLength == 0) {
+                  //    // Redirect to the "Add Business" page
+                  //    this.router.navigate(['/add-business']);
+                  // } else if (businessIdLength == 1) {
+                  //    // Redirect to the Dashboard page
+                  //    this.router.navigate(['/dashboard']);
+                  // } else {
+                  //    // Redirect to the "List of Businesses" page
+                  //    this.router.navigate(['/list-of-business']);
+                  // }
                } else {
                   // TODO: Redirect to the business setup page
                   // this.router.navigate(['/business-setup']);
@@ -102,6 +104,37 @@ export class SigninComponent {
          },
          complete: () => {
             // Stop the loading state when the API call is complete
+            this.loading = false;
+         },
+      });
+   }
+   fetchBusinessList(): void {
+      this.loading = true;
+      this.apiService.getListOfBusinesses().subscribe({
+         next: (response) => {
+            if (response.status === true) {
+               this.business = response.data || [];
+
+               if (this.business.length == 0) {
+                  // Redirect to the "Add Business" page
+                  this.router.navigate(['/add-business']);
+               } else if (this.business.length == 1) {
+                  // Redirect to the Dashboard page
+                  localStorage.setItem('bussinessDetails', JSON.stringify(this.business[0]));
+                  this.router.navigate(['/dashboard']);
+               } else {
+                  // Redirect to the "List of Businesses" page
+                  this.router.navigate(['/list-of-business']);
+               }
+            } else {
+               console.error('Error fetching list of business:', response.message);
+               this.loading = false;
+            }
+         },
+         error: (err) => {
+            console.error('Error fetching list of business:', err);
+         },
+         complete: () => {
             this.loading = false;
          },
       });
