@@ -12,8 +12,9 @@
    <div class="recent-order-flex">
       <i class="pi pi-map-marker icon"></i>
       <div>
-         <div class="add">Collect From:- {{ pickupLocation.person_name |titlecase}}({{pickupLocation.person_phone_no }} )</div>
-         <div class="address">{{pickupLocation.house_no}}{{ pickupLocation.address_details }}</div>
+         <div class="add">Collect From:- {{ pickupLocation.person_name | titlecase}}({{pickupLocation.person_phone_no
+            }})</div>
+         <div class="address">{{ pickupLocation.house_no }}{{ pickupLocation.address_details }}</div>
       </div>
    </div>
 
@@ -33,24 +34,26 @@
 
 <!-- Delivery Types -->
 <h4>Delivery Type</h4>
-<div class="recent-order-item"  *ngFor="let delivery of deliveryList" (click)="onDeliveryTypeSelect(delivery)" [class.selected]="selectedDeliveryType === delivery.id" >
-   <div class="header" *ngIf="delivery?.pickup">
-      <h4>{{delivery.delivery_name}}</h4>
-      <h4>{{this.businessDetails.currency_symbol}} {{delivery.price | number: '1.2-2'}} </h4>
+<div class="grid-3">
+   <div class="recent-order-item hovered" *ngFor="let delivery of deliveryList" (click)="onDeliveryTypeSelect(delivery)"
+      [class.selected]="selectedDeliveryType === delivery.id">
+      <div class="header" *ngIf="delivery?.pickup">
+         <h4>{{delivery.delivery_name}}</h4>
+         <h4>{{this.businessDetails.currency_symbol}} {{delivery.price | number: '1.2-2'}} </h4>
+      </div>
+      <div>{{delivery.pickup_label}}{{delivery.eta}}.</div>
    </div>
-   <div>{{delivery.pickup_label}}{{delivery.eta}}.</div>
 </div>
-
-<p-select *ngIf="timeslot === '1'"  
-          [options]="timeSlot" 
-          optionValue="id" 
-          optionLabel="slot_name" 
-          placeholder="Select Time Slot" 
-          class="w-full">
-</p-select>
-
-
 <br>
+
+<!-- Payment Modes -->
+<h4 *ngIf="timeslot === '1'">Select Time Slot</h4>
+<div>
+   <p-select *ngIf="timeslot === '1'" [options]="timeSlot" optionValue="id" optionLabel="slot_name"
+      placeholder="Select Time Slot" class="w-full">
+   </p-select>
+</div>
+<br *ngIf="timeslot === '1'">
 
 <!-- Payment Modes -->
 <h4>Payment Modes</h4>

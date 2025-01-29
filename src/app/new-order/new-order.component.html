@@ -1,4 +1,4 @@
-<form [formGroup]="form" >
+<form [formGroup]="form">
    <div *ngIf="loading" class="full-page-skeleton">
       <p-skeleton [width]="'100%'" [height]="'3rem'" class="heading-skeleton"></p-skeleton>
       <div *ngFor="let i of [1, 2, 3, 4]" class="card-skeleton">
@@ -26,8 +26,7 @@
 
       <h3>Select Pickup Location<span class="mandatory">*</span></h3>
       <div *ngIf="!pickupLocation" class="card-container">
-         <input class="mb" pInputText type="text" placeholder="Pickup Address" 
-            (click)="navigateToPickupSelect()" />
+         <input class="mb" pInputText type="text" placeholder="Pickup Address" (click)="navigateToPickupSelect()" />
          <button pButton type="button" icon="pi pi-map-marker" label="Select on Map" class="map-button"></button>
       </div>
       <div *ngIf="pickupLocation" class="address-card">
@@ -49,8 +48,7 @@
 
       <h3>Select Drop Location<span class="mandatory">*</span></h3>
       <div *ngIf="!dropLocation" class="card-container">
-         <input class="mb" pInputText type="text" placeholder="Drop Address" 
-            (click)="navigateToDropSelect()" />
+         <input class="mb" pInputText type="text" placeholder="Drop Address" (click)="navigateToDropSelect()" />
          <button pButton type="button" icon="pi pi-map-marker" label="Select on Map" class="map-button"></button>
       </div>
       <div *ngIf="dropLocation" class="address-card">
@@ -71,14 +69,25 @@
       </div>
 
       <h3>Enter Parcel Details</h3>
+      <div class="categories">
+         <div class="c-item">Food</div>
+         <div class="c-item">Book</div>
+         <div class="c-item">Medicines</div>
+         <div class="c-item">Documents</div>
+         <div class="c-item">Grocery</div>
+         <div class="c-item">Cake</div>
+         <div class="c-item">Other</div>
+      </div>
+
       <div class="card-container">
-         <input class="mb" pInputText type="text" placeholder="Parcel Weight" formControlName="parcelWeight" />
-         <input pInputText type="text" placeholder="Parcel Description" formControlName="parcelDescription" />
+         <input class="mb" pInputText type="text" placeholder="Parcel Details" formControlName="parcelWeight" />
+         <input pInputText type="text" placeholder="Instructions" formControlName="parcelDescription" />
       </div>
 
       <div class="bottom-buttons">
          <button pButton type="button" label="Cancel" class="p-button-outlined p-button-danger"></button>
-         <button pButton type="submit" label="Continue" class="p-button-contained p-button-success" (click)="calculateDistanceNews()"></button>
+         <button pButton type="submit" label="Continue" class="p-button-contained p-button-success"
+            (click)="calculateDistanceNews()"></button>
       </div>
    </div>
 </form>

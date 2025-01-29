@@ -19,6 +19,27 @@
    text-align: center;
 }
 
+.categories {
+   display: grid;
+   grid-template-columns: repeat(10, 1fr);
+   gap: 10px;
+   margin-top: 5px;
+   margin-bottom: 5px;
+}
+
+.c-item {
+   border: 1px solid var(--neutral-main);
+   padding: 5px;
+   min-width: 80px;
+   cursor: pointer;
+   text-align: center;
+   border-radius: 5px;
+}
+
+.c-item:hover {
+   box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.1);
+}
+
 .vehicle-card:hover {
    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
@@ -112,6 +133,14 @@
 
    .hidden {
       display: none;
+   }
+
+   .categories {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 5px;
+      margin-bottom: 5px;
    }
 }
 

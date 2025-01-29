@@ -6,11 +6,12 @@ import { ApiService } from '../services/api.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { Select } from 'primeng/select';
+import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
    selector: 'app-address-preview',
    standalone: true,
-   imports: [CommonModule, ButtonModule,Select],
+   imports: [CommonModule, ButtonModule, Select, SkeletonModule],
    templateUrl: './address-preview.component.html',
    styleUrls: ['./address-preview.component.css']
 })
@@ -111,10 +112,7 @@ export class AddressPreviewComponent {
          next: (response) => {
             if (response.status === true) {
                // this.deliveryList = response.data || [];
-            this.timeSlot = response.data
-
-
-
+               this.timeSlot = response.data
 
             } else {
                console.error('Error fetching vehicle types:', response.message);
