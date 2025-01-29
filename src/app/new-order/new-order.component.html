@@ -70,18 +70,18 @@
 
       <h3>Enter Parcel Details</h3>
       <div class="categories">
-         <div class="c-item">Food</div>
-         <div class="c-item">Book</div>
+         <div class="c-item" (click)="setParcel(category)" *ngFor="let category of categories">{{ category }}</div>
+         <!-- <div class="c-item">Book</div>
          <div class="c-item">Medicines</div>
          <div class="c-item">Documents</div>
          <div class="c-item">Grocery</div>
          <div class="c-item">Cake</div>
-         <div class="c-item">Other</div>
+         <div class="c-item">Other</div> -->
       </div>
 
       <div class="card-container">
-         <input class="mb" pInputText type="text" placeholder="Parcel Details" formControlName="parcelWeight" />
-         <input pInputText type="text" placeholder="Instructions" formControlName="parcelDescription" />
+         <input class="mb" pInputText type="text" placeholder="Parcel Details" formControlName="package_details" />
+         <input pInputText type="text" placeholder="Instructions" formControlName="instructions" />
       </div>
 
       <div class="bottom-buttons">

@@ -40,6 +40,8 @@ export class AddressPreviewComponent {
    selectedPayment: any;
    pay_on_pickup: string = '0';
    pay_on_delivery: string = '0';
+   selectedSlot: any;
+   order_status: any;
    constructor(private apiService: ApiService, private router: Router, private fb: FormBuilder, private route: ActivatedRoute) {
       this.pickupLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedPickup'));
       this.dropLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedDrop'));
@@ -200,6 +202,7 @@ export class AddressPreviewComponent {
 
    onDeliveryTypeSelect(value: any) {
       this.sub_total = value.price
+      this.order_status=value.order_status_id
       this.timeslot = value.time_slot
       // this.base_price=value.price.base_price
 
@@ -330,9 +333,8 @@ export class AddressPreviewComponent {
          console.log('Error in the catch block', error);
       }
    }
-   selectedSlot(selectedSlot: any): any {
-      throw new Error('Method not implemented.');
-   }
+ 
+  
    addTransaction(id: any) {
       const currentDate = new Date();
       const formattedDate = currentDate.toISOString().split('T')[0];
@@ -352,6 +354,7 @@ export class AddressPreviewComponent {
                // this.clearLocal()
                // this.addNotification()
                this.router.navigate(['/dashboard']);
+               this.clearLocal()
                // this.listofInvoice = ApiResponse.data;
                // if(  this.selectedPaymentType == 'cash'){}
                // else if(  this.selectedPaymentType == 'wallet'){}
@@ -376,6 +379,7 @@ export class AddressPreviewComponent {
       payload.business_id = this.businessDetails.id
       payload.order_delivery_details_id = id
       payload.status = 1
+      payload.order_status_id=this.order_status
       payload.delivery_type_id = this.selectedDeliveryType
       payload.order_value = this.sub_total
       payload.delivery_charges = this.sub_total
@@ -444,5 +448,10 @@ export class AddressPreviewComponent {
       } catch (error) {
          console.log('Error in the catch block', error);
       }
+   }
+   clearLocal() {
+      localStorage.removeItem('selectedPickup');
+      localStorage.removeItem('selectedDrop');
+      localStorage.removeItem('new-order');
    }
 }

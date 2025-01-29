@@ -5,6 +5,31 @@
 
 
 <div class="card-container">
+   <!-- Show skeleton loader when loading -->
+   <div *ngIf="loading">
+      <p-card *ngFor="let i of [0, 1, 2, 3]">
+         <div class="customer-card">
+            <p-avatar styleClass="skeleton-avatar" size="large" shape="circle">
+               <p-skeleton width="50px" height="50px" shape="circle"></p-skeleton>
+            </p-avatar>
+            <div class="customer-info">
+               <p-skeleton width="100px" height="16px" styleClass="mb-2"></p-skeleton>
+               <p-skeleton width="150px" height="16px"></p-skeleton>
+            </div>
+         </div>
+      </p-card>
+   </div>
 
-
+   <!-- Show actual content when not loading -->
+   <div *ngIf="!loading" >
+      <p-card *ngFor="let customer of transactionList"  >
+         <div class="customer-card">
+            <p-avatar [image]="customer.image" size="large" shape="circle"></p-avatar>
+            <div class="customer-info ">
+               <span class="customer-name" *ngIf="customer.dr_amount > 0 "> -{{ customer.dr_amount  }}</span>
+               <span class="customer-mobile" *ngIf="customer.cr_amont > 0 ">+{{ customer.cr_amont  }}</span>
+            </div>
+         </div>
+      </p-card>
+   </div>
 </div>

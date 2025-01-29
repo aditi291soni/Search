@@ -15,7 +15,7 @@ import { environment } from '../../environments/environment';
 })
 export class OrderViewComponent {
    events: any[];
-   order: any;
+   order: any=0;
    loading: boolean=false;
    invoice: any;
    invoiceId: any;
@@ -72,10 +72,10 @@ export class OrderViewComponent {
       this.getOrderStatus()
      
    }
-   getOrderDelivery(): void {
+   getOrderDelivery(id:any): void {
       let payload: any = {};
       payload.super_admin_id = environment.superAdminId;
-      payload.order_delivery_details_id = this.deliveryId;
+      payload.order_delivery_details_id = id;
       this.apiService.getOrderDeliveryDetail(payload).subscribe({
          next: (response) => {
             if (response.status === true) {
@@ -169,7 +169,7 @@ export class OrderViewComponent {
                if (response.status === true) {
                   this.invoice = response.data || [];
                   this.deliveryId = this.invoice.delivery_id;
-                  this.getOrderDelivery();
+                  this.getOrderDelivery(response.data.delivery_id);
                } else {
                   console.error('Error fetching vehicle types:', response.message);
                }

@@ -40,6 +40,8 @@ export class NewOrderComponent {
    private distanceMatrixService: google.maps.DistanceMatrixService
    distance: any;
    distanceResult: string = '';
+   categories: string[] = ['Food', 'Book', 'Medicines', 'Documents', 'Grocery', 'Cake', 'Other'];
+
    constructor(private apiService: ApiService, private router: Router, private fb: FormBuilder,) {
       this.distanceMatrixService = new google.maps.DistanceMatrixService();
       this.pickupLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedPickup'));
@@ -48,14 +50,14 @@ export class NewOrderComponent {
       this.newOrder = this.apiService.getLocalValueInJSON(localStorage.getItem('new-order'));
       this.form = this.fb.group({
          vehicleType: ['', Validators.required],
-         pickupLocation: [this.pickupLocation ? this.pickupLocation.house_no : '', Validators.required],
-         dropLocation: [this.dropLocation ? this.dropLocation.house_no : '', Validators.required],
-         parcelWeight: [''],
+         pickup_address: [this.pickupLocation ? this.pickupLocation.house_no : '', Validators.required],
+         drop_address: [this.dropLocation ? this.dropLocation.house_no : '', Validators.required],
+         instructions: [''],
          drop_longitude: [this.dropLocation?.long_val],
          drop_drop_latitude: [this.dropLocation?.lat_val],
          pick_pickup_latitude: [this.pickupLocation?.lat_val],
          pick_pickup_longitude: [this.pickupLocation?.long_val],
-         parcelDescription: [''],
+         package_details: [''],
          pickup_address_id: [this.pickupLocation ? this.pickupLocation.id : '', Validators.required],
          drop_address_id: [this.dropLocation ? this.dropLocation.id : '', Validators.required],
       });
@@ -66,23 +68,23 @@ export class NewOrderComponent {
       if (this.newOrder) {
          this.form.patchValue({
             vehicleType: this.newOrder.vehicleType,
-            pickupLocation: this.pickupLocation.address_details,
-            dropLocation: this.dropLocation.address_details,
-            parcelWeight: this.newOrder.parcelWeight,
-            parcelDescription: this.newOrder.parcelDescription,
+            pickup_address: this.pickupLocation.address_details,
+            drop_address: this.dropLocation.address_details,
+            instructions: this.newOrder.instructions,
+            package_details: this.newOrder.package_details,
          });
       }
       if (this.dropLocation) {
          this.form.patchValue({
 
-            dropLocation: this.dropLocation.address_details,
+            drop_address: this.dropLocation.address_details,
 
          });
       }
       if (this.pickupLocation) {
          this.form.patchValue({
 
-            pickupLocation: this.pickupLocation.address_details,
+            pickup_address: this.pickupLocation.address_details,
 
 
          });
@@ -114,7 +116,9 @@ export class NewOrderComponent {
       this.form.get('vehicleType')?.setValue(vehicleId);
       localStorage.setItem('new-order', JSON.stringify(this.form.value));
    }
-
+setParcel(category: string): void {
+   this.form.get('package_details')?.setValue(category);
+}
    addDelivery() {
 
       if (!this.form.valid) {

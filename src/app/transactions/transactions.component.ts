@@ -7,10 +7,12 @@ import { AvatarModule } from 'primeng/avatar';
 import { ApiService } from '../services/api.service';
 import { environment } from '../../environments/environment';
 import { CustomerService } from '../services/customer.service';
+import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
   selector: 'app-transactions',
-  imports: [],
+  imports: [SkeletonModule,CardModule, AvatarModule,ButtonModule,RouterModule,CommonModule],
+  standalone: true,
   templateUrl: './transactions.component.html',
   styleUrl: './transactions.component.css'
 })

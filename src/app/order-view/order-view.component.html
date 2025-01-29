@@ -10,33 +10,37 @@
    <div class="main-container">
       <div class="left">
          <div class="header">Order No.</div>
-         <div class="strong">#{{invoice.order_no}}</div>
+         <div class="strong">#{{invoice?.order_no ? invoice?.order_no :0}}</div>
       </div>
       <div class="right">
          <div class="header">Payment Status</div>
-         <div class="strong error">Unpaid</div>
+         
+         <!-- <div class="strong error">Unpaid</div> -->
+         <div class="strong error"  >{{this.invoice?.bill_status =='1'?'Paid' :'Unpaid'}}</div> 
+         <!-- <div class="strong error"  @if="this.invoice?.bill_status =='0'">Unpaid</div>  -->
+
       </div>
    </div>
 
    <div class="main-container">
       <div class="left">
          <div class="header">Drop Person</div>
-         <div class="strong">{{invoice.drop_name}}</div>
+         <div class="strong">{{invoice?.drop_name}}</div>
       </div>
       <div class="right">
          <div class="header">Phone Number</div>
-         <div class="strong">{{invoice.drop_mobile}}</div>
+         <div class="strong">{{invoice?.drop_mobile}}</div>
       </div>
    </div>
 
    <div class="main-container">
       <div class="left">
          <div class="header">Pickup Person</div>
-         <div class="strong">{{invoice.pickup_name}}</div>
+         <div class="strong">{{invoice?.pickup_name}}</div>
       </div>
       <div class="right">
          <div class="header">Phone Number</div>
-         <div class="strong">{{invoice.pickup_mobile}}</div>
+         <div class="strong">{{invoice?.pickup_mobile}}</div>
       </div>
    </div>
 
@@ -54,11 +58,11 @@
    <div class="main-container">
       <div class="left">
          <div class="header">Amount</div>
-         <div class="strong">{{this.businessDetails?.currency_symbol}}{{invoice.subtotal}}</div>
+         <div class="strong">{{this.businessDetails?.currency_symbol}}{{invoice?.subtotal}}</div>
       </div>
       <div class="right">
          <div class="header">Payment Mode</div>
-         <div class="strong">{{this.order?.delivery_payment_status }}</div>
+         <div class="strong">{{this.order?.delivery_payment_status  }}</div>
       </div>
    </div>
 </div>
