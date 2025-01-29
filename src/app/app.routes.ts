@@ -51,7 +51,7 @@ export const routes: Routes = [
             loadComponent: () => import('./address-select/address-select.component').then(m => m.AddressSelectComponent),
          },
          {
-            path: 'orders/new-order/order-preview/:id',
+            path: 'orders/new-order/order-preview/:delivery_id',
             loadComponent: () => import('./address-preview/address-preview.component').then(m => m.AddressPreviewComponent),
          },
          {

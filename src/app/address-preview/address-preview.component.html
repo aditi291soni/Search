@@ -48,7 +48,7 @@
 
 <!-- Payment Modes -->
 <h4 *ngIf="timeslot === '1'">Select Time Slot</h4>
-<div>
+<div> (onChange)="onSlotChange($event)"
    <p-select *ngIf="timeslot === '1'" [options]="timeSlot" optionValue="id" optionLabel="slot_name"
       placeholder="Select Time Slot" class="w-full">
    </p-select>
@@ -57,19 +57,34 @@
 
 <!-- Payment Modes -->
 <h4>Payment Modes</h4>
-<div class="container">
-   <div class="recent-order-item">
-      <i class="pi pi-credit-card"></i> Online
+<div class="container" >
+   <div class="recent-order-item" (click)="paymentTypesSelection(payment)" *ngFor="let payment of paymentTypes" [class.selected]="selectedPaymentType === payment.value">
+      <i [class]="payment.img"></i> {{payment.name}}
+   </div>
+
+
+   <!-- <div class="recent-order-item">
+      <i [class]="pi pi-wallet"></i> Wallet
    </div>
    <div class="recent-order-item">
-      <i class="pi pi-wallet"></i> Wallet
-   </div>
-   <div class="recent-order-item">
-      <i class="pi pi-money-bill"></i> Cash
-   </div>
+      <i [class]="pi pi-money-bill"></i> Cash
+   </div> -->
 </div>
+<div>
+   <p-select *ngIf="selectedPaymentType=== 'cash'"  (click)="paymentType($event)"
+   [options]="CashTypes" 
+   optionValue="value" 
+   optionLabel="name" 
+   placeholder="Payment Type" 
+   class="w-full">
+   </p-select>
+</div>
+
 <br>
-<br>
+<div *ngIf="selectedPaymentType=== 'wallet'">
+   Available Wallet Balance: {{this.businessDetails.currency_symbol}} 2000
+
+</div>
 <div class="text-center">
    <div class="space">
       <button pButton class="p-button-outlined p-button-danger ml-5" label="Cancel"></button>

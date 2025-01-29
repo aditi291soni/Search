@@ -19,9 +19,14 @@ export class OrderViewComponent {
    loading: boolean=false;
    invoice: any;
    invoiceId: any;
+   businessDetails: any;
+   deliveryId: any;
+   delivery_name: any;
+   timeslot: any;
+   orderstatus: any;
 
  constructor(private apiService: ApiService, private router: Router, private fb: FormBuilder,private route: ActivatedRoute) {
-
+   this.businessDetails = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
    this.route.params.subscribe((params) => {
 
       this.invoiceId = params['invoice_id'];
@@ -64,16 +69,84 @@ export class OrderViewComponent {
 
    ngOnInit(): void {
       this.getInvoice()
-      this.getOrderDelivery();
+      this.getOrderStatus()
+     
    }
    getOrderDelivery(): void {
       let payload: any = {};
       payload.super_admin_id = environment.superAdminId;
-      payload.order_delivery_details_id = this.order.id;
+      payload.order_delivery_details_id = this.deliveryId;
       this.apiService.getOrderDeliveryDetail(payload).subscribe({
          next: (response) => {
             if (response.status === true) {
                this.order = response.data || [];
+               this.getTimeSlot(this.order?.time_slot);
+               this.getDelivery(this.order?.delivery_type_id);
+            } else {
+               console.error('Error fetching vehicle types:', response.message);
+            }
+         },
+         error: (err) => {
+            console.error('Error fetching vehicle types:', err);
+         },
+         complete: () => {
+            this.loading = false;
+         },
+      });
+   }
+
+
+   getOrderStatus(): void {
+      let payload: any = {};
+      payload.super_admin_id = environment.superAdminId;
+      // payload.order_delivery_details_id = this.deliveryId;
+      this.apiService.getOrderStatus(payload).subscribe({
+         next: (response) => {
+            if (response.status === true) {
+               this.orderstatus = response.data || [];
+           
+            } else {
+               console.error('Error fetching vehicle types:', response.message);
+            }
+         },
+         error: (err) => {
+            console.error('Error fetching vehicle types:', err);
+         },
+         complete: () => {
+            this.loading = false;
+         },
+      });
+   }
+   getDelivery(id:any): void {
+      let payload: any = {};
+      payload.super_admin_id = environment.superAdminId;
+      payload.delivery_type_id = id;
+      this.apiService.getDelivery(payload).subscribe({
+         next: (response) => {
+            if (response.status === true) {
+               this.delivery_name = response.data.delivery_name|| [];
+            } else {
+               console.error('Error fetching vehicle types:', response.message);
+            }
+         },
+         error: (err) => {
+            console.error('Error fetching vehicle types:', err);
+         },
+         complete: () => {
+            this.loading = false;
+         },
+      });
+   }
+
+
+   getTimeSlot(id:any): void {
+      let payload: any = {};
+      payload.super_admin_id = environment.superAdminId;
+      payload.time_slot_id = id;
+      this.apiService.getTimeSlots(payload).subscribe({
+         next: (response) => {
+            if (response.status === true) {
+               this.timeslot = response.data || [];
             } else {
                console.error('Error fetching vehicle types:', response.message);
             }
@@ -95,6 +168,8 @@ export class OrderViewComponent {
             next: (response) => {
                if (response.status === true) {
                   this.invoice = response.data || [];
+                  this.deliveryId = this.invoice.delivery_id;
+                  this.getOrderDelivery();
                } else {
                   console.error('Error fetching vehicle types:', response.message);
                }

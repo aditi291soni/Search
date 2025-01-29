@@ -77,8 +77,34 @@ export class ApiService {
          })
       );
    }
+   getDelivery(params:object): Observable<any> {
+     
+      return this.http.post(`${this.baseUrl}/get-delivery-type`, params, this.getHttpOptions()).pipe(
+         catchError((error) => {
+            console.error('Error fetching the list of addresses:', error); // Log error for debugging
+            return throwError(() => new Error('Failed to fetch the list of addresses')); // Return a user-friendly error message
+         })
+      );
+   }
+   getTimeSlots(params:object): Observable<any> {
+     
+      return this.http.post(`${this.baseUrl}/get-time-slot`, params, this.getHttpOptions()).pipe(
+         catchError((error) => {
+            console.error('Error fetching the list of addresses:', error); // Log error for debugging
+            return throwError(() => new Error('Failed to fetch the list of addresses')); // Return a user-friendly error message
+         })
+      );
+   }
 
-
+   getOrderStatus(params:object): Observable<any> {
+     
+      return this.http.post(`${this.baseUrl}/get-order-status-list`, params, this.getHttpOptions()).pipe(
+         catchError((error) => {
+            console.error('Error fetching the list of addresses:', error); // Log error for debugging
+            return throwError(() => new Error('Failed to fetch the list of addresses')); // Return a user-friendly error message
+         })
+      );
+   }
    getInvoice(params:object): Observable<any> {
      
       return this.http.post(`${this.baseUrl}/get-invoice`, params, this.getHttpOptions()).pipe(

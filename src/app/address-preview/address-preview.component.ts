@@ -36,6 +36,9 @@ export class AddressPreviewComponent {
    selectedPaymentType: any;
    deliveryId: any;
    timeSlot: any;
+   selectedPayment: any;
+   pay_on_pickup: string='0';
+   pay_on_delivery: string='0';
    constructor(private apiService: ApiService, private router: Router, private fb: FormBuilder, private route: ActivatedRoute) {
       this.pickupLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedPickup'));
       this.dropLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedDrop'));
@@ -46,6 +49,7 @@ export class AddressPreviewComponent {
 
          this.deliveryId = params['delivery_id'];
       });
+      console.log(this.deliveryId)
    }
    pickup = {
       name: 'Aditi Mp',
@@ -58,7 +62,16 @@ export class AddressPreviewComponent {
       phone: '362364723',
       address: 'Minal Residency, Bhopal, Madhya Pradesh, India'
    };
-
+   paymentTypes:any = [
+      { name: 'Online',  value: 'upi' ,img:'pi pi-credit-card'},
+      { name: 'Wallet',  value: 'wallet' ,img:'pi pi-wallet'},
+      { name: 'Cash',  value: 'cash',img:'pi pi-money-bill' }
+    ];
+    CashTypes:any = [
+      { name: 'Pay On Pickup',  value: 'pickup' },
+      { name: 'Pay On Drop',  value: 'drop' },
+    
+    ];
    ngOnInit(): void {
       this.fetchDeliveryTypeList();
       this.getfinancialYear()
@@ -195,9 +208,23 @@ export class AddressPreviewComponent {
    }
    paymentTypesSelection(value: any): void {
       this.selectedPaymentType = value.value;
+      console.log("dd", value.value)
 
    }
-
+   paymentType(event: any) {
+      this.selectedPayment = event.target.innerText;
+      console.log("dddd", this.selectedPayment)
+      if(this.selectedPayment == 'Pay On Pickup'){
+         this.pay_on_pickup = '1'
+          this.pay_on_delivery='0'
+         console.log(this.pay_on_pickup)
+      }else{
+         this.pay_on_delivery='1'
+         this.pay_on_pickup = '0'
+         console.log(this.pay_on_delivery)
+      }
+      console.log(this.pay_on_delivery,this.pay_on_pickup)
+   }
    getlastinvoice() {
       try {
          this.apiService.last_invoice({ business_id: this.businessDetails.id }).subscribe({
@@ -224,17 +251,24 @@ export class AddressPreviewComponent {
       }
    }
 
-
+   onSlotChange(event: any): void {
+      this.selectedSlot =event;
+      console.log('Selected Delivery Type:', event);
+    }
    addInvoice(order_id: any) {
       const currentDate = new Date();
       const formattedDate = currentDate.toISOString().split('T')[0];
       let payload: any = {}
       payload.business_id = this.businessDetails.id
-      payload.for_user_id = '171'
-      // payload.for_booking_slot_id=Number(this.selectedSlot)
+      payload.for_user_id = '171',
+        payload.pay_on_pickup= this.pay_on_pickup ,
+        payload.pay_on_delivery=this.pay_on_delivery,
+    payload.for_booking_slot_id=Number(this.selectedSlot)
       payload.for_slot_id = this.timeslot
       payload.super_admin_id = environment.superAdminId
       payload.delivery_id = this.deliveryId
+      // payload.end_time = this.deliveryId
+      // payload.start_time = this.deliveryId
       // payload.for_booking_time=
       payload.prefix_value = 'ORDER'
       payload.invoice_type = 'order'
@@ -290,6 +324,9 @@ export class AddressPreviewComponent {
          console.log('Error in the catch block', error);
       }
    }
+   selectedSlot(selectedSlot: any): any {
+      throw new Error('Method not implemented.');
+   }
    addTransaction(id: any) {
       const currentDate = new Date();
       const formattedDate = currentDate.toISOString().split('T')[0];
@@ -333,17 +370,20 @@ export class AddressPreviewComponent {
       payload.business_id = this.businessDetails.id
       payload.order_delivery_details_id = id
       payload.status = 1
-      //  payload.delivery_type_id=this.selectedDeliveryType
+     payload.delivery_type_id=this.selectedDeliveryType
       payload.order_value = this.sub_total
       payload.delivery_charges = this.sub_total
-      //  payload.time_slot=this.timeslot
+     payload.time_slot=this.timeslot
       payload.pickup_address_id = this.pickupLocation.id
       payload.drop_address_id = this.dropLocation.id
-      //  payload.delivery_payment_status=this.selectedPaymentType
+       payload.delivery_payment_status=this.selectedPaymentType
       payload.drop_person_name = this.dropLocation.person_name
       payload.drop_phone_no = this.dropLocation.person_phone_no
       payload.pickup_person_name = this.pickupLocation.person_name
       payload.pickup_phone_no = this.pickupLocation.person_phone_no
+      payload.super_admin_id = environment.superAdminId
+      payload.drop_address=this.dropLocation.address_details
+      payload.pickup_address= this.pickupLocation.address_details
 
       // payload.user_id=
       try {
@@ -352,7 +392,7 @@ export class AddressPreviewComponent {
                let ApiResponse: any = data;
                // this.listofDelivery = ApiResponse.data;
                // this.clearLocal()
-               this.router.navigate(['/order-list']);
+               // this.router.navigate(['/order-list']);
 
             },
             error: (error: any) => {

@@ -43,22 +43,22 @@
    <div class="main-container">
       <div class="left">
          <div class="header">Delivery Type</div>
-         <div class="strong">{{invoice.order_no}}</div>
+         <div class="strong">{{delivery_name}}</div>
       </div>
       <div class="right">
          <div class="header">Time Slot</div>
-         <div class="strong">{{invoice.time_slot_id}}</div>
+         <div class="strong">{{this.timeslot?.start_time }}-{{this.timeslot?.end_time}}</div>
       </div>
    </div>
 
    <div class="main-container">
       <div class="left">
          <div class="header">Amount</div>
-         <div class="strong">{{invoice.subtotal}}</div>
+         <div class="strong">{{this.businessDetails?.currency_symbol}}{{invoice.subtotal}}</div>
       </div>
       <div class="right">
          <div class="header">Payment Mode</div>
-         <div class="strong">Cash</div>
+         <div class="strong">{{this.order?.delivery_payment_status }}</div>
       </div>
    </div>
 </div>
@@ -102,7 +102,7 @@
       <div>
          <div class="add">Collect From:</div>
          <div class="address">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur, inventore?
+    {{order.pickup_address}}
          </div>
       </div>
    </div>
@@ -115,7 +115,7 @@
       <div>
          <div class="add">Drop To: </div>
          <div class="address">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aspernatur, molestiae?
+            {{order.drop_address}}
          </div>
       </div>
    </div>
@@ -128,15 +128,15 @@
 <div class="time-con">
    <p-timeline [value]="events" layout="horizontal" class="small-timeline">
       <!-- Custom Marker Icons -->
-      <ng-template pTemplate="marker" let-event let-i="index">
-         <i [class]="event.icon" [style.color]="event.color" style="font-size: 1.5rem"></i>
+      <ng-template pTemplate="marker" let-orderstatus let-i="index">
+         <i class="pi pi-check-circle" style.color="gray" style="font-size: 1.5rem"></i>
       </ng-template>
 
       <!-- Custom Content -->
-      <ng-template pTemplate="content" let-event>
+      <ng-template pTemplate="content" let-orderstatus>
          <div class="p-d-flex p-ai-center">
             <div class="p-mr-2">
-               <b>{{ event.status }}</b>
+               <b>{{ orderstatus.name_for_user }}</b>
             </div>
          </div>
       </ng-template>
