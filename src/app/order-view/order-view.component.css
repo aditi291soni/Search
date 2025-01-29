@@ -85,3 +85,26 @@
    height: 20px;
    margin: 10px 8px;
 }
+
+.small-timeline ::ng-deep .p-timeline .p-timeline-event-connector {
+   background-color: var(--gray);
+   /* Default color */
+   height: 4px;
+}
+
+.small-timeline ::ng-deep .p-timeline .p-timeline-event:nth-child(-n+3) .p-timeline-event-connector {
+   background-color: green !important;
+   /* Green for first 3 statuses */
+}
+
+::ng-deep .p-timeline .p-timeline-event-connector {
+   background-color: gray !important;
+   /* Default gray color for the separator */
+   height: 4px;
+   /* Adjust thickness */
+}
+
+::ng-deep .p-timeline .p-timeline-event:nth-child(-n+2) .p-timeline-event-connector {
+   background-color: green !important;
+   /* Green separator for the first 3 events */
+}

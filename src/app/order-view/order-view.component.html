@@ -127,6 +127,12 @@
 </div>
 <div class="time-con">
    <p-timeline [value]="events" layout="horizontal" class="small-timeline">
+      <!-- Custom Marker Icons -->
+      <ng-template pTemplate="marker" let-event let-i="index">
+         <i [class]="event.icon" [style.color]="event.color" style="font-size: 1.5rem"></i>
+      </ng-template>
+
+      <!-- Custom Content -->
       <ng-template pTemplate="content" let-event>
          <div class="p-d-flex p-ai-center">
             <div class="p-mr-2">
