@@ -1,10 +1,10 @@
 <h2>Order Preview</h2>
-<div class="thin">Preview your order</div>
+<!-- <div class="thin">Preview your order</div> -->
 <br>
 
 <div class="header">
    <h4>Pickup and Drop Location</h4>
-   <h4 class="add">Distance 4.4 KM</h4>
+   <h4 class="add">Distance {{ this.newOrder?.distance}}</h4>
 </div>
 
 <div class="recent-order-item">
@@ -12,8 +12,8 @@
    <div class="recent-order-flex">
       <i class="pi pi-map-marker icon"></i>
       <div>
-         <div class="add">Collect From:- {{ pickup.name }} ({{ pickup.phone }})</div>
-         <div class="address">{{ pickup.address }}</div>
+         <div class="add">Collect From:- {{ pickupLocation.person_name |titlecase}}({{pickupLocation.person_phone_no }} )</div>
+         <div class="address">{{pickupLocation.house_no}}{{ pickupLocation.address_details }}</div>
       </div>
    </div>
 
@@ -23,8 +23,8 @@
    <div class="recent-order-flex">
       <i class="pi pi-map-marker icon"></i>
       <div>
-         <div class="add">Drop To :- {{ drop.name }} ({{ drop.phone }})</div>
-         <div class="address">{{ drop.address }}</div>
+         <div class="add">Drop To :- {{ dropLocation.person_name |titlecase}}({{dropLocation.person_phone_no }})</div>
+         <div class="address">{{dropLocation.house_no}}{{ dropLocation.address_details }}</div>
       </div>
    </div>
 </div>
@@ -33,20 +33,23 @@
 
 <!-- Delivery Types -->
 <h4>Delivery Type</h4>
-<div class="recent-order-item">
-   <div class="header">
-      <h4>Express Delivery</h4>
-      <h4>INR 458.00</h4>
+<div class="recent-order-item"  *ngFor="let delivery of deliveryList" (click)="onDeliveryTypeSelect(delivery)" [class.selected]="selectedDeliveryType === delivery.id" >
+   <div class="header" *ngIf="delivery?.pickup">
+      <h4>{{delivery.delivery_name}}</h4>
+      <h4>{{this.businessDetails.currency_symbol}} {{delivery.price | number: '1.2-2'}} </h4>
    </div>
-   <div>Pickup in 70 minutes.</div>
+   <div>{{delivery.pickup_label}}{{delivery.eta}}.</div>
 </div>
-<div class="recent-order-item">
-   <div class="header">
-      <h4>Express Delivery</h4>
-      <h4>INR 458.00</h4>
-   </div>
-   <div>Pickup in 70 minutes.</div>
-</div>
+
+<p-select *ngIf="timeslot === '1'"  
+          [options]="timeSlot" 
+          optionValue="id" 
+          optionLabel="slot_name" 
+          placeholder="Select Time Slot" 
+          class="w-full">
+</p-select>
+
+
 <br>
 
 <!-- Payment Modes -->
@@ -67,6 +70,6 @@
 <div class="text-center">
    <div class="space">
       <button pButton class="p-button-outlined p-button-danger ml-5" label="Cancel"></button>
-      <button pButton type="submit" label="Submit"></button>
+      <button pButton type="submit" label="Submit" (click)="getlastinvoice()"></button>
    </div>
 </div>

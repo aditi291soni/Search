@@ -129,7 +129,7 @@ export class NewOrderComponent {
       try {
         this.apiService.createDelivery(payload).subscribe({
           next: (data: any) => {
-            this.router.navigate(['orders/new-order/order-preview']);
+            this.router.navigate(['orders/new-order/order-preview',data.data.id]);
             let ApiResponse: any = data;
       //       this.delivery_id=data.data.id
       //       localStorage.setItem('delivery_id', JSON.stringify(this.delivery_id));
