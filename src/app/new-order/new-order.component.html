@@ -86,7 +86,7 @@
 
       <div class="bottom-buttons">
          <button pButton type="button" label="Cancel" class="p-button-outlined p-button-danger"></button>
-         <button pButton type="submit" label="Continue" class="p-button-contained p-button-success"
+         <button pButton type="submit" [loading]="loading_button" [disabled]="loading_button" label="Continue" class="p-button-contained p-button-success"
             (click)="calculateDistanceNews()"></button>
       </div>
    </div>

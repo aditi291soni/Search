@@ -88,6 +88,6 @@
 <div class="text-center">
    <div class="space">
       <button pButton class="p-button-outlined p-button-danger ml-5" label="Cancel"></button>
-      <button pButton type="submit" label="Submit" (click)="getlastinvoice()"></button>
+      <button [loading]="loading_button" [disabled]="loading_button" pButton type="submit" label="Submit" (click)="getlastinvoice()"></button>
    </div>
 </div>
