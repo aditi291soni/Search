@@ -67,7 +67,7 @@ export const routes: Routes = [
             loadComponent: () => import('./order-view/order-view.component').then(m => m.OrderViewComponent),
          },
          {
-            path: 'orders/new-order/add-address',
+            path: 'orders/new-order/add-address/:type',
             loadComponent: () => import('./add-address/add-address.component').then(m => m.AddAddressComponent),
          },
       ],

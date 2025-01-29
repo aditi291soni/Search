@@ -29,7 +29,11 @@ export class AddressSelectComponent {
       private apiService: ApiService,
       private activatedRoute: ActivatedRoute,
       private router: Router
-   ) { }
+   ) { 
+
+
+      
+   }
 
    /**
     * Lifecycle hook that runs on component initialization.
@@ -97,4 +101,24 @@ export class AddressSelectComponent {
          window.history.back();
       });
    }
+   addPickUpAddress(){
+      
+         const currentRoute = this.router.url;
+   
+         
+   
+   
+         // Check the current route and save the address accordingly
+         if (currentRoute.includes('select-pickup')) {
+            this.router.navigate(['orders/new-order/add-address/','pickup']);
+         } else if (currentRoute.includes('select-drop')) {
+            this.router.navigate(['orders/new-order/add-address/','drop']);
+         } else {
+            console.error('Unknown route, no address saved');
+         }
+   
+       
+         // this.router.navigate(['orders/new-order/add-address/',key]);
+        
+       }
 }

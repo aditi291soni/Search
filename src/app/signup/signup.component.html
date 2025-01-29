@@ -1,1 +1,33 @@
-<p>signup works!</p>
+<div>
+   <p-card class="signin-card">
+      <h2>Sign in</h2>
+      <div>Welcome back to Dropzone</div>
+      <form (ngSubmit)="onSubmit()" class="signin-form" [formGroup]="signInForm">
+         <div class="p-field">
+            <div class="thin">Name</div>
+            <input class="full-width" id="email" type="text" pInputText placeholder="Enter your Name"
+              formControlName="first_name" name="email" required />
+         </div>
+         <div class="p-field">
+            <div class="thin">Email</div>
+            <input class="full-width" id="email" type="email" pInputText placeholder="Enter your email"
+              formControlName="email" name="email" required />
+         </div>
+         <div class="p-field">
+            <div class="thin">Phone</div>
+            <input class="full-width" id="email" type="text" pInputText placeholder="Enter your email"
+              formControlName="phone" name="email" required />
+         </div>
+         <div class="p-field">
+            <div class="thin">Password</div>
+            <input class="full-width" id="password" type="password" pInputText placeholder="Enter your password"
+            formControlName="password" name="password" required />
+         </div>
+         <div class="form-actions">
+            <button type="submit" pButton label="Sign In" class="p-button-primary" [disabled]="loading"
+               [loading]="loading">
+            </button>
+         </div>
+      </form>
+   </p-card>
+</div>

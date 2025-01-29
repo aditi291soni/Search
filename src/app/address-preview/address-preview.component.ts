@@ -7,6 +7,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { Select } from 'primeng/select';
 import { SkeletonModule } from 'primeng/skeleton';
+import { ToastNotificationService } from '../services/toast-notification.service';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
    selector: 'app-address-preview',
@@ -34,7 +36,7 @@ export class AddressPreviewComponent {
    listofDelivery: any;
    timeslot: any;
    selectedDeliveryType: any;
-   selectedPaymentType: any;
+   selectedPaymentType: any='cash';
    deliveryId: any;
    timeSlot: any;
    selectedPayment: any;
@@ -42,7 +44,7 @@ export class AddressPreviewComponent {
    pay_on_delivery: string = '0';
    selectedSlot: any;
    order_status: any;
-   constructor(private apiService: ApiService, private router: Router, private fb: FormBuilder, private route: ActivatedRoute) {
+   constructor(private apiService: ApiService, private router: Router, private confirmationService: ConfirmationService, private fb: FormBuilder, private route: ActivatedRoute,private toastService: ToastNotificationService) {
       this.pickupLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedPickup'));
       this.dropLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedDrop'));
       this.businessDetails = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
@@ -89,6 +91,7 @@ export class AddressPreviewComponent {
       this.apiService.getDeliveryType(payload).subscribe({
          next: (response) => {
             if (response.status === true) {
+               this.selectedDeliveryType = response.data[0].id;
                // this.deliveryList = response.data || [];
                this.deliveryList = response.data.map((deliveryType: any) => {
 
@@ -207,12 +210,12 @@ export class AddressPreviewComponent {
       // this.base_price=value.price.base_price
 
       this.selectedDeliveryType = value.id;
-      console.log("dd", value)
+   
 
    }
    paymentTypesSelection(value: any): void {
       this.selectedPaymentType = value.value;
-      console.log("dd", value.value)
+
 
    }
    paymentType(event: any) {
@@ -230,6 +233,28 @@ export class AddressPreviewComponent {
       console.log(this.pay_on_delivery, this.pay_on_pickup)
    }
    getlastinvoice() {
+      if(this.timeslot=='1' && !this.selectedSlot){
+
+         this.toastService.showError("Please select time slot")
+        
+         return;
+       }
+       if (!this.selectedPaymentType ) {
+         this.toastService.showError("Please select payment mode")
+         
+         return;
+       }
+       if(this.selectedPaymentType=='cash' && !this.selectedPayment){
+
+         this.toastService.showError("Please select payment location")
+        
+         return;
+       }
+      else if (!this.selectedDeliveryType ) {
+       this.toastService.showError("Please select Delivery Type")
+   
+         return;
+       }
       try {
          this.loading_button = true;
          this.apiService.last_invoice({ business_id: this.businessDetails.id }).subscribe({
@@ -265,6 +290,7 @@ export class AddressPreviewComponent {
       console.log('Selected Delivery Type:', event);
    }
    addInvoice(order_id: any) {
+
       const currentDate = new Date();
       const formattedDate = currentDate.toISOString().split('T')[0];
       let payload: any = {}
@@ -274,7 +300,7 @@ export class AddressPreviewComponent {
          payload.pay_on_delivery = this.pay_on_delivery,
          payload.for_booking_slot_id = Number(this.selectedSlot)
       payload.for_slot_id = this.timeslot
-      payload.super_admin_id = environment.superAdminId
+      payload.super_admin_id = environment?.superAdminId
       payload.delivery_id = this.deliveryId
       // payload.end_time = this.deliveryId
       // payload.start_time = this.deliveryId
@@ -292,9 +318,9 @@ export class AddressPreviewComponent {
       payload.created_on_date = formattedDate
       payload.for_booking_date = formattedDate
       payload.drop_name = this.dropLocation.person_name
-      payload.drop_mobile = this.dropLocation.person_phone_no
-      payload.pickup_name = this.pickupLocation.person_name
-      payload.pickup_mobile = this.pickupLocation.person_phone_no
+      payload.drop_mobile = this.dropLocation?.person_phone_no
+      payload.pickup_name = this.pickupLocation?.person_name
+      payload.pickup_mobile = this.pickupLocation?.person_phone_no
       try {
          this.apiService.addInvoice(payload).subscribe({
             next: (data: any) => {
@@ -318,7 +344,7 @@ export class AddressPreviewComponent {
                   // this.router.navigate(['/order-list']);
                   // this.messageService.showThankyou()
                } else {
-                  // this.messageService.showError(data.msg, 'Error')
+                  this.toastService.showError(data.msg); 
                }
 
 
@@ -353,8 +379,26 @@ export class AddressPreviewComponent {
                let ApiResponse: any = data;
                // this.clearLocal()
                // this.addNotification()
+               if(data.status){
+                
                this.router.navigate(['/dashboard']);
                this.clearLocal()
+               this.confirmationService.confirm({
+                  message: 'Thank Your Order Placed Successfully!',
+                  header: 'Thank You!',
+                  icon: 'pi pi-check-circle',
+                  acceptLabel: 'OK',
+                  rejectVisible: false, // Hides the "No" button
+                  accept: () => {
+                      console.log('Thank you message displayed');
+                  }
+              });
+              
+               // this.toastService.showSuccess("Order Placed Successfully")
+            }
+               else{
+                  this.toastService.showError('Error in Payment'); 
+               }
                // this.listofInvoice = ApiResponse.data;
                // if(  this.selectedPaymentType == 'cash'){}
                // else if(  this.selectedPaymentType == 'wallet'){}
@@ -400,6 +444,7 @@ export class AddressPreviewComponent {
          this.apiService.edit_order_delivery_details(payload).subscribe({
             next: (data: any) => {
                let ApiResponse: any = data;
+            this.addNotification()
                // this.listofDelivery = ApiResponse.data;
                // this.clearLocal()
                // this.router.navigate(['/order-list']);
@@ -419,26 +464,22 @@ export class AddressPreviewComponent {
 
    addNotification() {
       let payload = {
-         "user_id": 456,
+         "user_id": 2083,
          "super_admin_id": environment.superAdminId,
          "delivery_id": this.deliveryId,
          "invoice_id": this.invoice_id,
+         "details": {
+            "distance":this.newOrder.distance,
+            'pickup_address':this.pickupLocation.address_details,
+            'order_status':this.order_status,
+            'delivery_type':this.selectedDeliveryType
+        }
       }
 
       try {
          this.apiService.addNotification(payload).subscribe({
             next: (data: any) => {
-               let ApiResponse: any = data;
-               this.listofInvoice = ApiResponse.data.order_no ? Number(ApiResponse.data.order_no) + 1 : Number(ApiResponse.data.id) + 1
-               console.log(this.listofInvoice)
-               if (this.listofInvoice) {
-                  this.addInvoice(this.listofInvoice)
-                  this.editDelivery(this.deliveryId)
-               }
-
-               else {
-                  //   this.messageService.showError('Order Id Invalid', 'Error')
-               }
+           
             },
             error: (error: any) => {
                console.log('Error fetching data', error);

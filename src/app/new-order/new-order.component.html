@@ -20,51 +20,51 @@
          <div *ngFor="let vehicle of vehicleTypeList" class="vehicle-card"
             [class.selected]="form.get('vehicleType')?.value === vehicle.id" (click)="selectVehicle(vehicle.id)">
             <img [src]="vehicle.image" alt="{{ vehicle.vehicle_type }}" class="vehicle-image" />
-            <div class="vehicle-name">{{ vehicle.vehicle_type }}</div>
+            <div class="vehicle-name">{{ vehicle?.vehicle_type }}</div>
          </div>
       </div>
 
       <h3>Select Pickup Location<span class="mandatory">*</span></h3>
       <div *ngIf="!pickupLocation" class="card-container">
          <input class="mb" pInputText type="text" placeholder="Pickup Address" (click)="navigateToPickupSelect()" />
-         <button pButton type="button" icon="pi pi-map-marker" label="Select on Map" class="map-button"></button>
+         <button pButton type="button" icon="pi pi-map-marker" label="Select on Map" class="map-button" (click)="addPickUpAddress('pickup')"></button>
       </div>
       <div *ngIf="pickupLocation" class="address-card">
          <div class="address-info">
             <div class="personal-info">
                <div>
-                  <div class="personal-info-text">{{ pickupLocation.person_name }}</div>
-                  <div class="mb-6">{{ pickupLocation.person_phone_no }}</div>
+                  <div class="personal-info-text">{{ pickupLocation?.person_name }}</div>
+                  <div class="mb-6">{{ pickupLocation?.person_phone_no }}</div>
                </div>
                <!-- Close Button for Pickup -->
                <button class="close-button" (click)="clearPickupAddress()">
                   <i class="pi pi-times"></i> <!-- PrimeNG Close Icon -->
                </button>
             </div>
-            <p>{{ pickupLocation.house_no }}, {{ pickupLocation.landmark }}</p>
-            <p>{{ pickupLocation.address_details }}</p>
+            <p>{{ pickupLocation?.house_no }}, {{ pickupLocation?.landmark }}</p>
+            <p>{{ pickupLocation?.address_details }}</p>
          </div>
       </div>
 
       <h3>Select Drop Location<span class="mandatory">*</span></h3>
       <div *ngIf="!dropLocation" class="card-container">
          <input class="mb" pInputText type="text" placeholder="Drop Address" (click)="navigateToDropSelect()" />
-         <button pButton type="button" icon="pi pi-map-marker" label="Select on Map" class="map-button"></button>
+         <button pButton type="button" icon="pi pi-map-marker" label="Select on Map" class="map-button" (click)="addPickUpAddress('drop')"></button>
       </div>
       <div *ngIf="dropLocation" class="address-card">
          <div class="address-info">
             <div class="personal-info">
                <div>
-                  <div class="personal-info-text">{{ dropLocation.person_name }}</div>
-                  <div class="mb-6">{{ dropLocation.person_phone_no }}</div>
+                  <div class="personal-info-text">{{ dropLocation?.person_name }}</div>
+                  <div class="mb-6">{{ dropLocation?.person_phone_no }}</div>
                </div>
                <!-- Close Button for Drop -->
                <button class="close-button" (click)="clearDropAddress()">
                   <i class="pi pi-times"></i> <!-- PrimeNG Close Icon -->
                </button>
             </div>
-            <p>{{ dropLocation.house_no }}, {{ dropLocation.landmark }}</p>
-            <p>{{ dropLocation.address_details }}</p>
+            <p>{{ dropLocation?.house_no }}, {{ dropLocation?.landmark }}</p>
+            <p>{{ dropLocation?.address_details }}</p>
          </div>
       </div>
 

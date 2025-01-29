@@ -13,10 +13,13 @@
             <input class="full-width" id="password" type="password" pInputText placeholder="Enter your password"
                [(ngModel)]="password" name="password" required />
          </div>
+
          <div class="form-actions">
-            <button type="submit" pButton label="Sign In" class="p-button-primary" [disabled]="loading"
+            <button type="submit" pButton label="Sign In" class="p-button-primary " [disabled]="loading"
                [loading]="loading">
             </button>
+            <!-- <button type="button" pButton label="Sign up" routerLink="sign-up"></button> -->
+
          </div>
       </form>
    </p-card>

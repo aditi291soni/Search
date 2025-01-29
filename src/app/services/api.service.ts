@@ -42,6 +42,14 @@ export class ApiService {
       );
    }
 
+   signUp(payload:object): Observable<any> {
+      return this.http.post(`${this.baseUrl}/sign-up`, payload).pipe(
+         catchError((error) => {
+            console.error('Error signing in:', error); // Log error for debugging
+            return throwError(() => new Error('Failed to sign in')); // Return a user-friendly error message
+         })
+      );
+   }
    /**
     * Fetches the list of businesses from the API.
     * 
@@ -66,7 +74,15 @@ export class ApiService {
          })
       );
    }
-
+   add_address(params:object): Observable<any> {
+     
+      return this.http.post(`${this.baseUrl}/addAddress`, params, this.getHttpOptions()).pipe(
+         catchError((error) => {
+            console.error('Error fetching the list of addresses:', error); // Log error for debugging
+            return throwError(() => new Error('Failed to fetch the list of addresses')); // Return a user-friendly error message
+         })
+      );
+   }
 
    getOrderDeliveryDetail(params:object): Observable<any> {
      

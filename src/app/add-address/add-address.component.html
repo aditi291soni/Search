@@ -4,7 +4,7 @@
 <div class="container">
    <div class="search-box-container">
       <input #searchBox type="text" pInputText placeholder="Search for an address..." class="search-box" />
-      <button pButton class="current-location-btn">
+      <button pButton class="current-location-btn" (click)="currentLocation()">
          <i class="pi pi-map-marker"></i>
       </button>
    </div>
@@ -12,42 +12,49 @@
    <div #mapContainer [ngClass]="{'map-container': true, 'shrink': isFormVisible}"></div>
 
    <div class="centered">
-      <button pButton label="Add Address" class="add-btn" (click)="openForm()"></button>
+      <button pButton label="Add Address" class="add-btn" (click)="submitForm('save')"></button>
    </div>
 
-   <div *ngIf="isFormVisible" class="form">
+   <form *ngIf="isFormVisible" [formGroup]="projectForm" >
+      <div class="form-group">
+         <div class="address_details">Address Detail</div>
+         <input pInputText id="address_details" type="text" formControlName="address_details" />
+      </div>
       <div class="form-group">
          <div class="address_details">Name</div>
-         <input pInputText id="address_details" type="text" [(ngModel)]="formData.address_details"
-            name="address_details" />
+         <input pInputText id="address_details" type="text" formControlName="person_name" />
       </div>
-
       <div class="form-group">
          <div class="address_details">Phone</div>
-         <input pInputText id="city" type="text" [(ngModel)]="formData.city" name="city" />
+         <input pInputText id="city" type="text" formControlName="person_phone_no" />
       </div>
-
+   
       <div class="form-group">
          <div class="address_details">Address Title</div>
-         <input pInputText id="state" type="text" [(ngModel)]="formData.state" name="state" />
+         <input pInputText id="state" type="text" formControlName="address_name" />
       </div>
-
+   
       <div class="form-group">
          <div class="address_details">Floor, Flat, House.no, Building, Apartment</div>
-         <input pInputText id="country" type="text" [(ngModel)]="formData.country" name="country" />
+         <input pInputText id="house_no" type="text" formControlName="house_no" />
       </div>
-
+   
       <div class="form-group">
          <div class="address_details">Landmark</div>
-         <input pInputText id="postal_code" type="text" [(ngModel)]="formData.postal_code" name="postal_code" />
+         <input pInputText id="landmark" type="text" formControlName="landmark" />
       </div>
-
+   
       <div class="form-group">
-         <div class="address_details">Address Details</div>
-         <input pInputText id="latitude" type="text" [(ngModel)]="formData.latitude" name="latitude" readonly />
+         <div class="address_details">City</div>
+         <input pInputText  type="text" formControlName="city"  />
       </div>
-   </div>
+      <div class="form-group">
+         <div class="address_details">Pincode</div>
+         <input pInputText  type="text" formControlName="postal_code"  />
+      </div>
+   </form>
+   
    <div class="form-group">
-      <button pButton label="Save" class="save-btn" (click)="submitForm()"></button>
+      <button pButton label="Save" class="save-btn" (click)="addAddress()" ></button>
    </div>
 </div>

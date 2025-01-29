@@ -5,7 +5,18 @@ p-skeleton {
    display: block;
    /* Ensures proper alignment in flex containers */
 }
-
+.map-button {
+   width: 100%;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   padding: 8px;
+   font-size: 14px;
+   border: 1px solid #ccc;
+   border-radius: 4px;
+   background-color: var(--info-main);
+   color: var(--text-secondary);
+}
 /* Header Styles */
 .header {
    display: flex;

@@ -33,7 +33,7 @@ export class DashboardComponent implements OnInit {
     * @param {ApiService} apiService - The service to interact with the API.
     */
    constructor(private apiService: ApiService, private router: Router) {
-      this.userInfo = this.apiService.getLocalValueInJSON(localStorage.getItem('userInfo'));
+      this.userInfo = this.apiService.getLocalValueInJSON(localStorage.getItem('userData'));
       this.businessDetails = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
 
    }
@@ -44,6 +44,7 @@ export class DashboardComponent implements OnInit {
     */
    ngOnInit(): void {
       this.fetchOrderList();
+      this.clearLocal()
    }
 
    /**
@@ -76,5 +77,10 @@ export class DashboardComponent implements OnInit {
    navigateToOrderDetails(orderId: any) {
       // localStorage.setItem('orderDetails', JSON.stringify(orderId));
       this.router.navigate(['/orders/order-view/', orderId]);
+   }
+   clearLocal() {
+      localStorage.removeItem('selectedPickup');
+      localStorage.removeItem('selectedDrop');
+      localStorage.removeItem('new-order');
    }
 }
