@@ -10,7 +10,7 @@
    <div class="main-container">
       <div class="left">
          <div class="header">Order No.</div>
-         <div class="strong">#103</div>
+         <div class="strong">#{{invoice.order_no}}</div>
       </div>
       <div class="right">
          <div class="header">Payment Status</div>
@@ -21,40 +21,40 @@
    <div class="main-container">
       <div class="left">
          <div class="header">Drop Person</div>
-         <div class="strong">Aditi Soni</div>
+         <div class="strong">{{invoice.drop_name}}</div>
       </div>
       <div class="right">
          <div class="header">Phone Number</div>
-         <div class="strong">9876543210</div>
+         <div class="strong">{{invoice.drop_mobile}}</div>
       </div>
    </div>
 
    <div class="main-container">
       <div class="left">
          <div class="header">Pickup Person</div>
-         <div class="strong">Yash Soni</div>
+         <div class="strong">{{invoice.pickup_name}}</div>
       </div>
       <div class="right">
          <div class="header">Phone Number</div>
-         <div class="strong">9876543210</div>
+         <div class="strong">{{invoice.pickup_mobile}}</div>
       </div>
    </div>
 
    <div class="main-container">
       <div class="left">
          <div class="header">Delivery Type</div>
-         <div class="strong">Express</div>
+         <div class="strong">{{invoice.order_no}}</div>
       </div>
       <div class="right">
          <div class="header">Time Slot</div>
-         <div class="strong">10:00</div>
+         <div class="strong">{{invoice.time_slot_id}}</div>
       </div>
    </div>
 
    <div class="main-container">
       <div class="left">
          <div class="header">Amount</div>
-         <div class="strong">4000 INR</div>
+         <div class="strong">{{invoice.subtotal}}</div>
       </div>
       <div class="right">
          <div class="header">Payment Mode</div>

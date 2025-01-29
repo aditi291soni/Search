@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../services/api.service';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
@@ -32,7 +32,7 @@ export class DashboardComponent implements OnInit {
     * Creates an instance of DashboardComponent.
     * @param {ApiService} apiService - The service to interact with the API.
     */
-   constructor(private apiService: ApiService) {
+   constructor(private apiService: ApiService, private router: Router) {
       this.userInfo = this.apiService.getLocalValueInJSON(localStorage.getItem('userInfo'));
       this.businessDetails = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
 
@@ -72,5 +72,9 @@ export class DashboardComponent implements OnInit {
             this.loading = false;
          },
       });
+   }
+   navigateToOrderDetails(orderId: any) {
+      // localStorage.setItem('orderDetails', JSON.stringify(orderId));
+      this.router.navigate(['/orders/order-view/', orderId]);
    }
 }

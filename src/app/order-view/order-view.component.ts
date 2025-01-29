@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { TimelineModule } from 'primeng/timeline';
+import { ApiService } from '../services/api.service';
+import { FormBuilder } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Component({
    selector: 'app-order-view',
@@ -11,8 +15,17 @@ import { TimelineModule } from 'primeng/timeline';
 })
 export class OrderViewComponent {
    events: any[];
+   order: any;
+   loading: boolean=false;
+   invoice: any;
+   invoiceId: any;
 
-   constructor() {
+ constructor(private apiService: ApiService, private router: Router, private fb: FormBuilder,private route: ActivatedRoute) {
+
+   this.route.params.subscribe((params) => {
+
+      this.invoiceId = params['invoice_id'];
+   });
       this.events = [
          {
             status: 'Placed',
@@ -48,4 +61,50 @@ export class OrderViewComponent {
          },
       ];
    }
+
+   ngOnInit(): void {
+      this.getInvoice()
+      this.getOrderDelivery();
+   }
+   getOrderDelivery(): void {
+      let payload: any = {};
+      payload.super_admin_id = environment.superAdminId;
+      payload.order_delivery_details_id = this.order.id;
+      this.apiService.getOrderDeliveryDetail(payload).subscribe({
+         next: (response) => {
+            if (response.status === true) {
+               this.order = response.data || [];
+            } else {
+               console.error('Error fetching vehicle types:', response.message);
+            }
+         },
+         error: (err) => {
+            console.error('Error fetching vehicle types:', err);
+         },
+         complete: () => {
+            this.loading = false;
+         },
+      });
+   }
+    getInvoice(): void {
+      let payload: any = {};
+      payload.super_admin_id = environment.superAdminId;
+      payload.invoice_id = this.invoiceId;
+      payload.invoice_type ='order';
+         this.apiService.getInvoice(payload).subscribe({
+            next: (response) => {
+               if (response.status === true) {
+                  this.invoice = response.data || [];
+               } else {
+                  console.error('Error fetching vehicle types:', response.message);
+               }
+            },
+            error: (err) => {
+               console.error('Error fetching vehicle types:', err);
+            },
+            complete: () => {
+               this.loading = false;
+            },
+         });
+      }
 }

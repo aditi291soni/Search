@@ -63,7 +63,7 @@ export const routes: Routes = [
             loadComponent: () => import('./business-list/business-list.component').then(m => m.BusinessListComponent),
          },
          {
-            path: 'orders/order-view',
+            path: 'orders/order-view/:invoice_id',
             loadComponent: () => import('./order-view/order-view.component').then(m => m.OrderViewComponent),
          },
       ],
