@@ -48,11 +48,11 @@
 
 <!-- Payment Modes -->
 <h4 *ngIf="timeslot === '1'">Select Time Slot</h4>
-<div> (onChange)="onSlotChange($event)"
-   <p-select *ngIf="timeslot === '1'" [options]="timeSlot" optionValue="id" optionLabel="slot_name"
+
+   <p-select (onChange)="onSlotChange($event)" *ngIf="timeslot === '1'" [options]="timeSlot" optionValue="id" optionLabel="slot_name"
       placeholder="Select Time Slot" class="w-full">
    </p-select>
-</div>
+
 <br *ngIf="timeslot === '1'">
 
 <!-- Payment Modes -->

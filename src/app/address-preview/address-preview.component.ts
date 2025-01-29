@@ -252,7 +252,7 @@ export class AddressPreviewComponent {
    }
 
    onSlotChange(event: any): void {
-      this.selectedSlot =event;
+      this.selectedSlot =event.value;
       console.log('Selected Delivery Type:', event);
     }
    addInvoice(order_id: any) {
