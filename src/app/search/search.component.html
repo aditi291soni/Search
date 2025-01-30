@@ -1,0 +1,7 @@
+<form [formGroup]="searchUserForm">
+<div class="right">
+   <h3 class="mb8">Enter Phone Number</h3>
+   <input pInputText type="tel" id="phone"  formControlName="phone" minlength="10" maxlength="10"  />
+</div>
+<button pButton type="button" icon="pi pi-search"  class="p-button-contained" (click)="getlistofCustomer()"></button>
+</form>
