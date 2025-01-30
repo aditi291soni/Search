@@ -92,6 +92,7 @@ export class AddressPreviewComponent {
          next: (response) => {
             if (response.status === true) {
                this.selectedDeliveryType = response.data[0].id;
+               this.order_status=response.data[0].order_status_id
                // this.deliveryList = response.data || [];
                this.deliveryList = response.data.map((deliveryType: any) => {
 
@@ -150,15 +151,20 @@ export class AddressPreviewComponent {
       const value = parts[0]; // "5.4"
       const unit = parts[1];
       if (this.newOrder.distance <= price.minimum_km) {
+         console.log("base",price.base_charges,this.newOrder.distance <= price.minimum_km)
          // If the distance is within the minimum, use only the base price for the distance.
-         this.price = price.base_charges;
+         this.price = Math.abs(price.base_charges);
       } else {
+
          // If the distance exceeds the minimum:
+      
          const minimumDistancePrice = Number(price.base_charges);
          const extraDistancePrice = (Number(value) - Number(price.minimum_km)) * Number(price.per_km_charge);
          this.price = minimumDistancePrice + extraDistancePrice;
+    
       }
-      return this.price
+
+      return Math.abs(this.price)
    }
    time(eta: any, opening_hr: any, closing_hr: any) {
       function toDateTime(timeStr: any) {
@@ -167,15 +173,15 @@ export class AddressPreviewComponent {
          now.setHours(hours, minutes, 0, 0);
          return now;
       }
-      console.log(opening_hr, opening_hr)
+     
       const now = new Date();
 
       let openingTime = toDateTime(opening_hr);
       let closingTime = toDateTime(closing_hr);
-      console.log(openingTime, closingTime)
+
       openingTime.setMinutes(openingTime.getMinutes());
       closingTime.setMinutes(closingTime.getMinutes());
-      console.log(openingTime, closingTime)
+    
       if (closingTime <= openingTime) {
          return now >= openingTime || now <= closingTime;
       } else {
@@ -208,7 +214,7 @@ export class AddressPreviewComponent {
       this.order_status=value.order_status_id
       this.timeslot = value.time_slot
       // this.base_price=value.price.base_price
-
+console.log(this.order_status,'order-status')
       this.selectedDeliveryType = value.id;
    
 
@@ -220,7 +226,7 @@ export class AddressPreviewComponent {
    }
    paymentType(event: any) {
       this.selectedPayment = event.target.innerText;
-      console.log("dddd", this.selectedPayment)
+    
       if (this.selectedPayment == 'Pay On Pickup') {
          this.pay_on_pickup = '1'
          this.pay_on_delivery = '0'
@@ -438,7 +444,7 @@ export class AddressPreviewComponent {
       payload.super_admin_id = environment.superAdminId
       payload.drop_address = this.dropLocation.address_details
       payload.pickup_address = this.pickupLocation.address_details
-
+      payload.parcel_weight = this.listofInvoice
       // payload.user_id=
       try {
          this.apiService.edit_order_delivery_details(payload).subscribe({

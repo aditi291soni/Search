@@ -25,7 +25,7 @@
    <div class="main-container">
       <div class="left">
          <div class="header">Drop Person</div>
-         <div class="strong">{{invoice?.drop_name}}</div>
+         <div class="strong">{{invoice?.drop_name | titlecase}}</div>
       </div>
       <div class="right">
          <div class="header">Phone Number</div>
@@ -36,7 +36,7 @@
    <div class="main-container">
       <div class="left">
          <div class="header">Pickup Person</div>
-         <div class="strong">{{invoice?.pickup_name}}</div>
+         <div class="strong">{{invoice?.pickup_name | titlecase}}</div>
       </div>
       <div class="right">
          <div class="header">Phone Number</div>
@@ -47,11 +47,11 @@
    <div class="main-container">
       <div class="left">
          <div class="header">Delivery Type</div>
-         <div class="strong">{{delivery_name}}</div>
+         <div class="strong">{{delivery_name | titlecase}}</div>
       </div>
       <div class="right">
          <div class="header">Time Slot</div>
-         <div class="strong">{{this.timeslot?.start_time }}-{{this.timeslot?.end_time}}</div>
+         <div class="strong">{{this.timeslot?.start_time?.slice(0, 5) }}-{{this.timeslot?.end_time?.slice(0, 5)}}</div>
       </div>
    </div>
 
@@ -62,7 +62,9 @@
       </div>
       <div class="right">
          <div class="header">Payment Mode</div>
-         <div class="strong">{{this.order?.delivery_payment_status }}</div>
+         <div class="strong">{{ this.order?.delivery_payment_status !== 'cash' 
+            ? (this.order?.delivery_payment_status | titlecase)
+            : (this.order?.pay_on_pickup == '0' ? 'Pay On Drop' : 'Pay On Pick up') }}</div>
       </div>
    </div>
 </div>
@@ -74,7 +76,7 @@
       <div class="main-container">
          <div class="left">
             <div class="header">Rider Name</div>
-            <div class="strong">Yash Soni</div>
+            <div class="strong">Rider</div>
          </div>
          <div class="right-icons">
             <!-- Phone Button -->

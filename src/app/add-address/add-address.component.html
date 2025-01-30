@@ -11,7 +11,7 @@
 
    <div #mapContainer [ngClass]="{'map-container': true, 'shrink': isFormVisible}"></div>
 
-   <div class="centered">
+   <div class="centered" *ngIf="!isFormVisible">
       <button pButton label="Add Address" class="add-btn" (click)="submitForm('save')"></button>
    </div>
 
@@ -26,7 +26,7 @@
       </div>
       <div class="form-group">
          <div class="address_details">Phone</div>
-         <input pInputText id="city" type="text" formControlName="person_phone_no" />
+         <input pInputText id="city" type="text" maxlength="10" minlength="10" formControlName="person_phone_no" />
       </div>
    
       <div class="form-group">
@@ -50,11 +50,11 @@
       </div>
       <div class="form-group">
          <div class="address_details">Pincode</div>
-         <input pInputText  type="text" formControlName="postal_code"  />
+         <input pInputText  type="text" maxlength="6" minlength="6" formControlName="postal_code"  />
       </div>
    </form>
    
-   <div class="form-group">
+   <div class="form-group" *ngIf="isFormVisible">
       <button pButton label="Save" class="save-btn" (click)="addAddress()" ></button>
    </div>
 </div>

@@ -8,11 +8,13 @@ import { MenuItem } from 'primeng/api';
 import { ToastNotificationService } from '../services/toast-notification.service';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
+import { SearchComponent } from '../search/search.component';
 
 @Component({
    selector: 'app-layout',
    standalone: true,
-   imports: [CommonModule, RouterModule, RouterOutlet, SidebarModule, ButtonModule, FormsModule, ConfirmDialogModule],  // Add FormsModule here
+   imports: [CommonModule, RouterModule, RouterOutlet, SidebarModule, ButtonModule, FormsModule, ConfirmDialogModule,SearchComponent],  
+
    templateUrl: './layout.component.html',
    providers: [ConfirmationService],
    styleUrls: ['./layout.component.css']
@@ -33,6 +35,11 @@ profileMenu: any;
 ngOnInit(): void {
  
 }
+
+handleGlobalSearch(query: string) {
+   console.log('Global Search:', query);
+   this.router.navigate(['/search'], { queryParams: { q: query } });
+ }
    toggleSidebar() {
       this.isSidebarVisible = !this.isSidebarVisible;
    }

@@ -3,39 +3,41 @@
 <br><br>
 
 <div class="row">
-   <div class="right">
-      <h3 class="mb8">Enter Phone Number</h3>
+   <div *ngIf="!isSearched">
+      <app-search *ngIf="!this.userId " (userSelected)="handleUserSelected($event)" (isSearched)="userSearched($event)"></app-search>
+      <!-- <h3 class="mb8">Enter Phone Number</h3>
       <input pInputText type="tel" id="phone" />
    </div>
-   <button pButton type="button" label="Search" class="p-button-contained"></button>
+   <button pButton type="button" label="Search" class="p-button-contained"></button> -->
 </div>
 <br><br>
-
-<div class="form-container">
+<form [formGroup]="profileForm" >
+<div class="form-container" *ngIf="isSearched== true">
    <div class="col">
       <label for="phone-number">Phone Number</label>
-      <input pInputText type="tel" id="phone-number" />
+      <input pInputText type="tel" id="phone-number" minlength="10" maxlength="10" formControlName="phone" />
    </div>
    <div class="col">
       <label for="full-name">Full Name</label>
-      <input pInputText type="text" id="full-name" />
+      <input pInputText type="text" id="full-name" formControlName="first_name" />
    </div>
    <div class="col">
       <label for="email">Email Address</label>
-      <input pInputText type="email" id="email" />
+      <input pInputText type="email" id="email" formControlName="email" />
    </div>
-   <div class="col">
+   <!-- <div class="col">
       <label for="dob">Date of Birth</label>
-      <p-calendar [(ngModel)]="dob" id="dob" dateFormat="yy-mm-dd" appendTo="body" [showIcon]="true"
+      <p-calendar [(ngModel)]="dob" id="dob"  dateFormat="yy-mm-dd" appendTo="body" [showIcon]="true"
          [style]="{'width': '100%'}"></p-calendar>
-   </div>
+   </div> -->
 
 </div>
+</form>
 <br>
 
 
 <!-- Bottom Buttons -->
-<div class="button-group bottom-buttons">
-   <button pButton type="button" label="Cancel" class="p-button-outlined p-button-danger"></button>
-   <button pButton type="button" label="Save" class="p-button-contained p-button-success"></button>
+<div class="button-group bottom-buttons" *ngIf="isSearched== true">
+   <!-- <button pButton type="button" label="Cancel" class="p-button-outlined p-button-danger"></button> -->
+   <button pButton type="submit" label="Save" class="p-button-contained p-button-success" (click)="onSubmit()"></button>
 </div>

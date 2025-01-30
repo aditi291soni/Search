@@ -84,6 +84,53 @@ export class ApiService {
       );
    }
 
+
+   add_user(params:object): Observable<any> {
+     
+      return this.http.post(`${this.baseUrl}/addUser`, params, this.getHttpOptions()).pipe(
+         catchError((error) => {
+            console.error('Error fetching the list of addresses:', error); // Log error for debugging
+            return throwError(() => new Error('Failed to fetch the list of addresses')); // Return a user-friendly error message
+         })
+      );
+   }
+   add_role_allot(params:object): Observable<any> {
+     
+      return this.http.post(`${this.baseUrl}/add-role-allot`, params, this.getHttpOptions()).pipe(
+         catchError((error) => {
+            console.error('Error fetching the list of addresses:', error); // Log error for debugging
+            return throwError(() => new Error('Failed to fetch the list of addresses')); // Return a user-friendly error message
+         })
+      );
+   }
+   get_user(params:object): Observable<any> {
+     
+      return this.http.post(`${this.baseUrl}/getUser`, params, this.getHttpOptions()).pipe(
+         catchError((error) => {
+            console.error('Error fetching the list of addresses:', error); // Log error for debugging
+            return throwError(() => new Error('Failed to fetch the list of addresses')); // Return a user-friendly error message
+         })
+      );
+   }
+
+   search_user(params:object): Observable<any> {
+     
+      return this.http.post(`${this.baseUrl}/search-users`, params, this.getHttpOptions()).pipe(
+         catchError((error) => {
+            console.error('Error fetching the list of addresses:', error); // Log error for debugging
+            return throwError(() => new Error('Failed to fetch the list of addresses')); // Return a user-friendly error message
+         })
+      );
+   }
+   edit_user(params:object): Observable<any> {
+     
+      return this.http.post(`${this.baseUrl}/editUser`, params, this.getHttpOptions()).pipe(
+         catchError((error) => {
+            console.error('Error fetching the list of addresses:', error); // Log error for debugging
+            return throwError(() => new Error('Failed to fetch the list of addresses')); // Return a user-friendly error message
+         })
+      );
+   }
    getOrderDeliveryDetail(params:object): Observable<any> {
      
       return this.http.post(`${this.baseUrl}/get-order-delivery-details`, params, this.getHttpOptions()).pipe(

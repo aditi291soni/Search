@@ -206,6 +206,7 @@ export class AddAddressComponent implements AfterViewInit {
             // this.commonService.goBack();
             // this.messageService.showSuccess(data.msg, 'Success');
           } else {
+            this.toastService.showError(data.msg)
             // this.messageService.showError(data.msg, 'Error');
           }
         },
