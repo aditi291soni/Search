@@ -14,9 +14,9 @@
       </div>
       <div class="right">
          <div class="header">Payment Status</div>
-         
+
          <!-- <div class="strong error">Unpaid</div> -->
-         <div class="strong error"  >{{this.invoice?.bill_status =='1'?'Paid' :'Unpaid'}}</div> 
+         <div class="strong error">{{this.invoice?.bill_status =='1'?'Paid' :'Unpaid'}}</div>
          <!-- <div class="strong error"  @if="this.invoice?.bill_status =='0'">Unpaid</div>  -->
 
       </div>
@@ -62,7 +62,7 @@
       </div>
       <div class="right">
          <div class="header">Payment Mode</div>
-         <div class="strong">{{this.order?.delivery_payment_status  }}</div>
+         <div class="strong">{{this.order?.delivery_payment_status }}</div>
       </div>
    </div>
 </div>
@@ -106,7 +106,7 @@
       <div>
          <div class="add">Collect From:</div>
          <div class="address">
-    {{order.pickup_address}}
+            {{order.pickup_address}}
          </div>
       </div>
    </div>
@@ -125,22 +125,24 @@
    </div>
 </div>
 
-<div>
-   <h4>Track Order</h4>
-   <h4 class="add">Describes your order current position</h4>
+<div class="flexed">
+   <div>
+      <h4>Track Order</h4>
+      <h4 class="add">Describes your order current position</h4>
+   </div>
+   <button (click)="showTimeline()" pButton label="Show"></button>
 </div>
-<div class="time-con">
-   <p-timeline [value]="events" layout="horizontal" class="small-timeline">
-      <!-- Custom Marker Icons -->
-      <ng-template pTemplate="marker" let-orderstatus let-i="index">
-         <i class="pi pi-check-circle" style.color="gray" style="font-size: 1.5rem"></i>
-      </ng-template>
-
-      <!-- Custom Content -->
-      <ng-template pTemplate="content" let-orderstatus>
-         <div class="p-d-flex p-ai-center">
-            <div class="p-mr-2">
-               <b>{{ orderstatus.name_for_user }}</b>
+<div class="time-con" *ngIf="timelineshow">
+   <p-timeline [value]="events" [layout]="isMobile ? 'vertical' : 'horizontal'" align="alternate">
+      <ng-template let-event pTemplate="content">
+         <div class="timeline-item">
+            <!-- Wrapper div for the icon to apply ngStyle -->
+            <div class="icon-wrapper" [ngStyle]="{'color': event.color}">
+               <i class="status-icon" [class]="event.icon"></i>
+            </div>
+            <div class="timeline-content">
+               <h4>{{ event.status }}</h4>
+               <p>{{ event.description }}</p>
             </div>
          </div>
       </ng-template>

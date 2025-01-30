@@ -104,7 +104,35 @@
    /* Adjust thickness */
 }
 
-::ng-deep .p-timeline .p-timeline-event:nth-child(-n+2) .p-timeline-event-connector {
+::ng-deep .p-timeline .p-timeline-event:nth-child(-n+4) .p-timeline-event-connector {
    background-color: green !important;
    /* Green separator for the first 3 events */
+}
+
+.text {
+   font-size: 12px;
+   text-wrap: 10px;
+}
+
+.time-con {
+   padding-top: 0px;
+}
+
+@media screen and (max-width: 768px) {
+   .time-con {
+      padding-top: 20px;
+   }
+}
+
+.icon-wrapper {
+   display: inline-block;
+   /* Ensure the icon stays inline */
+   font-size: 2rem;
+   /* Optional: Adjust size as needed */
+}
+
+.flexed {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
 }
