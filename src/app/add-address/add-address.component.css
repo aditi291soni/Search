@@ -20,7 +20,23 @@
    padding: 8px;
    margin-bottom: 10px;
 }
-
+.mandatory {
+   color: red;
+   font-size: 16px;
+   margin-left: 5px;
+}
+.icon{
+   overflow: none !important;
+   font-size: 21px !important;
+   height: 21px !important;
+}
+textarea {
+   min-height: 40px;  /* Set a minimum height */
+   max-height: 270px; /* Prevent it from growing too much */
+   height: 70px;
+   overflow-y: hidden; /* Hide the scrollbar */
+   resize: none; /* Disable manual resizing */
+ }
 .current-location-btn {
    background-color: var(--secondary-main);
    color: white;

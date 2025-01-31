@@ -1,0 +1,19 @@
+<div class="card" *ngIf="loading">
+   <div class="card">
+      <p-carousel [value]="listofBanner" [numVisible]="3" [numScroll]="1" [responsiveOptions]="responsiveOptions">
+          <ng-template let-listofBanner #item>
+              <div class="border border-surface-200 dark:border-surface-700 rounded m-2 p-4">
+                  <div class="mb-4">
+                      <div class="relative mx-auto">
+                          <img [src]="listofBanner.image" class="" [alt]="listofBanner.title" class="w-full rounded-border" />
+                      </div>
+                  </div>
+               
+              </div>
+          </ng-template>
+      </p-carousel>
+  </div>
+</div>
+<div *ngIf="!loading">
+   <p-skeleton class="banner-img" height="150px"></p-skeleton>
+</div>

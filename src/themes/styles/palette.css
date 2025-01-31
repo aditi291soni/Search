@@ -2,7 +2,7 @@
    --pure-white: #fff;
    --neutral-light: #f9f9f9;
    --neutral-main: #bdbdbd;
-   --neutral-dark: #212121;
+   --neutral-dark: #000000;
 
    --primary-light: rgb(25, 139, 205);
    --primary-main: #198CCD;
@@ -27,8 +27,8 @@
    --error-main: #f44336;
    --error-dark: #b71c1c;
 
-   --text-primary: #3f51b5;
-   --text-secondary: #212121;
+   --text-primary: #198ccd;
+   --text-secondary: #000000;
    --text-disabled: #bdbdbd;
 
    --gradients-primary-main: #9c27b0;
@@ -36,4 +36,9 @@
 
    --gradients-secondary-main: #2196f3;
    --gradients-secondary-state: #81d4fa;
+   --p-button-outlined-secondary-border-color :#198ccd !important;
+   --p-button-outlined-secondary-color: #198ccd !important;
+   --p-button-primary-background:#198ccd !important;
+   --p-button-primary-border-color:#198ccd !important;
 }
+ 

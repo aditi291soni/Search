@@ -8,11 +8,12 @@ import { ApiService } from '../services/api.service';
 import { environment } from '../../environments/environment';
 import { CustomerService } from '../services/customer.service';
 import { SkeletonModule } from 'primeng/skeleton';
+import { NoDataFoundComponent } from '../no-data-found/no-data-found.component';
 
 @Component({
    selector: 'app-customers',
    standalone: true,
-   imports: [CommonModule, ButtonModule, RouterModule, CardModule, AvatarModule, SkeletonModule],
+   imports: [CommonModule, ButtonModule, RouterModule, CardModule, AvatarModule, SkeletonModule,NoDataFoundComponent],
    templateUrl: './customers.component.html',
    styleUrls: ['./customers.component.css']
 })
@@ -39,7 +40,14 @@ export class CustomersComponent {
       this.customerService.getCustomerList({ business_id: this.businessDetail.id }).subscribe({
          next: (response) => {
             if (response.status) {
-               this.customerList = response.data || [];
+               let apiResponseData = response.data || [];
+               // this.customerList = response.data || [];
+
+               this.customerList = apiResponseData.filter((customer: any) => 
+              
+                  customer.role_id == '4'
+                );
+                console.log( this.customerList)
             } else {
                console.error('Error fetching vehicle types:', response.message);
             }

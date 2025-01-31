@@ -20,6 +20,7 @@
    display: flex;
    align-items: center;
    gap: 1rem;
+   justify-content: space-between;
    cursor: pointer;
    
    /* Add spacing between avatar and details */
@@ -38,4 +39,17 @@
 .customer-mobile {
    font-size: 14px;
    color: gray;
+}
+.end{
+   display: flex;
+   justify-content: flex-end;
+}
+.red{
+   color: red;
+}
+.green{
+   color: green;
+}
+.margin{
+   margin: 0 10px;
 }

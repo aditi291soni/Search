@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { ApiService } from '../services/api.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../environments/environment';
@@ -9,11 +9,12 @@ import { Select } from 'primeng/select';
 import { SkeletonModule } from 'primeng/skeleton';
 import { ToastNotificationService } from '../services/toast-notification.service';
 import { ConfirmationService } from 'primeng/api';
+import { CalendarModule } from 'primeng/calendar';
 
 @Component({
    selector: 'app-address-preview',
    standalone: true,
-   imports: [CommonModule, ButtonModule, Select, SkeletonModule],
+   imports: [CommonModule, ButtonModule, Select, SkeletonModule,CalendarModule,FormsModule],
    templateUrl: './address-preview.component.html',
    styleUrls: ['./address-preview.component.css']
 })
@@ -25,7 +26,7 @@ export class AddressPreviewComponent {
    newOrder: any;
    vehicleTypeList: any;
    loading: boolean = true;
-   loading_button: boolean = false;
+   loading_button:any;
    deliveryList: any;
    times: any;
    sub_total: any;
@@ -44,7 +45,9 @@ export class AddressPreviewComponent {
    pay_on_delivery: string = '0';
    selectedSlot: any;
    order_status: any;
-   constructor(private apiService: ApiService, private router: Router, private confirmationService: ConfirmationService, private fb: FormBuilder, private route: ActivatedRoute,private toastService: ToastNotificationService) {
+   selectedDate: string = '';
+   minDate: Date | undefined;
+   constructor( private cdr: ChangeDetectorRef,private apiService: ApiService, private router: Router, private confirmationService: ConfirmationService, private fb: FormBuilder, private route: ActivatedRoute,private toastService: ToastNotificationService) {
       this.pickupLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedPickup'));
       this.dropLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedDrop'));
       this.businessDetails = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
@@ -73,16 +76,37 @@ export class AddressPreviewComponent {
       { name: 'Cash', value: 'cash', img: 'pi pi-money-bill' }
    ];
    CashTypes: any = [
-      { name: 'Pay On Pickup', value: 'pickup' },
-      { name: 'Pay On Drop', value: 'drop' },
+      { name: 'Pickup Point', value: 'pickup' },
+      { name: 'Drop Point', value: 'drop' },
 
    ];
    ngOnInit(): void {
+      this.loading_button = false;
+      this.cdr.detectChanges();
+      console.log('s',this.loading_button)
       this.fetchDeliveryTypeList();
       this.getfinancialYear()
       this.TimeSlot()
    }
-
+   setDefaultDate() {
+      const currentDate = new Date();
+      this.selectedDate = currentDate.toISOString().split('T')[0]; // Format: "yyyy-mm-dd"
+      this.minDate = currentDate;
+      console.log("Default Selected Date:", this.selectedDate);
+    }
+    onDateSelect(event: Date) {
+      const istOffset = 5.5 * 60 * 60 * 1000; // IST offset in milliseconds
+      const localDate = new Date(event.getTime() + istOffset); // Convert UTC to IST
+    
+      this.selectedDate = localDate.toISOString().split('T')[0]; // Format as "yyyy-mm-dd"
+      console.log("Selected Date (IST):", this.selectedDate);
+    }
+    
+   //  onDateSelect(event: Date) {
+   //    console.log(event)
+   //    this.selectedDate = event.toISOString().split('T')[0]; // Convert selected date to "yyyy-mm-dd"
+   //    console.log("Selected Date:", this.selectedDate);
+   //  }
    fetchDeliveryTypeList(): void {
       let payload: any = {};
       payload.super_admin_id = environment.superAdminId;
@@ -133,7 +157,7 @@ export class AddressPreviewComponent {
             if (response.status === true) {
                // this.deliveryList = response.data || [];
                this.timeSlot = response.data
-
+               this.setDefaultDate();
             } else {
                console.error('Error fetching vehicle types:', response.message);
             }
@@ -239,40 +263,56 @@ console.log(this.order_status,'order-status')
       console.log(this.pay_on_delivery, this.pay_on_pickup)
    }
    getlastinvoice() {
+      console.log(this.loading_button)
+      if (this.loading_button) return; // Prevent multiple clicks while loading
+
+   this.loading_button = true; // Disable button immediately
       if(this.timeslot=='1' && !this.selectedSlot){
 
          this.toastService.showError("Please select time slot")
-        
+         this.loading_button = false;
+         this.cdr.detectChanges();
+         return;
+       }      if(this.timeslot=='1' && !this.selectedDate){
+
+         this.toastService.showError("Please select delivery date")
+         this.loading_button = false;
+         this.cdr.detectChanges();
          return;
        }
+       
        if (!this.selectedPaymentType ) {
          this.toastService.showError("Please select payment mode")
-         
+         this.loading_button = false;
+         this.cdr.detectChanges();
          return;
        }
        if(this.selectedPaymentType=='cash' && !this.selectedPayment){
 
          this.toastService.showError("Please select payment location")
-        
+         this.loading_button = false;
+         this.cdr.detectChanges();
          return;
        }
       else if (!this.selectedDeliveryType ) {
        this.toastService.showError("Please select Delivery Type")
-   
+       this.loading_button = false;
+       this.cdr.detectChanges();
          return;
        }
       try {
-         this.loading_button = true;
+        
          this.apiService.last_invoice({ business_id: this.businessDetails.id }).subscribe({
             next: (data: any) => {
+               // this.loading_button = true;
                let ApiResponse: any = data;
                this.listofInvoice = ApiResponse.data.order_no ? Number(ApiResponse.data.order_no) + 1 : Number(ApiResponse.data.id) + 1
                console.log(this.listofInvoice)
                if (this.listofInvoice) {
                   this.addInvoice(this.listofInvoice)
-                  this.editDelivery(this.deliveryId)
+                  
 
-                  this.loading_button = false;
+                 
                }
 
                else {
@@ -322,7 +362,7 @@ console.log(this.order_status,'order-status')
       payload.for_date = formattedDate
       payload.delivery_id = this.deliveryId
       payload.created_on_date = formattedDate
-      payload.for_booking_date = formattedDate
+      payload.for_booking_date =this.selectedDate
       payload.drop_name = this.dropLocation.person_name
       payload.drop_mobile = this.dropLocation?.person_phone_no
       payload.pickup_name = this.pickupLocation?.person_name
@@ -333,8 +373,11 @@ console.log(this.order_status,'order-status')
                let ApiResponse: any = data;
                console.log(data.status)
                if (data.status) {
-                  this.listofInvoice = ApiResponse.data;
-                  this.invoice_id = ApiResponse.data.id
+                  // this.loading_button = true;
+                  console.log('i',this.loading_button )
+                  // this.listofInvoice = ApiResponse.data;
+                  this.invoice_id = ApiResponse?.data?.id
+                  this.editDelivery(this.deliveryId)
                   this.addTransaction(data.data.id)
                   // if(  this.selectedPaymentType == 'cash'){
                   //   this.addDeliveryAllot(this.invoice_id)
@@ -351,6 +394,8 @@ console.log(this.order_status,'order-status')
                   // this.messageService.showThankyou()
                } else {
                   this.toastService.showError(data.msg); 
+                  this.loading_button = false;
+                  this.cdr.detectChanges();
                }
 
 
@@ -382,23 +427,16 @@ console.log(this.order_status,'order-status')
       try {
          this.apiService.addTransaction(payload).subscribe({
             next: (data: any) => {
+               // this.loading_button = true;
+               console.log('i',this.loading_button )
                let ApiResponse: any = data;
                // this.clearLocal()
                // this.addNotification()
                if(data.status){
                 
-               this.router.navigate(['/dashboard']);
-               this.clearLocal()
-               this.confirmationService.confirm({
-                  message: 'Thank Your Order Placed Successfully!',
-                  header: 'Thank You!',
-                  icon: 'pi pi-check-circle',
-                  acceptLabel: 'OK',
-                  rejectVisible: false, // Hides the "No" button
-                  accept: () => {
-                      console.log('Thank you message displayed');
-                  }
-              });
+               // this.router.navigate(['/dashboard']);
+             
+             
               
                // this.toastService.showSuccess("Order Placed Successfully")
             }
@@ -445,12 +483,14 @@ console.log(this.order_status,'order-status')
       payload.drop_address = this.dropLocation.address_details
       payload.pickup_address = this.pickupLocation.address_details
       payload.parcel_weight = this.listofInvoice
+      payload.invoice_id=this.invoice_id ? this.invoice_id: 0
       // payload.user_id=
       try {
          this.apiService.edit_order_delivery_details(payload).subscribe({
             next: (data: any) => {
                let ApiResponse: any = data;
             this.addNotification()
+            // this.loading_button = true;
                // this.listofDelivery = ApiResponse.data;
                // this.clearLocal()
                // this.router.navigate(['/order-list']);
@@ -458,6 +498,53 @@ console.log(this.order_status,'order-status')
             },
             error: (error: any) => {
                console.log('Error fetching data', error);
+               this.loading_button = false;
+               this.cdr.detectChanges();
+            }
+         });
+      } catch (error) {
+         console.log('Error in the catch block', error);
+      }
+   }
+
+   editDeliveries(id: any) {
+      let payload: any = {}
+      payload.business_id = this.businessDetails.id
+      payload.order_delivery_details_id = id
+      payload.status = 1
+      payload.order_status_id=this.order_status
+      payload.delivery_type_id = this.selectedDeliveryType
+      payload.order_value = this.sub_total
+      payload.delivery_charges = this.sub_total
+      payload.time_slot = this.timeslot
+      payload.pickup_address_id = this.pickupLocation.id
+      payload.drop_address_id = this.dropLocation.id
+      payload.delivery_payment_status = this.selectedPaymentType
+      payload.drop_person_name = this.dropLocation.person_name
+      payload.drop_phone_no = this.dropLocation.person_phone_no
+      payload.pickup_person_name = this.pickupLocation.person_name
+      payload.pickup_phone_no = this.pickupLocation.person_phone_no
+      payload.super_admin_id = environment.superAdminId
+      payload.drop_address = this.dropLocation.address_details
+      payload.pickup_address = this.pickupLocation.address_details
+      payload.parcel_weight = this.listofInvoice
+      payload.invoice_id=this.invoice_id ? this.invoice_id: 0
+      // payload.user_id=
+      try {
+         this.apiService.edit_order_delivery_details(payload).subscribe({
+            next: (data: any) => {
+               let ApiResponse: any = data;
+            // this.addNotification()
+            // this.loading_button = true;
+               // this.listofDelivery = ApiResponse.data;
+               // this.clearLocal()
+               // this.router.navigate(['/order-list']);
+
+            },
+            error: (error: any) => {
+               console.log('Error fetching data', error);
+               this.loading_button = false;
+               this.cdr.detectChanges();
             }
          });
       } catch (error) {
@@ -466,11 +553,16 @@ console.log(this.order_status,'order-status')
    }
 
 
-
-
    addNotification() {
+      if(!this.invoice_id){
+console.log("nf",this.invoice_id)
+         this.toastService.showSuccess('Your Order is Successfully Cancelled'); 
+         return;
+      }else{
+         console.log("f",this.invoice_id)
+      }
       let payload = {
-         "user_id": 2083,
+         "user_id": environment.riderId,
          "super_admin_id": environment.superAdminId,
          "delivery_id": this.deliveryId,
          "invoice_id": this.invoice_id,
@@ -485,10 +577,24 @@ console.log(this.order_status,'order-status')
       try {
          this.apiService.addNotification(payload).subscribe({
             next: (data: any) => {
-           
+               // this.loading_button = true;
+               this.clearLocal()
+               this.confirmationService.confirm({
+                  message: 'Thank Your Order Placed Successfully!',
+                  header: 'Thank You!',
+                  icon: 'pi pi-check-circle',
+                  acceptLabel: 'OK',
+                  rejectVisible: false, // Hides the "No" button
+                  accept: () => {
+                      console.log('Thank you message displayed');
+                  }
+                  
+              });
+              this.loading_button = false;
             },
             error: (error: any) => {
                console.log('Error fetching data', error);
+               this.loading_button = false;
             }
 
          });
@@ -497,8 +603,18 @@ console.log(this.order_status,'order-status')
       }
    }
    clearLocal() {
+ 
       localStorage.removeItem('selectedPickup');
       localStorage.removeItem('selectedDrop');
       localStorage.removeItem('new-order');
+      this.router.navigate(['/dashboard']);
+   }
+   cancel() {
+      this.order_status=25
+      this.editDeliveries(this.deliveryId)
+      localStorage.removeItem('selectedPickup');
+      localStorage.removeItem('selectedDrop');
+      localStorage.removeItem('new-order');
+      this.router.navigate(['/dashboard']);
    }
 }

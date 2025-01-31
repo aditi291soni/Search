@@ -3,9 +3,11 @@ import { ApiService } from '../services/api.service';
 import { Router } from '@angular/router';
 import { InputTextModule } from 'primeng/inputtext';
 import { CardModule } from 'primeng/card';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
+import { PasswordModule } from 'primeng/password';
 import { ToastNotificationService } from '../services/toast-notification.service';
+import { CommonModule } from '@angular/common';
 
 /**
  * SigninComponent handles the user sign-in process.
@@ -17,14 +19,15 @@ import { ToastNotificationService } from '../services/toast-notification.service
    standalone: true,
    templateUrl: './signin.component.html',
    styleUrls: ['./signin.component.css'],
-   imports: [CardModule, FormsModule, ButtonModule, InputTextModule],
+   imports: [CardModule, FormsModule, ButtonModule, InputTextModule,PasswordModule,ReactiveFormsModule,CommonModule],
 })
 export class SigninComponent {
    /** The email or phone number entered by the user for sign-in */
-   email_or_phone: string = '';
-
+   // email_or_phone: string = '';
+   showPassword: boolean = false;
+   signinForm: FormGroup;
    /** The password entered by the user for sign-in */
-   password: string = '';
+   // password: string = '';
 
    /** State to track whether the API call is in progress */
    loading: boolean = false;
@@ -38,11 +41,23 @@ export class SigninComponent {
     * @param toastService - ToastNotificationService to display notifications
     */
    constructor(
+      private fb: FormBuilder,
       private apiService: ApiService,
       private router: Router,
       private toastService: ToastNotificationService
-   ) { }
-
+   ) { 
+      this.signinForm = this.fb.group({
+         email_or_phone: ['', [Validators.required, Validators.pattern(/^(.+)@(.+)$|^\d{10}$/)]],
+         password: ['', [Validators.required, Validators.minLength(6)]],
+       });
+   }
+  
+   togglePasswordVisibility() {
+      this.showPassword = !this.showPassword;
+    }
+   redirectToSignUp() {
+     this.router.navigate(['/auth/sign-up']); // Navigates to the route
+   }
    /**
     * Handles the form submission for sign-in.
     * It calls the ApiService's `signIn` method with the provided email_or_phone and password.
@@ -55,9 +70,13 @@ export class SigninComponent {
    onSubmit(): void {
       // Start the loading state
       this.loading = true;
-
+      if (this.signinForm.invalid) {
+         this.signinForm.markAllAsTouched();
+         this.loading = false;
+         return;
+       }
       // Call the API for sign-in
-      this.apiService.signIn(this.email_or_phone, this.password).subscribe({
+      this.apiService.signIn(this.signinForm.value).subscribe({
          next: (response) => {
             // Handle successful sign-in
             if (response.status === true) {
@@ -68,8 +87,8 @@ export class SigninComponent {
                // Show success notification
                this.toastService.showSuccess('Login successful!');
                this.fetchBusinessList()
-               if (response.data && response.data.business_id && response.data.business_id.length > 0) {
-
+               // if (response.data && response.data.business_id && response.data.business_id.length > 0) {
+               //    this.router.navigate(['/add-business']);
                   // const businessIdLength = response.data.business_id.length;
 
                   // if (businessIdLength == 0) {
@@ -82,10 +101,12 @@ export class SigninComponent {
                   //    // Redirect to the "List of Businesses" page
                   //    this.router.navigate(['/list-of-business']);
                   // }
-               } else {
-                  // TODO: Redirect to the business setup page
-                  // this.router.navigate(['/business-setup']);
-               }
+               // } else {
+               //    this.loading = false;
+               //    this.toastService.showError('Sign-in failed. Invalid credentials or other error.');
+               //    // TODO: Redirect to the business setup page
+               //    // this.router.navigate(['/business-setup']);
+               // }
 
             } else {
                // Show error notification if credentials are invalid
@@ -127,6 +148,7 @@ export class SigninComponent {
                   this.router.navigate(['/list-of-business']);
                }
             } else {
+               this.router.navigate(['/add-business']);
                console.error('Error fetching list of business:', response.message);
                this.loading = false;
             }

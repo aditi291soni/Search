@@ -13,8 +13,8 @@
    </div>
 </div>
 <div>
-   <h2>Add Business</h2>
-   <div class="thin">Add a business profile</div>
+   <h2>{{this.business_id ? "Edit" :"Add"}} Business</h2>
+   <div class="thin">{{this.business_id ? "Edit" :"Add"}} a business profile</div>
    <br>
    <form [formGroup]="businessForm" class="needs-validation" novalidate (ngSubmit)="onSubmit()">
       <div class="card-container">
@@ -56,7 +56,7 @@
          <div class="form-group mb-3">
             <label for="phone" class="form-label">Phone Number <span class="mandatory">*</span></label>
             <input id="phone" type="text" pInputText formControlName="phone" placeholder="Enter Phone Number"
-               maxlength="10" class="form-control" />
+               maxlength="10" minlength="10" class="form-control" />
             <div *ngIf="businessForm.get('phone')?.invalid && businessForm.get('phone')?.touched" class="mandatory">
                <small *ngIf="businessForm.get('phone')?.hasError('required')">Phone number is required.</small>
                <small *ngIf="businessForm.get('phone')?.hasError('pattern')">Enter only numbers.</small>
@@ -87,7 +87,7 @@
 
          <!-- Pincode -->
          <div class="form-group mb-3">
-            <label for="pincode" class="form-label">Pincode <span class="mandatory">*</span></label>
+            <label for="pincode" class="form-label">Pincode</label>
             <input id="pincode" type="text" pInputText formControlName="pincode" placeholder="Enter Pincode"
                maxlength="6" class="form-control" />
             <div *ngIf="businessForm.get('pincode')?.invalid && businessForm.get('pincode')?.touched" class="mandatory">
@@ -149,8 +149,8 @@
       </div>
       <div class="text-center">
          <div class="space">
-            <button pButton class="p-button-outlined p-button-danger ml-5" label="Cancel"></button>
-            <button pButton type="submit" label="Submit" [disabled]="businessForm.invalid"></button>
+            <button *ngIf="!this.business_id" pButton class="p-button-outlined p-button-danger ml-5" label="Reset" (click)="resetForm()"></button>
+            <button pButton type="submit" label="Submit"  [loading]="loading_button" [disabled]="businessForm.invalid"></button>
          </div>
       </div>
    </form>

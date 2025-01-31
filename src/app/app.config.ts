@@ -19,7 +19,7 @@ export const appConfig: ApplicationConfig = {
       }),
       provideRouter(routes),
       provideHttpClient(withInterceptors([authInterceptor])), // Register the interceptor here
-      MessageService,  // Provide MessageService globally
+      MessageService, provideAnimationsAsync(),  // Provide MessageService globally
       // ToastModule,     // Ensure ToastModule is available globally
    ],
 };

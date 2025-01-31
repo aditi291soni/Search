@@ -40,6 +40,9 @@ export class SignupComponent {
          super_admin: [environment.superAdminId, [Validators.required]],
        })
     }
+    redirectToSignUp() {
+      this.router.navigate(['/auth/sign-in']); // Navigates to the route
+    }
    onSubmit(): void {
       // Start the loading state
       this.loading = true;
@@ -55,12 +58,14 @@ this.signInForm.value.password_confirmation=this.signInForm.value.password
 
                // Show success notification
                this.router.navigate(['/add-business']);
+               localStorage.setItem('authToken', response.data.token);
+               localStorage.setItem('userData', JSON.stringify(response.data));
                this.toastService.showSuccess('Signup successful!');
               
 
             } else {
                // Show error notification if credentials are invalid
-               this.toastService.showError('Sign-in failed. Invalid credentials or other error.');
+               this.toastService.showError(response.msg);
             }
          },
          error: (error) => {

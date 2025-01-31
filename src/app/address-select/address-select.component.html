@@ -1,13 +1,29 @@
+<!-- <div class="header">
+   <div >
+      <h2>Select Address</h2>
+      <div class="thin">Select any of the detailed addresses</div>
+
+   </div>
+   <button pButton type="button" icon="pi pi-map-marker" label="Select on Map" class="map-button " (click)="addPickUpAddress()"></button>
+
+   <div>
+   </div>
+</div> -->
+
+
+
 <div class="header">
    <div>
       <h2>Select Address</h2>
-      <div class="thin">Select any of the detailed addresses</div>
-      <button pButton type="button" icon="pi pi-map-marker" label="Select on Map" class="map-button" (click)="addPickUpAddress()"></button>
-
+      <div class="thin">List of addresses</div>
    </div>
-   <div>
-   </div>
+   <button  pButton type="button" type="button" icon="pi pi-map-marker" label="Select on Map" (click)="addPickUpAddress()"
+      class="p-button-outlined p-button-secondary">
+   </button>
 </div>
+
+<br>
+
 
 <div class="recent-orders-container">
    <!-- Skeleton Loader -->
@@ -34,19 +50,19 @@
       <div class="recent-order-item" *ngFor="let address of addressList" (click)="saveAddressToLocalStorage(address)">
          <div class="recent-order-flex">
             <div>
-               <div class="maintext">{{ address.person_name || '' }}</div>
+               <div class="maintext">{{ address.person_name | titlecase }}</div>
             </div>
             <div>
-               <div class="subtext">{{ address.address_name || '' }}</div>
+               <div class="subtext">{{ address.address_name | titlecase }}</div>
             </div>
          </div>
          <div class="recent-order-flex">
             <div>
-               <div class="address">
-                  {{ address.house_no || '' }}, {{ address.landmark || '' }}
+               <div class="address" *ngIf="address.house_no">
+                  {{ address.house_no  }}, {{ address.landmark  }}
                </div>
                <div class="address">
-                  {{ address.address_details }}
+                  {{ address.address_details  }}
                </div>
             </div>
          </div>

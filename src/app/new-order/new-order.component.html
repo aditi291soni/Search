@@ -18,7 +18,7 @@
       <h3>Select Vehicle<span class="mandatory">*</span></h3>
       <div class="vehicle-cards">
          <div *ngFor="let vehicle of vehicleTypeList" class="vehicle-card"
-            [class.selected]="form.get('vehicleType')?.value === vehicle.id" (click)="selectVehicle(vehicle.id)">
+            [class.selected]="form.get('vehicle_type_id')?.value === vehicle.id" (click)="selectVehicle(vehicle.id)">
             <img [src]="vehicle.image" alt="{{ vehicle.vehicle_type }}" class="vehicle-image" />
             <div class="vehicle-name">{{ vehicle?.vehicle_type }}</div>
          </div>
@@ -33,7 +33,7 @@
          <div class="address-info">
             <div class="personal-info">
                <div>
-                  <div class="personal-info-text">{{ pickupLocation?.person_name }}</div>
+                  <div class="personal-info-text">{{ pickupLocation?.person_name | titlecase }}</div>
                   <div class="mb-6">{{ pickupLocation?.person_phone_no }}</div>
                </div>
                <!-- Close Button for Pickup -->
@@ -41,7 +41,7 @@
                   <i class="pi pi-times"></i> <!-- PrimeNG Close Icon -->
                </button>
             </div>
-            <p>{{ pickupLocation?.house_no }}, {{ pickupLocation?.landmark }}</p>
+            <p *ngIf="pickupLocation?.house_no">{{ pickupLocation?.house_no }}, {{ pickupLocation?.landmark }}</p>
             <p>{{ pickupLocation?.address_details }}</p>
          </div>
       </div>
@@ -55,7 +55,7 @@
          <div class="address-info">
             <div class="personal-info">
                <div>
-                  <div class="personal-info-text">{{ dropLocation?.person_name }}</div>
+                  <div class="personal-info-text">{{ dropLocation?.person_name | titlecase }}</div>
                   <div class="mb-6">{{ dropLocation?.person_phone_no }}</div>
                </div>
                <!-- Close Button for Drop -->
@@ -63,7 +63,7 @@
                   <i class="pi pi-times"></i> <!-- PrimeNG Close Icon -->
                </button>
             </div>
-            <p>{{ dropLocation?.house_no }}, {{ dropLocation?.landmark }}</p>
+            <p *ngIf="dropLocation?.house_no">{{ dropLocation?.house_no }},<ng-container *ngIf="dropLocation?.landmark">{{ dropLocation?.landmark }}</ng-container> </p>
             <p>{{ dropLocation?.address_details }}</p>
          </div>
       </div>

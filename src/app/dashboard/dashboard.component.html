@@ -4,10 +4,15 @@
 <br>
 
 <!-- Banner with Skeleton -->
-<div *ngIf="loading">
+<!-- <div *ngIf="loading">
    <p-skeleton class="banner-img" height="150px"></p-skeleton>
-</div>
-<img *ngIf="!loading" class="banner-img"
+</div> -->
+
+<!-- <div *ngIf="!loading">
+   <app-corousel></app-corousel>
+</div> -->
+<!-- TODO chnag --> 
+<img  class="banner-img" *ngIf="!loading"
    src="https://ik.imagekit.io/praveenarbs/api-images/super-announcement/24/17368555934940400.jpg" alt="banner" />
 <br><br>
 
@@ -47,35 +52,35 @@
    </div>
 </div>
 <div class="recent-orders-container" *ngIf="!loading">
+   <ng-container *ngIf="order.length==0">
+      <app-no-data-found></app-no-data-found>
+   </ng-container>
    <div class="recent-order-item"  *ngFor="let order of order" (click)="navigateToOrderDetails(order.id)">
-      <div class="recent-order-flex">
+      <div class="recent-order-flex"  >
          <div>
-            <div class="subtext2">Drop Address</div>
-            <div class="maintext">{{order.drop_name | titlecase}}</div>
-            <div class="subtext">{{order.drop_mobile}}</div>
             <div class="subtext2 mt-2">Pickup Address</div>
-            <div class="maintext">{{order.pickup_name | titlecase}}</div>
-            <div>{{order.pickup_mobile}}</div>
+            <div class="maintext">{{order?.pickup_name | titlecase}}</div>
+            <div>{{order?.pickup_mobile}}</div>
+            <div class="subtext2">Drop Address</div>
+            <div class="maintext">{{order?.drop_name | titlecase}}</div>
+            <div class="subtext">{{order?.drop_mobile}}</div>
+      
          </div>
          <div class="order-no">
             <div class="subtext2">Order No.</div>
             <div class="maintext2">#{{order.order_no}}</div>
          </div>
       </div>
-      <!-- <div class="recent-order-flex">
-         <div class="address">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-         </div>
-         <button severity="warn" pButton type="button" label="Pending" class="p-button-outlined" size="small"></button>
-      </div> -->
+ 
+     
    </div>
 
 </div>
 <br>
 
 <!-- Coupons -->
-<div *ngIf="loading">
+<!-- <div *ngIf="loading">
    <p-skeleton class="banner-img" height="150px"></p-skeleton>
 </div>
 <img *ngIf="!loading" class="banner-img" src="https://dropzonevendor.magicqr.in/assets/img/theme/coupan.jpg"
-   alt="coupon" />
+   alt="coupon" /> -->

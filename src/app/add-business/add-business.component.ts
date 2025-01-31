@@ -15,7 +15,7 @@ import { Select } from 'primeng/select';
 @Component({
    selector: 'app-add-business',
    imports: [InputTextModule, ButtonModule, CommonModule, SkeletonModule, FormsModule, Select,
-      ReactiveFormsModule, FileUpload, ToastModule],
+      ReactiveFormsModule,  ToastModule],
    templateUrl: './add-business.component.html',
    styleUrl: './add-business.component.css',
    standalone: true,
@@ -24,17 +24,24 @@ import { Select } from 'primeng/select';
 export class AddBusinessComponent {
    businessForm!: FormGroup;
    loading: boolean = false;
+   loading_button: boolean = false;
    previewPictureUrl: any = '';
    logoImage: any = null;
    previewPicture: any = '';
    blob: Blob | undefined;
    listofState: any[] = [];
-   constructor(private fb: FormBuilder, private apiService: ApiService, private route: ActivatedRoute, private router: Router,) { }
+   business_id: any;
+   constructor(private fb: FormBuilder, private apiService: ApiService, private route: ActivatedRoute, private router: Router,) {
+      this.route.params.subscribe((params) => {
+     
+         this.business_id = params['id'];
+       });
+    }
 
    ngOnInit(): void {
       // Initialize the form group with controls
       this.businessForm = this.fb.group({
-         name: ['', [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)]],
+         name: ['', [Validators.required, ]],
          owner: ['', [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)]],
          email: ['', [Validators.required, Validators.email]],
          phone: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.maxLength(10), Validators.minLength(10)]],
@@ -42,13 +49,16 @@ export class AddBusinessComponent {
          city: ['', Validators.required],
          pincode: ['', [Validators.pattern('^[0-9]*$'), Validators.pattern(/^\d{6}$/), Validators.maxLength(6)]],
          state_id: ['', Validators.required],
-         gst_registration: ['0',],
+         gst_registration: ['0'],
          gst_number: ['',],
          super_admin: [environment.superAdminId],
          logo_image: [''],
          country_id: ['101']
       });
       this.getlistofState()
+      if(this.business_id){
+this.getBusiness()
+      }
    }
 
    onBasicUploadAuto(event: any) {
@@ -93,6 +103,7 @@ export class AddBusinessComponent {
 
    }
    addBusiness(form: any) {
+      this.loading_button = true;
       console.log(this.businessForm.value)
       const formData = new FormData();
 
@@ -118,6 +129,7 @@ export class AddBusinessComponent {
                this.router.navigate(['']);
             } else {
                // this.messageService.showError(data.msg, 'Error')
+               this.loading_button = false;
             }
             console.log(data)
 
@@ -130,13 +142,57 @@ export class AddBusinessComponent {
       })
    }
 
+   editBusiness(form: any) {
+      this.loading_button = true;
+      console.log(this.businessForm.value)
+      const formData = new FormData();
 
+      // Loop through all the form controls
+      Object.keys(this.businessForm.value).forEach((key) => {
+         const value = this.businessForm.value[key];
+
+         // If the value is a file (Blob), append it differently
+         if (key === 'logo_image' && value instanceof Blob) {
+            formData.append(key, value, 'logo.png'); // 'logo.png' is the name of the file to be sent
+         } else {
+            // Append normal form control values as string
+            formData.append(key, value ? value : '');
+         }
+      });
+      this.loading = true;
+      this.businessForm.value.business_id=this.business_id
+      this.apiService.editBusiness(this.businessForm.value).subscribe({
+         next: (data: any) => {
+            this.loading = false;
+            if (data.status) {
+               localStorage.setItem('bussinessDetails', JSON.stringify(data.data));
+               // this.messageService.showSuccess(data.msg, 'Success')
+               this.router.navigate(['']);
+            } else {
+               // this.messageService.showError(data.msg, 'Error')
+               this.loading_button = false;
+            }
+            console.log(data)
+
+
+         },
+         error: (error: any) => {
+
+            console.log(error);
+         }
+      })
+   }
    onSubmit(): void {
 
       if (this.businessForm.valid) {
          console.log(this.businessForm.value);
          // this.businessForm.country_id='101'
-         this.addBusiness(this.businessForm.value)
+         if(this.business_id){
+            this.editBusiness(this.businessForm.value)
+         }else{
+            this.addBusiness(this.businessForm.value)
+         }
+       
       } else {
          console.log('Form is invalid');
       }
@@ -152,7 +208,35 @@ export class AddBusinessComponent {
       // }
 
    }
+  getBusiness() {
+      try {
+         this.apiService.getBusiness({business_id:this.business_id}).subscribe({
+            next: (data: any) => {
+               let ApiResponse: any = data.data;
+              this.businessForm.patchValue({
+               name: ApiResponse?.name,
+               owner:ApiResponse?.owner,
+               email: ApiResponse?.email,
+               phone: ApiResponse?.plain_phone,
+               address: ApiResponse?.address,
+               city: ApiResponse?.city,
+               pincode: ApiResponse?.pincode,
+               state_id: ApiResponse?.state_id,
+              
+               logo_image: ApiResponse?.image,
+         
+              })
 
+            },
+            error: (error: any) => {
+               console.log('Error fetching data', error);
+            }
+         });
+      } catch (error) {
+         console.log('Error in the catch block', error);
+      }
+
+   }
 
    getlistofState() {
       try {
@@ -171,4 +255,17 @@ export class AddBusinessComponent {
       }
 
    }
+   resetForm() {
+      this.businessForm.reset({
+        name: '',
+        owner: '',
+        email: '',
+        phone: '',
+        address: '',
+        city: '',
+        pincode: '',
+        state_id: null,  // Ensure dropdowns reset correctly
+      });
+    }
+    
 }

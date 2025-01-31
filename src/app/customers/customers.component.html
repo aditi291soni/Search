@@ -29,7 +29,10 @@
 
    <!-- Show actual content when not loading -->
    <div *ngIf="!loading">
-      <p-card *ngFor="let customer of customerList">
+      <ng-container *ngIf="customerList.length==0">
+         <app-no-data-found></app-no-data-found>
+      </ng-container>
+      <p-card *ngFor="let customer of customerList" class="margin">
          <div class="customer-card">
             <p-avatar [image]="customer.image" size="large" shape="circle"></p-avatar>
             <div class="customer-info">

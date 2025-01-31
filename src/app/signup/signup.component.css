@@ -1,0 +1,52 @@
+.signin-card {
+   display: block;
+   width: 390px;
+   min-height: 420px;
+   padding: 1rem;
+   text-align: center;
+}
+
+.signin-form {
+   margin-top: 1rem;
+   text-align: center;
+   /* border: 1px solid #d3d3d3; */
+}
+
+.signin-form .p-field {
+   display: block;
+   margin-bottom: 1rem;
+   text-align: left;
+}
+
+.form-actions {
+   margin-top: 1rem;
+   text-align: center;
+}
+
+.full-width {
+   width: 100%;
+}
+
+.thin {
+   font-weight: 300;
+   font-size: 14px;
+}
+.flex{
+   display: flex;
+   justify-content: space-around;
+}
+.margin-top{
+   margin-top: 1.5rem !important;
+   font-size: 13px;
+}
+.sign{
+   
+   font-size: 13px !important;
+   color: #198ccd !important;
+   font-weight: 700 !important;
+}
+.mandatory {
+   color: red;
+   font-size: 16px;
+   margin-left: 5px;
+}

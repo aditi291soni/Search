@@ -9,11 +9,12 @@ import { environment } from '../../environments/environment';
 import { CustomerService } from '../services/customer.service';
 import { SkeletonModule } from 'primeng/skeleton';
 import { Select } from 'primeng/select';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-settings',
  standalone: true,
-   imports: [CommonModule, ButtonModule, RouterModule, CardModule, AvatarModule, SkeletonModule,   Select,],
+   imports: [CommonModule, ButtonModule, RouterModule, CardModule, AvatarModule, SkeletonModule,   Select,FormsModule],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.css'
 })
@@ -21,11 +22,12 @@ export class SettingsComponent {
    businessDetail: any;
    selectedId: any;
    listofBusiness: any[]=[];
+   userData: any;
 
  constructor(private apiService: ApiService, private router: Router,private route: ActivatedRoute){
-
+   
    this.businessDetail = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
-
+   this.userData = this.apiService.getLocalValueInJSON(localStorage.getItem('userData'));
  }
    loading: boolean = false;
 
@@ -38,8 +40,9 @@ export class SettingsComponent {
   }
   
   
-  businessPage(){
-    this.router.navigate(['/list-of-business',]);
+  businessPage(id:any){
+   //  this.router.navigate(['/list-of-business',]);
+   this.router.navigate(['/edit-business',id]);
   
   }
   profilePage(){
@@ -55,9 +58,11 @@ export class SettingsComponent {
     this.router.navigate(['/support']); 
   }
   onBusinessChange(event:any){
-     this.selectedId = (event.target as HTMLSelectElement).value;
+   console.log(event)
+     this.selectedId = event;
+   //   console.log(this.selectedId)
     const selectedBusiness = this.listofBusiness.find(
-      (business: any) => business.id.toString() === this.selectedId
+      (business: any) => business.id.toString() == this.selectedId
     );
     if (selectedBusiness) {
       console.log('Selected Business:', selectedBusiness);

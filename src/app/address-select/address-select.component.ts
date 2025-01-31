@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../services/api.service';
 import { SkeletonModule } from 'primeng/skeleton';
+import { ButtonModule } from 'primeng/button';
 
 /**
  * Component to select an address from a list and save it to localStorage.
@@ -10,7 +11,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 @Component({
    selector: 'app-address-select',
    standalone: true,
-   imports: [CommonModule, SkeletonModule],
+   imports: [CommonModule, SkeletonModule,ButtonModule],
    templateUrl: './address-select.component.html',
    styleUrls: ['./address-select.component.css'],
 })

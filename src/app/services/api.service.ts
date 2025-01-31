@@ -33,8 +33,8 @@ export class ApiService {
     * @returns An observable that emits the response from the sign-in API.
     * @throws Will throw an error if the API request fails.
     */
-   signIn(email_or_phone: string, password: string): Observable<any> {
-      return this.http.post(`${this.baseUrl}/sign-in`, { email_or_phone, password }).pipe(
+   signIn(payload:object): Observable<any> {
+      return this.http.post(`${this.baseUrl}/sign-in`, payload).pipe(
          catchError((error) => {
             console.error('Error signing in:', error); // Log error for debugging
             return throwError(() => new Error('Failed to sign in')); // Return a user-friendly error message
@@ -64,7 +64,24 @@ export class ApiService {
          })
       );
    }
+   list_of_banner(payload:object): Observable<any> {
+      return this.http.post(`${this.baseUrl}/get-super-announcement-list`,payload, this.getHttpOptions()).pipe(
+         catchError((error) => {
+            console.error('Error fetching the list of businesses:', error); // Log error for debugging
+            return throwError(() => new Error('Failed to fetch the list of businesses')); // Return a user-friendly error message
+         })
+      );
+   }
 
+
+   list_of_coupan(): Observable<any> {
+      return this.http.post(`${this.baseUrl}/get-product-scheme-coupon-list`, this.getHttpOptions()).pipe(
+         catchError((error) => {
+            console.error('Error fetching the list of businesses:', error); // Log error for debugging
+            return throwError(() => new Error('Failed to fetch the list of businesses')); // Return a user-friendly error message
+         })
+      );
+   }
    last_invoice(params:object): Observable<any> {
      
       return this.http.post(`${this.baseUrl}/get-last-invoice`, params, this.getHttpOptions()).pipe(
@@ -292,8 +309,26 @@ export class ApiService {
          })
       );
    }
+   editBusiness(params: Object): Observable<any> {
+     
+      return this.http.post(`${this.baseUrl}/edit-business`, params, this.getHttpOptions()).pipe(
+         catchError((error) => {
+            console.error('Error fetching the list of business:', error); // Log error for debugging
+            return throwError(() => new Error('Failed to fetch the list of business')); // Return a user-friendly error message
+         })
+      );
+   }
+   
 
-
+   getBusiness(params: Object): Observable<any> {
+     
+      return this.http.post(`${this.baseUrl}/get-business`, params, this.getHttpOptions()).pipe(
+         catchError((error) => {
+            console.error('Error fetching the list of business:', error); // Log error for debugging
+            return throwError(() => new Error('Failed to fetch the list of business')); // Return a user-friendly error message
+         })
+      );
+   }
    addInvoice(params: Object): Observable<any> {
      
       return this.http.post(`${this.baseUrl}/add-invoice`, params, this.getHttpOptions()).pipe(

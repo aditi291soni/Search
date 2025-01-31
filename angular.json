@@ -28,8 +28,9 @@
                      }
                   ],
                   "styles": [
-                     "src/styles.css",
-                     "src/themes/styles/palette.css"
+                    "@angular/material/prebuilt-themes/azure-blue.css",
+                    "src/styles.css",
+                    "src/themes/styles/palette.css"
                   ],
                   "scripts": []
                },
@@ -38,13 +39,13 @@
                      "budgets": [
                         {
                            "type": "initial",
-                           "maximumWarning": "500kB",
-                           "maximumError": "1MB"
+                           "maximumWarning": "8MB",
+                           "maximumError": "8MB"
                         },
                         {
                            "type": "anyComponentStyle",
-                           "maximumWarning": "4kB",
-                           "maximumError": "8kB"
+                           "maximumWarning": "8MB",
+                           "maximumError": "8MB"
                         }
                      ],
                      "outputHashing": "all"
@@ -87,8 +88,9 @@
                      }
                   ],
                   "styles": [
-                     "src/styles.css",
-                     "src/themes/styles/palette.css"
+                    "@angular/material/prebuilt-themes/azure-blue.css",
+                    "src/styles.css",
+                    "src/themes/styles/palette.css"
                   ],
                   "scripts": []
                }

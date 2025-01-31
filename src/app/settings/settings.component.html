@@ -1,12 +1,20 @@
+<div class="header">
+   <div>
+      <h2>Profile</h2>
+      <!-- <div class="thin">List of all your customers</div> -->
+   </div>
+   <button routerLink="/add-business" pButton type="button" icon="pi pi-plus" label="New Business"
+      class="p-button-outlined p-button-secondary">
+   </button>
+</div>
 
-
-<!-- Card container -->
+<br>
 <div class="card-container">
    <!-- Show skeleton loader when loading -->
    <div *ngIf="loading">
       <p-card *ngFor="let i of [0, 1, 2, 3]">
          <div class="customer-card">
-            <p-avatar styleClass="skeleton-avatar" size="large" shape="circle">
+            <p-avatar styleClass="skeleton-avatar" size="xlarge" shape="circle">
                <p-skeleton width="50px" height="50px" shape="circle"></p-skeleton>
             </p-avatar>
             <div class="customer-info">
@@ -18,20 +26,41 @@
    </div>
 
    <!-- Show actual content when not loading -->
-   <div *ngIf="!loading" class="w-100">
-      <p-card >
-         <div class="customer-card">
-            <!-- <p-avatar [image]="customer.image" size="large" shape="circle"></p-avatar> -->
-            <div class="customer-info">
-               <span class="customer-name">Profile</span>
+   <div *ngIf="!loading" >
+  
+
+  
+    <div class="w-1001">
+      <p-avatar *ngIf="userData?.image; else firstLetter" [image]="userData?.image"  class="img" ></p-avatar>
+      <ng-template #firstLetter>
+        <p-avatar size="xlarge" label="{{ userData?.first_name?.charAt(0) | titlecase}}" shape="circle"></p-avatar>
+      </ng-template>
+    </div>
+    
+      
+          
+               <h1 class="customer-name ">{{this.userData?.first_name | titlecase}}</h1>
              
+               <span class="customer-mobile center">{{this.userData?.plain_phone }}</span>  
+           
+                  <span class="customer-mobile center">{{this.userData?.email | titlecase}}</span>
+         
+               <h4 class="w-100">Switch Business </h4>
+      <p-select class="w-100" [options]="listofBusiness" optionValue="id" optionLabel="name" (onChange)="onBusinessChange($event.value)"  [(ngModel)]="selectedId"
+      placeholder="Select Business" >
+   </p-select>
+
+   </div>
+
+   <h4 class="w-100">My  Business </h4>
+      <p-card *ngFor="let business of listofBusiness" class="margin">
+         <div class="customer-card" (click)="businessPage(business.id)">
+            <p-avatar [image]="business.image" size="large" shape="circle"></p-avatar>
+            <div class="customer-info">
+               <h1 class="customer-mobile">{{ business.name | titlecase }}</h1>
+               <span class="customer-mobile">{{ business.plain_phone }}</span>
+               <span class="customer-mobile">{{ business.email }}</span>
             </div>
          </div>
       </p-card>
-
-
-      <p-select [options]="listofBusiness" optionValue="id" optionLabel="owner"
-      placeholder="Select Business" >
-   </p-select>
    </div>
-</div>

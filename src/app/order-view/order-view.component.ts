@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { TimelineModule } from 'primeng/timeline';
 import { ApiService } from '../services/api.service';
@@ -6,6 +6,7 @@ import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { CommonModule } from '@angular/common';
+import { ToastNotificationService } from '../services/toast-notification.service';
 
 @Component({
    selector: 'app-order-view',
@@ -33,7 +34,9 @@ export class OrderViewComponent {
       private apiService: ApiService,
       private router: Router,
       private fb: FormBuilder,
-      private route: ActivatedRoute
+      private route: ActivatedRoute,
+       private toastService: ToastNotificationService,
+       private cdr: ChangeDetectorRef,
    ) {
       this.businessDetails = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
 
@@ -96,15 +99,39 @@ export class OrderViewComponent {
    }
 
    filterOrderStatus(): void {
-      if (this.order?.order_status_id === 33) {
-         this.filteredOrderStatus = this.orderstatus.filter(status => ![34, 26, 25].includes(status.id));
-      } else if (this.order?.order_status_id === 34) {
-         this.filteredOrderStatus = this.orderstatus.filter(status => ![33, 26, 25].includes(status.id));
-      } else if (this.order?.order_status_id === 32) {
-         this.filteredOrderStatus = this.orderstatus.filter(status => ![34, 26, 25].includes(status.id));
-      }
-   }
+      if (!this.order?.order_status_id) return;
 
+  const excludeMap: { [key: number]: number[] } = {
+    33: [34, 26, 25],
+    34: [33, 26, 25],
+    32: [34, 26, 25]
+  };
+
+  this.filteredOrderStatus = this.orderstatus.filter(status =>
+    !excludeMap[this.order.order_status_id]?.includes(status.id)
+  );
+
+  // Assign the filtered result to orderStatusFilter
+  this.orderstatus = [...this.filteredOrderStatus];
+  this.updateTimeline();
+  this.cdr.detectChanges();
+      // if (this.order?.order_status_id === 33) {
+      //    this.filteredOrderStatus = this.orderstatus.filter(status => ![34, 26, 25].includes(status.id));
+      // } else if (this.order?.order_status_id === 34) {
+      //    this.filteredOrderStatus = this.orderstatus.filter(status => ![33, 26, 25].includes(status.id));
+      // } else if (this.order?.order_status_id === 32) {
+      //    this.filteredOrderStatus = this.orderstatus.filter(status => ![34, 26, 25].includes(status.id));
+      // }
+   }
+   makePhoneCall(phoneNumber: string): void {
+      // Redirect to the phone call app with the number
+      window.open(`tel:${phoneNumber}`, '_self');
+    }
+    openMessageBox(): void {
+      // For demonstration, open an alert. Replace with actual message modal logic.
+      // alert('Message box opened! Implement your message modal here.');
+      this.toastService.showError('Message box opened! Implement your message modal here.');
+    }
    getOrderStatus(): void {
       let payload = {
          super_admin_id: environment.superAdminId,
@@ -114,7 +141,9 @@ export class OrderViewComponent {
          next: (response) => {
             if (response.status === true) {
                this.orderstatus = response.data || [];
-               this.updateTimeline(); // ✅ Update timeline dynamically
+               this.filterOrderStatus()
+               this.cdr.detectChanges();
+               // ✅ Update timeline dynamically
             } else {
                console.error('Error fetching order status:', response.message);
             }
@@ -126,6 +155,7 @@ export class OrderViewComponent {
 
    showTimeline(): void {
       this.timelineshow = !this.timelineshow;
+      this.cdr.detectChanges();
    }
 
    getDelivery(id: any): void {
@@ -170,7 +200,7 @@ export class OrderViewComponent {
       if (!this.order || !this.order.order_status_id || this.orderstatus.length === 0) {
          return;
       }
-
+      this.cdr.detectChanges();
       // Find the current order's index in the orderstatus array
       const currentIndex = this.orderstatus.findIndex(status => status.id === this.order.order_status_id);
 

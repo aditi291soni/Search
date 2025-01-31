@@ -6,7 +6,7 @@ p-skeleton {
    /* Ensures proper alignment in flex containers */
 }
 .map-button {
-   width: 100%;
+   width: 20%;
    display: flex;
    justify-content: center;
    align-items: center;
@@ -78,4 +78,15 @@ p-skeleton {
    -webkit-line-clamp: 2;
    -webkit-box-orient: vertical;
    overflow: hidden;
+}
+.p-button-outlined .p-button-secondary{
+   color:198ccd !important;
+   border-color:198ccd !important;
+   white-space: nowrap;
+}
+.p-button-label{
+   font-weight: 100 !important;
+}
+.p-button {
+font-size: 1rem !important;
 }

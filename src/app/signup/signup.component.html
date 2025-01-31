@@ -1,33 +1,36 @@
 <div>
    <p-card class="signin-card">
-      <h2>Sign in</h2>
-      <div>Welcome back to Dropzone</div>
+      <h2>Sign Up</h2>
+      <div>Welcome to Dropzone</div>
       <form (ngSubmit)="onSubmit()" class="signin-form" [formGroup]="signInForm">
          <div class="p-field">
-            <div class="thin">Name</div>
+            <div class="thin">Name  <span class="mandatory">*</span></div>
             <input class="full-width" id="email" type="text" pInputText placeholder="Enter your Name"
               formControlName="first_name" name="email" required />
          </div>
          <div class="p-field">
-            <div class="thin">Email</div>
-            <input class="full-width" id="email" type="email" pInputText placeholder="Enter your email"
+            <div class="thin">Email  <span class="mandatory">*</span></div>
+            <input class="full-width" id="email" type="email" pInputText placeholder="Enter your Email"
               formControlName="email" name="email" required />
          </div>
          <div class="p-field">
-            <div class="thin">Phone</div>
-            <input class="full-width" id="email" type="text" pInputText placeholder="Enter your email"
+            <div class="thin">Phone  <span class="mandatory">*</span></div>
+            <input class="full-width" id="email" type="text" pInputText minlength="10" maxlength="10" placeholder="Enter your Phone"
               formControlName="phone" name="email" required />
          </div>
          <div class="p-field">
-            <div class="thin">Password</div>
-            <input class="full-width" id="password" type="password" pInputText placeholder="Enter your password"
+            <div class="thin">Password  <span class="mandatory">*</span></div>
+            <input class="full-width" id="password" type="password" pInputText placeholder="Enter your Password"
             formControlName="password" name="password" required />
          </div>
-         <div class="form-actions">
-            <button type="submit" pButton label="Sign In" class="p-button-primary" [disabled]="loading"
+         <div class="form-actions flex">
+            <button type="submit" pButton label="Sign Up" class="p-button-primary" [disabled]="loading"
                [loading]="loading">
             </button>
+          
          </div>
+         <br>
+         <a (click)="redirectToSignUp()" class="margin-top" routerLinkActive="active" >Already have account <span class="sign"> Login</span> </a>
       </form>
    </p-card>
 </div>

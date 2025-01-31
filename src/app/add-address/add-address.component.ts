@@ -10,12 +10,14 @@ import { Select } from 'primeng/select';
 import { SkeletonModule } from 'primeng/skeleton';
 import { ApiService } from '../services/api.service';
 import { ToastNotificationService } from '../services/toast-notification.service';
+import { MatIconModule } from '@angular/material/icon';
+
 
 @Component({
    selector: 'app-add-address',
    standalone: true,
-   imports: [  ButtonModule, CardModule, CommonModule,InputTextModule, ButtonModule, CommonModule, SkeletonModule, FormsModule, 
-         ReactiveFormsModule,],
+   imports: [  ButtonModule, CardModule, CommonModule,InputTextModule,CommonModule, SkeletonModule, FormsModule, 
+         ReactiveFormsModule,MatIconModule],
    templateUrl: './add-address.component.html',
    styleUrls: ['./add-address.component.css']
 })
@@ -58,7 +60,7 @@ export class AddAddressComponent implements AfterViewInit {
         long_val: '',
         status: ['1'],
         user_id: [''],
-        postal_code:['',[Validators.required, Validators.pattern('^[0-9]*$'), Validators.maxLength(6), Validators.minLength(6)]],
+        postal_code:['',[ Validators.pattern('^[0-9]*$'), Validators.maxLength(6), Validators.minLength(6)]],
         landmark:[''],
         house_no:[''],
         person_phone_no: ['',[Validators.required, Validators.pattern('^[0-9]*$'), Validators.maxLength(10), Validators.minLength(10)]],
@@ -66,7 +68,7 @@ export class AddAddressComponent implements AfterViewInit {
   super_admin_id: [environment.superAdminId],
       });
      
-  
+  this.currentLocation()
   
     }
    map: google.maps.Map | undefined;
@@ -95,7 +97,7 @@ export class AddAddressComponent implements AfterViewInit {
       this.initializeMap();
   
       const searchBox = new google.maps.places.SearchBox(this.searchBox.nativeElement);
-  
+  console.log('ll',searchBox)
       this.map?.addListener('bounds_changed', () => {
         searchBox.setBounds(this.map!.getBounds() as google.maps.LatLngBounds);
       });
@@ -115,7 +117,7 @@ export class AddAddressComponent implements AfterViewInit {
         }
         // this.isFormVisible = true;
         const selectedLocation = place.geometry.location;
-  
+  console.log("g",place.geometry.location)
         // Check if the selected address is within the geofence
         // if (!this.isWithinGeofence(selectedLocation)) {
         //   alert("The selected address is outside the allowed city boundary.");
@@ -134,6 +136,7 @@ export class AddAddressComponent implements AfterViewInit {
         });
   
         const addressComponents = place.address_components || [];
+        console.log("gnn",place.address_components)
         const getAddressComponent = (type: string) => {
          
           const component = addressComponents.find(c => c.types.includes(type));
@@ -164,7 +167,7 @@ export class AddAddressComponent implements AfterViewInit {
         })
   console.log(this.formData ,"value")
         this.searchBox.nativeElement.value = place.formatted_address || '';
-        
+        console.log(place.formatted_address ,"valuffe")
       });
       
     }
@@ -189,7 +192,12 @@ export class AddAddressComponent implements AfterViewInit {
           })
     }
     addAddress() {
-      
+      if (!this.projectForm.valid) {
+         this.toastService.showError('Please fill in all required fields correctly.');
+         // Show an error message for invalid form
+         //   this.messageService.showError('Please fill in all required fields correctly.', 'Error');
+         return; // Stop further execution
+      }
       if (this.addressType === 'drop') {
         localStorage.setItem('selectedDrop', JSON.stringify(this.projectForm.value));
       } else if (this.addressType === 'pickup') {
@@ -203,6 +211,11 @@ export class AddAddressComponent implements AfterViewInit {
           if (data?.data?.status) {
        this.router.navigate(['/orders/new-order']);
        this.toastService.showSuccess("Address Added Successfully")
+       if (this.addressType === 'drop') {
+         localStorage.setItem('selectedDrop', JSON.stringify(data?.data));
+       } else if (this.addressType === 'pickup') {
+         localStorage.setItem('selectedPickup', JSON.stringify(data?.data));
+       }
             // this.commonService.goBack();
             // this.messageService.showSuccess(data.msg, 'Success');
           } else {
@@ -314,7 +327,7 @@ export class AddAddressComponent implements AfterViewInit {
           const address = results[0].formatted_address;
           const addressComponents = results[0].address_components;
         
-          this.searchBox.nativeElement.value = address;
+         //  this.searchBox.nativeElement.value = address;
           const getAddressComponent = (type: string) => {
             const component = addressComponents.find(c => c.types.includes(type));
             return component ? component.long_name : null;
@@ -331,7 +344,8 @@ export class AddAddressComponent implements AfterViewInit {
             long_val: location.lng,
           };
   
-          this.searchBox.nativeElement.value = address;
+         //  this.searchBox.nativeElement.value = address;
+         
         } else {
           console.error("Geocoder failed due to: " + status);
         }
@@ -378,6 +392,7 @@ export class AddAddressComponent implements AfterViewInit {
               };
   
               this.searchBox.nativeElement.value = address;
+              console.log(address ,"e")
             } else {
               console.error("Geocoder failed due to: " + status);
             }
@@ -427,6 +442,7 @@ export class AddAddressComponent implements AfterViewInit {
               };
   
               this.searchBox.nativeElement.value = address;
+              console.log(address ,"fnjwnjfe")
             } else {
               console.error("Geocoder failed due to: " + status);
             }

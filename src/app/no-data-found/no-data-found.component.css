@@ -1,0 +1,20 @@
+.no-data-container {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   height: 100%;
+   text-align: center;
+   color: #666; /* Adjust as needed */
+ }
+ 
+ .no-data-image {
+   max-width: 200px; /* Adjust based on your design */
+   margin-bottom: 20px;
+ }
+ 
+ .no-data-text {
+   font-size: 18px;
+   font-weight: bold;
+ }
+ 

@@ -8,10 +8,11 @@ import { ApiService } from '../services/api.service';
 import { environment } from '../../environments/environment';
 import { CustomerService } from '../services/customer.service';
 import { SkeletonModule } from 'primeng/skeleton';
+import { NoDataFoundComponent } from '../no-data-found/no-data-found.component';
 
 @Component({
   selector: 'app-transactions',
-  imports: [SkeletonModule,CardModule, AvatarModule,ButtonModule,RouterModule,CommonModule],
+  imports: [SkeletonModule,CardModule, AvatarModule,ButtonModule,RouterModule,CommonModule,NoDataFoundComponent],
   standalone: true,
   templateUrl: './transactions.component.html',
   styleUrl: './transactions.component.css'

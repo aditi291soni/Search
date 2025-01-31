@@ -17,8 +17,8 @@
 
       <!-- Right-aligned icons for notification and user profile -->
       <div class="topbar-right">
-         <button pButton icon="pi pi-bell" class="topbar-btn"></button>
-         <button pButton icon="pi pi-user" class="topbar-btn"></button>
+         <!-- <button pButton icon="pi pi-bell" class="topbar-btn"></button> -->
+         <button pButton icon="pi pi-cog" routerLink="/settings" class="topbar-btn"></button>
          <p-confirmDialog></p-confirmDialog>
          <!-- <button
             pButton
@@ -38,17 +38,17 @@
             <img class="sidebar-logo" src="assets/brand/logo.png" alt="logo-png">
          </div>
          <ul>
-            <li><a routerLink="/dashboard" routerLinkActive="active" (click)="toggleSidebar()"><i
+            <li routerLink="/dashboard" (click)="toggleSidebar()"><a routerLink="/dashboard" routerLinkActive="active" (click)="toggleSidebar()"><i
                      class="pi pi-home"></i> Dashboard</a></li>
-            <li><a routerLink="/orders" routerLinkActive="active" (click)="toggleSidebar()"><i class="pi pi-box"></i>
+            <li routerLink="/orders" (click)="toggleSidebar()"><a routerLink="/orders" routerLinkActive="active" (click)="toggleSidebar()"><i class="pi pi-box"></i>
                   Orders</a></li>
-            <li><a routerLink="/customers" routerLinkActive="active" (click)="toggleSidebar()"><i
+            <li routerLink="/customers" (click)="toggleSidebar()"><a routerLink="/customers" routerLinkActive="active" (click)="toggleSidebar()"><i
                      class="pi pi-users"></i> Customers</a></li>
-            <li><a routerLink="/transactions" routerLinkActive="active" (click)="toggleSidebar()"><i
+            <li routerLink="/transactions" (click)="toggleSidebar()"><a routerLink="/transactions" routerLinkActive="active" (click)="toggleSidebar()"><i
                      class="pi pi-credit-card"></i> Transactions</a></li>
-            <li><a routerLink="/settings" routerLinkActive="active" (click)="toggleSidebar()"><i class="pi pi-cog"></i>
+            <li routerLink="/settings" (click)="toggleSidebar()"> <a routerLink="/settings" routerLinkActive="active" (click)="toggleSidebar()"><i class="pi pi-cog"></i>
                   Settings</a></li>
-                  <li><a routerLinkActive="active" (click)="logout()"><i class="pi pi-sign-out"></i>
+                  <li (click)="logout();toggleSidebar()"><a routerLinkActive="active" class="red" (click)="logout();toggleSidebar()" ><i class="pi pi-sign-out red" ></i>
                      Logout</a></li>
          </ul>
       </div>

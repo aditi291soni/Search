@@ -4,11 +4,13 @@ import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { Router, RouterModule } from '@angular/router';
 import { SkeletonModule } from 'primeng/skeleton';
+import { NoDataFoundComponent } from '../no-data-found/no-data-found.component';
+import { CorouselComponent } from '../corousel/corousel.component';
 
 @Component({
    selector: 'app-dashboard',
    standalone: true,
-   imports: [CommonModule, ButtonModule, RouterModule, SkeletonModule],
+   imports: [CommonModule, ButtonModule, RouterModule, SkeletonModule,NoDataFoundComponent],
    templateUrl: './dashboard.component.html',
    styleUrls: ['./dashboard.component.css'],
 })
@@ -26,7 +28,7 @@ export class DashboardComponent implements OnInit {
    loading: boolean = false;
    userInfo: any;
    businessDetails: any;
-   order: any;
+   order: any[]=[];
 
    /**
     * Creates an instance of DashboardComponent.

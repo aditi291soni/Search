@@ -18,6 +18,8 @@
    gap: 10px;
 }
 
+
+
 .header {
    font-size: small;
 }
@@ -104,9 +106,8 @@
    /* Adjust thickness */
 }
 
-::ng-deep .p-timeline .p-timeline-event:nth-child(-n+4) .p-timeline-event-connector {
+::ng-deep .p-timeline .p-timeline-event .p-timeline-event-connector {
    background-color: green !important;
-   /* Green separator for the first 3 events */
 }
 
 .text {

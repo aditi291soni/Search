@@ -32,4 +32,11 @@ input:focus+label {
    color: #007bff;
    transform: translateY(-18px);
 }
+.right{
+display: flex;
+justify-content: space-between;
+}
+.w-90{
+width: 80%;
+}
 

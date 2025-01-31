@@ -7,7 +7,9 @@
       class="p-button-outlined p-button-secondary"></button>
 </div>
 <br>
-
+<ng-container *ngIf="order.length==0">
+   <app-no-data-found></app-no-data-found>
+</ng-container>
 <div class="recent-orders-container" *ngIf="!loading">
    <div class="recent-order-item" *ngFor="let order of order" (click)="navigateToOrderDetails(order.id)">
       <div class="recent-order-flex">

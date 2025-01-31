@@ -4,10 +4,11 @@ import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { ApiService } from '../services/api.service';
 import { SkeletonModule } from 'primeng/skeleton';
+import { NoDataFoundComponent } from '../no-data-found/no-data-found.component';
 
 @Component({
    selector: 'app-orders',
-   imports: [CommonModule, ButtonModule, RouterModule, SkeletonModule],
+   imports: [CommonModule, ButtonModule, RouterModule, SkeletonModule,NoDataFoundComponent],
    templateUrl: './orders.component.html',
    styleUrl: './orders.component.css',
    standalone: true
@@ -16,7 +17,7 @@ export class OrdersComponent {
    loading: boolean = false;
    userInfo: any;
    businessDetails: any;
-   order: any;
+   order: any[]=[];
 
 
    /**

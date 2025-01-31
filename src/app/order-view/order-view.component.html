@@ -1,10 +1,10 @@
 <h2>Order Details</h2>
 <div class="thin">Details of your order</div>
-<br>
+<!-- <br>
 <div>
    <h4>Order Information</h4>
    <h4 class="add">Describes your order details</h4>
-</div>
+</div> -->
 
 <div class="recent-order-item">
    <div class="main-container">
@@ -57,8 +57,8 @@
 
    <div class="main-container">
       <div class="left">
-         <div class="header">Amount</div>
-         <div class="strong">{{this.businessDetails?.currency_symbol}}{{invoice?.subtotal}}</div>
+         <div class="header">Date</div>
+         <div class="strong">{{invoice?.for_booking_date}}</div>
       </div>
       <div class="right">
          <div class="header">Payment Mode</div>
@@ -66,6 +66,13 @@
             ? (this.order?.delivery_payment_status | titlecase)
             : (this.order?.pay_on_pickup == '0' ? 'Pay On Drop' : 'Pay On Pick up') }}</div>
       </div>
+   </div>
+   <div class="main-container">
+      <div class="left">
+         <div class="header">Amount</div>
+         <div class="strong">{{this.businessDetails?.currency_symbol ?this.businessDetails?.currency_symbol : '₹'}}{{invoice?.subtotal}}</div>
+      </div>
+    
    </div>
 </div>
 
@@ -81,14 +88,14 @@
          <div class="right-icons">
             <!-- Phone Button -->
             <div class="first">
-               <button pButton type="button" class="custom-button">
+               <button pButton type="button" class="custom-button" (click)="makePhoneCall('9056342178')">
                   <i class="pi pi-phone"></i>
                </button>
             </div>
             <!-- Message Button -->
             <div>
-               <button pButton type="button" class="custom-button">
-                  <i class="pi pi-envelope"></i>
+               <button pButton type="button" class="custom-button" (click)="openMessageBox()">
+                  <i class="pi pi-whatsapp"></i>
                </button>
             </div>
          </div>
@@ -132,21 +139,39 @@
       <h4>Track Order</h4>
       <h4 class="add">Describes your order current position</h4>
    </div>
-   <button (click)="showTimeline()" pButton label="Show"></button>
+   <button (click)="showTimeline()" pButton [label]="timelineshow ? 'Hide' : 'Show'"></button>
 </div>
-<div class="time-con" *ngIf="timelineshow">
-   <p-timeline [value]="events" [layout]="isMobile ? 'vertical' : 'horizontal'" align="alternate">
+<div class="time-con" *ngIf="timelineshow" >
+   <p-timeline *ngIf="isMobile" [value]="events" [layout]="isMobile ? 'vertical' : 'horizontal'" align="alternate">
       <ng-template let-event pTemplate="content">
          <div class="timeline-item">
-            <!-- Wrapper div for the icon to apply ngStyle -->
+          
             <div class="icon-wrapper" [ngStyle]="{'color': event.color}">
                <i class="status-icon" [class]="event.icon"></i>
             </div>
             <div class="timeline-content">
-               <h4>{{ event.status }}</h4>
-               <p>{{ event.description }}</p>
+               <h4 class="">{{ event.status }}</h4>
+               <!-- <p>{{ event.description }}</p> -->
             </div>
          </div>
       </ng-template>
    </p-timeline>
+
+
+   <p-timeline *ngIf="!isMobile" [value]="events" layout="horizontal" class="small-timeline">
+      <!-- Custom Marker Icons -->
+      <ng-template pTemplate="marker" let-event let-i="index">
+         <i [class]="event.icon"  style="font-size: 1.5rem"></i>
+      </ng-template>
+
+      <!-- Custom Content -->
+      <ng-template pTemplate="content" let-event>
+         <div class="p-d-flex p-ai-center">
+            <div class="p-mr-2">
+               <b>{{event.status  }}</b>
+            </div>
+         </div>
+      </ng-template>
+   </p-timeline>
+
 </div>

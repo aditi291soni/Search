@@ -13,7 +13,7 @@ import { SearchComponent } from '../search/search.component';
 @Component({
    selector: 'app-layout',
    standalone: true,
-   imports: [CommonModule, RouterModule, RouterOutlet, SidebarModule, ButtonModule, FormsModule, ConfirmDialogModule,SearchComponent],  
+   imports: [CommonModule, RouterModule, RouterOutlet, SidebarModule, ButtonModule, FormsModule, ConfirmDialogModule],  
 
    templateUrl: './layout.component.html',
    providers: [ConfirmationService],

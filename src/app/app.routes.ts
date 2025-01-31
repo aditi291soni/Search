@@ -59,6 +59,10 @@ export const routes: Routes = [
             loadComponent: () => import('./add-business/add-business.component').then(m => m.AddBusinessComponent),
          },
          {
+            path: 'edit-business/:id',
+            loadComponent: () => import('./add-business/add-business.component').then(m => m.AddBusinessComponent),
+         },
+         {
             path: 'list-of-business',
             loadComponent: () => import('./business-list/business-list.component').then(m => m.BusinessListComponent),
          },

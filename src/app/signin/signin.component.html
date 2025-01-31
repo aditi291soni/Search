@@ -1,26 +1,35 @@
 <div>
    <p-card class="signin-card">
-      <h2>Sign in</h2>
+      <h2>Sign In</h2>
       <div>Welcome back to Dropzone</div>
-      <form (ngSubmit)="onSubmit()" class="signin-form">
+      <form (ngSubmit)="onSubmit()" class="signin-form" [formGroup]="signinForm">
          <div class="p-field">
-            <div class="thin">Email</div>
-            <input class="full-width" id="email" type="email" pInputText placeholder="Enter your email"
-               [(ngModel)]="email_or_phone" name="email" required />
+            <div class="thin">Username  <span class="mandatory">*</span></div>
+            <input class="full-width" id="email" type="text" pInputText placeholder="Enter your Email or Phone"
+            formControlName="email_or_phone" name="email" required />
+            <div *ngIf="signinForm.get('email_or_phone')?.invalid && signinForm.get('email_or_phone')?.touched" class="mandatory">
+               <small>Email or Phone is required.</small>
+            </div>
          </div>
          <div class="p-field">
-            <div class="thin">Password</div>
-            <input class="full-width" id="password" type="password" pInputText placeholder="Enter your password"
-               [(ngModel)]="password" name="password" required />
+            <div class="thin">Password  <span class="mandatory">*</span></div>
+            <input class="full-width" id="password" type="password" pInputText placeholder="Enter your Password"
+              formControlName="password" name="password" required />
+              <div *ngIf="signinForm.get('password')?.invalid && signinForm.get('password')?.touched" class="mandatory">
+               <small *ngIf="signinForm.get('password')?.hasError('required')">Password number is required.</small>
+               <small *ngIf="signinForm.get('password')?.hasError('maxlength')">Password must be more than 6 digits.</small>
+            </div>
          </div>
 
-         <div class="form-actions">
-            <button type="submit" pButton label="Sign In" class="p-button-primary " [disabled]="loading"
+         <div class="form-actions flex">
+            <button type="submit" pButton label="Login " class="p-button-primary " [disabled]="loading"
                [loading]="loading">
             </button>
             <!-- <button type="button" pButton label="Sign up" routerLink="sign-up"></button> -->
-
+            <!-- <a (click)="redirectToSignUp()" class="margin-top" routerLinkActive="active" >Sign up </a> -->
          </div>
+         <br>
+         <a (click)="redirectToSignUp()" class="margin-top" routerLinkActive="active" >Create new Account? <span class="sign">Sign Up</span> </a>
       </form>
    </p-card>
 </div>

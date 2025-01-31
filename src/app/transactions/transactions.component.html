@@ -22,14 +22,21 @@
 
    <!-- Show actual content when not loading -->
    <div *ngIf="!loading" >
-      <p-card *ngFor="let customer of transactionList"  >
+      <ng-container *ngIf="transactionList.length==0">
+         <app-no-data-found></app-no-data-found>
+      </ng-container>
+      <p-card *ngFor="let customer of transactionList"  class="margin" >
          <div class="customer-card">
             <p-avatar [image]="customer.image" size="large" shape="circle"></p-avatar>
-            <div class="customer-info ">
-               <span class="customer-name" *ngIf="customer.dr_amount > 0 "> -{{ customer.dr_amount  }}</span>
-               <span class="customer-mobile" *ngIf="customer.cr_amont > 0 ">+{{ customer.cr_amont  }}</span>
+       
+               <span class="customer-name" > Order No :#{{ customer.invoice_info.order_no  }}</span>
+          
             </div>
-         </div>
+            <div class="end ">
+               <span class="customer-name red" *ngIf="customer.dr_amount > 0 "> -{{ customer.dr_amount  }}</span>
+               <span class="customer-mobile green" *ngIf="customer.cr_amont > 0 ">+{{ customer.cr_amont  }}</span>
+            </div>
+        
       </p-card>
    </div>
 </div>

@@ -4,11 +4,12 @@ import { RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast'; // Import ToastModule
-
+import { BrowserModule } from '@angular/platform-browser';
+import { MatIconModule } from '@angular/material/icon';
 @Component({
    selector: 'app-root',
    standalone: true,
-   imports: [MenubarModule, RouterOutlet, FormsModule, ToastModule], // Add ToastModule here
+   imports: [MenubarModule, RouterOutlet, FormsModule, ToastModule, MatIconModule], // Add ToastModule here
    templateUrl: './app.component.html',
    styleUrls: ['./app.component.css'],
 })

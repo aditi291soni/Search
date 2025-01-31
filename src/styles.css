@@ -11,9 +11,12 @@
 
 body {
    font-family: "Inter", serif;
-   color: #415b61;
+   color: #000000;
 }
 
 h2{
    font-size: 18px;
 }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+

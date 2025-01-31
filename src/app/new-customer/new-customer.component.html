@@ -2,7 +2,7 @@
 <div class="thin">Add a new customer profile</div>
 <br><br>
 
-<div class="row">
+<div class="">
    <div *ngIf="!isSearched">
       <app-search *ngIf="!this.userId " (userSelected)="handleUserSelected($event)" (isSearched)="userSearched($event)"></app-search>
       <!-- <h3 class="mb8">Enter Phone Number</h3>
@@ -10,20 +10,20 @@
    </div>
    <button pButton type="button" label="Search" class="p-button-contained"></button> -->
 </div>
-<br><br>
+
 <form [formGroup]="profileForm" >
 <div class="form-container" *ngIf="isSearched== true">
    <div class="col">
-      <label for="phone-number">Phone Number</label>
-      <input pInputText type="tel" id="phone-number" minlength="10" maxlength="10" formControlName="phone" />
+      <label for="phone-number">Phone Number<span class="mandatory">*</span></label>
+      <input pInputText type="tel" id="phone-number" minlength="10" maxlength="10" formControlName="phone" placeholder="Enter Phone no"/>
    </div>
    <div class="col">
-      <label for="full-name">Full Name</label>
-      <input pInputText type="text" id="full-name" formControlName="first_name" />
+      <label for="full-name">Full Name <span class="mandatory">*</span></label>
+      <input pInputText type="text" id="full-name" formControlName="first_name" placeholder="Enter Full name" />
    </div>
    <div class="col">
-      <label for="email">Email Address</label>
-      <input pInputText type="email" id="email" formControlName="email" />
+      <label for="email">Email Address <span class="mandatory">*</span></label>
+      <input pInputText type="email" id="email" formControlName="email" placeholder="Enter email" />
    </div>
    <!-- <div class="col">
       <label for="dob">Date of Birth</label>
