@@ -1,0 +1,13 @@
+in.magicqr.dropzonevendor.twa.app-play-services-basement-18.1.0-0 /Users/mac/.gradle/caches/8.8/transforms/070e01525a9f4da3b88a8516a42b5c99/transformed/play-services-basement-18.1.0/res
+in.magicqr.dropzonevendor.twa.app-coordinatorlayout-1.0.0-1 /Users/mac/.gradle/caches/8.8/transforms/7b5725f0698d53851dbd128b6d233666/transformed/coordinatorlayout-1.0.0/res
+in.magicqr.dropzonevendor.twa.app-play-services-base-18.1.0-2 /Users/mac/.gradle/caches/8.8/transforms/9d7b38f1d96938519477dd5bb030ea7d/transformed/play-services-base-18.1.0/res
+in.magicqr.dropzonevendor.twa.app-browser-1.4.0-3 /Users/mac/.gradle/caches/8.8/transforms/b511174c15fdde7dea3e957094b4390b/transformed/browser-1.4.0/res
+in.magicqr.dropzonevendor.twa.app-androidbrowserhelper-2.5.0-4 /Users/mac/.gradle/caches/8.8/transforms/d3335fbdff4200978ad121d7b141def7/transformed/androidbrowserhelper-2.5.0/res
+in.magicqr.dropzonevendor.twa.app-core-1.2.0-5 /Users/mac/.gradle/caches/8.8/transforms/feb8e2b099a13ef41f9cf940d6fd2758/transformed/core-1.2.0/res
+in.magicqr.dropzonevendor.twa.app-pngs-6 /Users/mac/Desktop/Projects/project/app/build/generated/res/pngs/release
+in.magicqr.dropzonevendor.twa.app-resValues-7 /Users/mac/Desktop/Projects/project/app/build/generated/res/resValues/release
+in.magicqr.dropzonevendor.twa.app-packageReleaseResources-8 /Users/mac/Desktop/Projects/project/app/build/intermediates/incremental/release/packageReleaseResources/merged.dir
+in.magicqr.dropzonevendor.twa.app-packageReleaseResources-9 /Users/mac/Desktop/Projects/project/app/build/intermediates/incremental/release/packageReleaseResources/stripped.dir
+in.magicqr.dropzonevendor.twa.app-release-10 /Users/mac/Desktop/Projects/project/app/build/intermediates/merged_res/release/mergeReleaseResources
+in.magicqr.dropzonevendor.twa.app-main-11 /Users/mac/Desktop/Projects/project/app/src/main/res
+in.magicqr.dropzonevendor.twa.app-release-12 /Users/mac/Desktop/Projects/project/app/src/release/res
