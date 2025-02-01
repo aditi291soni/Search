@@ -1,0 +1,14 @@
+[
+   {
+      "relation": [
+         "delegate_permission/common.handle_all_urls"
+      ],
+      "target": {
+         "namespace": "android_app",
+         "package_name": "in.magicqr.dropzonevendor.twa",
+         "sha256_cert_fingerprints": [
+            "A2:17:B2:97:3F:64:D3:E4:5F:B3:E3:B4:ED:21:DE:A8:EE:FE:EF:57:BB:1B:B6:29:54:F9:3B:70:0E:A6:77:14"
+         ]
+      }
+   }
+]
