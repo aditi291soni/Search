@@ -101,7 +101,7 @@
             <div class="w-100">
 
                <p-select appendTo="body" [options]="listofState" optionValue="id" formControlName="state_id"
-                  optionLabel="name" placeholder="Select State" class="w-full" />
+                  optionLabel="name" placeholder="Select State" filter class="w-full" [filterBy]="'name'" />
             </div>
             <br>
             <br>
@@ -149,8 +149,10 @@
       </div>
       <div class="text-center">
          <div class="space">
-            <button *ngIf="!this.business_id" pButton class="p-button-outlined p-button-danger ml-5" label="Reset" (click)="resetForm()"></button>
-            <button pButton type="submit" label="Submit"  [loading]="loading_button" [disabled]="businessForm.invalid"></button>
+            <button *ngIf="!this.business_id" pButton class="p-button-outlined p-button-danger ml-5" label="Reset"
+               (click)="resetForm()"></button>
+            <button pButton type="submit" label="Submit" [loading]="loading_button"
+               [disabled]="businessForm.invalid"></button>
          </div>
       </div>
    </form>

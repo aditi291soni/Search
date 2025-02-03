@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';  // Import FormsModule for ngModel
-import { Router, RouterModule, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule, RouterOutlet } from '@angular/router';
 import { SidebarModule } from 'primeng/sidebar';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
@@ -9,11 +9,12 @@ import { ToastNotificationService } from '../services/toast-notification.service
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { SearchComponent } from '../search/search.component';
+import { SearchBarService } from '../services/search-bar.service';
 
 @Component({
    selector: 'app-layout',
    standalone: true,
-   imports: [CommonModule, RouterModule, RouterOutlet, SidebarModule, ButtonModule, FormsModule, ConfirmDialogModule],  
+   imports: [CommonModule, RouterModule, RouterOutlet, SidebarModule, ButtonModule, FormsModule, ConfirmDialogModule],
 
    templateUrl: './layout.component.html',
    providers: [ConfirmationService],
@@ -24,22 +25,23 @@ export class LayoutComponent {
    isSidebarVisible = true; // Controls sidebar visibility
    isSmallDevice = false; // Tracks if it's a small device
    searchQuery = ''; // Stores search input
-profileMenu: any;
-
-   constructor(  private router: Router,private toastService: ToastNotificationService,      private confirmationService: ConfirmationService,
+   profileMenu: any;
+   searchResults: any[] = [];
+   constructor(private router: Router, private toastService: ToastNotificationService, private confirmationService: ConfirmationService,
+      private searchService: SearchBarService, private activatedRoute: ActivatedRoute
    ) {
-    
+
       this.updateDeviceView();
       window.addEventListener('resize', this.updateDeviceView.bind(this));
    }
-ngOnInit(): void {
- 
-}
+   ngOnInit(): void {
 
-handleGlobalSearch(query: string) {
-   console.log('Global Search:', query);
-   this.router.navigate(['/search'], { queryParams: { q: query } });
- }
+   }
+
+   handleGlobalSearch(query: string) {
+      console.log('Global Search:', query);
+      this.router.navigate(['/search'], { queryParams: { q: query } });
+   }
    toggleSidebar() {
       this.isSidebarVisible = !this.isSidebarVisible;
    }
@@ -60,12 +62,12 @@ handleGlobalSearch(query: string) {
    // Toggle search field visibility on small devices
    toggleSearch() {
       const searchBar = document.querySelector('.search-bar-mobile') as HTMLElement;
-      
+
       if (searchBar) {
          searchBar.style.display = searchBar.style.display === 'flex' ? 'none' : 'flex';
       }
    }
-   logout(){
+   logout() {
 
       this.confirmationService.confirm({
          message: 'Are you sure you want to logout?',
@@ -83,7 +85,27 @@ handleGlobalSearch(query: string) {
       });
 
    }
-   goToProfile(){
-      
+   goToProfile() {
+
+   }
+
+   onSearch() {
+      if (this.searchQuery.trim()) {
+         this.router.navigate([], {
+            relativeTo: this.activatedRoute,
+            queryParams: { search: this.searchQuery }, // Add the search query as a query parameter
+
+         });
+         // console.log(this.searchQuery)
+      }
+      // if (this.searchQuery.trim()) {
+      //    // Call the search service to get results based on the query
+      //    this.searchService.getSearchResults(this.searchQuery).subscribe((results: any[]) => {
+      //       this.searchResults = results;
+      //       console.log(this.searchResults)
+      //    });
+      // } else {
+      //    this.searchResults = [];
+      // }
    }
 }

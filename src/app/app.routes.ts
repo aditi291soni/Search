@@ -22,6 +22,7 @@ export const routes: Routes = [
             path: 'orders',
             loadComponent: () => import('./orders/orders.component').then(m => m.OrdersComponent),
          },
+
          {
             path: 'customers',
             loadComponent: () => import('./customers/customers.component').then(m => m.CustomersComponent),
@@ -74,6 +75,10 @@ export const routes: Routes = [
             path: 'orders/new-order/add-address/:type',
             loadComponent: () => import('./add-address/add-address.component').then(m => m.AddAddressComponent),
          },
+         // {
+         //    path: 'orders/:search',
+         //    loadComponent: () => import('./orders/orders.component').then(m => m.OrdersComponent),
+         // },
       ],
    },
    {

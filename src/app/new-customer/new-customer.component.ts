@@ -65,7 +65,7 @@ export class NewCustomerComponent {
    }
 
    addCustomer(form: any) {
-      console.log(form)
+      // console.log(form)
       form.business_id = this.businessDetail.id
       form.user_type = 4
       this.isLoading = true;
@@ -79,7 +79,7 @@ export class NewCustomerComponent {
             } else {
                this.toastService.showError(data.msg)
             }
-            console.log(data)
+            // console.log(data)
 
 
          },
@@ -107,7 +107,7 @@ export class NewCustomerComponent {
             } else {
                this.toastService.showError(data.msg)
             }
-            console.log(data)
+            // console.log(data)
 
 
          },
@@ -119,10 +119,10 @@ export class NewCustomerComponent {
    }
    userSearched(event: any) {
       this.isSearched = event
-      console.log(event)
+      // console.log(event)
    }
    handleUserSelected(user: any) {
-      console.log(user)
+      // console.log(user)
       if (user) {
          this.userId = user.id
          this.profileForm.patchValue({
@@ -156,7 +156,7 @@ export class NewCustomerComponent {
             } else {
                this.toastService.showError(data.msg)
             }
-            console.log(data)
+            // console.log(data)
 
 
          },
@@ -198,6 +198,11 @@ export class NewCustomerComponent {
       } catch (error) {
          console.log('Error in the catch block', error);
       }
+   }
+   reset() {
+      this.isSearched = false
+      this.userId = false
+      console.log(this.isSearched)
    }
 }
 

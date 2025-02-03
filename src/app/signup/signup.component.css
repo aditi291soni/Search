@@ -31,22 +31,40 @@
    font-weight: 300;
    font-size: 14px;
 }
-.flex{
+
+.flex {
    display: flex;
    justify-content: space-around;
 }
-.margin-top{
+
+.margin-top {
    margin-top: 1.5rem !important;
    font-size: 13px;
 }
-.sign{
-   
+
+.sign {
+
    font-size: 13px !important;
    color: #198ccd !important;
    font-weight: 700 !important;
 }
+
 .mandatory {
    color: red;
    font-size: 16px;
    margin-left: 5px;
+}
+
+
+
+.password-container {
+   position: relative;
+}
+
+.password-container i {
+   position: absolute;
+   right: 10px;
+   top: 50%;
+   transform: translateY(-50%);
+   cursor: pointer;
 }

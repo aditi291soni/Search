@@ -19,7 +19,7 @@ import { CommonModule } from '@angular/common';
    standalone: true,
    templateUrl: './signin.component.html',
    styleUrls: ['./signin.component.css'],
-   imports: [CardModule, FormsModule, ButtonModule, InputTextModule,PasswordModule,ReactiveFormsModule,CommonModule],
+   imports: [CardModule, FormsModule, ButtonModule, InputTextModule, PasswordModule, ReactiveFormsModule, CommonModule],
 })
 export class SigninComponent {
    /** The email or phone number entered by the user for sign-in */
@@ -45,18 +45,18 @@ export class SigninComponent {
       private apiService: ApiService,
       private router: Router,
       private toastService: ToastNotificationService
-   ) { 
+   ) {
       this.signinForm = this.fb.group({
          email_or_phone: ['', [Validators.required, Validators.pattern(/^(.+)@(.+)$|^\d{10}$/)]],
          password: ['', [Validators.required, Validators.minLength(6)]],
-       });
+      });
    }
-  
+
    togglePasswordVisibility() {
       this.showPassword = !this.showPassword;
-    }
+   }
    redirectToSignUp() {
-     this.router.navigate(['/auth/sign-up']); // Navigates to the route
+      this.router.navigate(['/auth/sign-up']); // Navigates to the route
    }
    /**
     * Handles the form submission for sign-in.
@@ -74,7 +74,7 @@ export class SigninComponent {
          this.signinForm.markAllAsTouched();
          this.loading = false;
          return;
-       }
+      }
       // Call the API for sign-in
       this.apiService.signIn(this.signinForm.value).subscribe({
          next: (response) => {
@@ -89,18 +89,18 @@ export class SigninComponent {
                this.fetchBusinessList()
                // if (response.data && response.data.business_id && response.data.business_id.length > 0) {
                //    this.router.navigate(['/add-business']);
-                  // const businessIdLength = response.data.business_id.length;
+               // const businessIdLength = response.data.business_id.length;
 
-                  // if (businessIdLength == 0) {
-                  //    // Redirect to the "Add Business" page
-                  //    this.router.navigate(['/add-business']);
-                  // } else if (businessIdLength == 1) {
-                  //    // Redirect to the Dashboard page
-                  //    this.router.navigate(['/dashboard']);
-                  // } else {
-                  //    // Redirect to the "List of Businesses" page
-                  //    this.router.navigate(['/list-of-business']);
-                  // }
+               // if (businessIdLength == 0) {
+               //    // Redirect to the "Add Business" page
+               //    this.router.navigate(['/add-business']);
+               // } else if (businessIdLength == 1) {
+               //    // Redirect to the Dashboard page
+               //    this.router.navigate(['/dashboard']);
+               // } else {
+               //    // Redirect to the "List of Businesses" page
+               //    this.router.navigate(['/list-of-business']);
+               // }
                // } else {
                //    this.loading = false;
                //    this.toastService.showError('Sign-in failed. Invalid credentials or other error.');
@@ -129,6 +129,7 @@ export class SigninComponent {
          },
       });
    }
+
    fetchBusinessList(): void {
       this.loading = true;
       this.apiService.getListOfBusinesses().subscribe({

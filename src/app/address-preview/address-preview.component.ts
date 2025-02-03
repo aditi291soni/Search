@@ -14,7 +14,7 @@ import { CalendarModule } from 'primeng/calendar';
 @Component({
    selector: 'app-address-preview',
    standalone: true,
-   imports: [CommonModule, ButtonModule, Select, SkeletonModule,CalendarModule,FormsModule],
+   imports: [CommonModule, ButtonModule, Select, SkeletonModule, CalendarModule, FormsModule],
    templateUrl: './address-preview.component.html',
    styleUrls: ['./address-preview.component.css']
 })
@@ -26,7 +26,7 @@ export class AddressPreviewComponent {
    newOrder: any;
    vehicleTypeList: any;
    loading: boolean = true;
-   loading_button:any;
+   loading_button: any;
    deliveryList: any;
    times: any;
    sub_total: any;
@@ -37,7 +37,7 @@ export class AddressPreviewComponent {
    listofDelivery: any;
    timeslot: any;
    selectedDeliveryType: any;
-   selectedPaymentType: any='cash';
+   selectedPaymentType: any = 'cash';
    deliveryId: any;
    timeSlot: any;
    selectedPayment: any;
@@ -46,8 +46,9 @@ export class AddressPreviewComponent {
    selectedSlot: any;
    order_status: any;
    selectedDate: string = '';
+   formattedDate: string = ''
    minDate: Date | undefined;
-   constructor( private cdr: ChangeDetectorRef,private apiService: ApiService, private router: Router, private confirmationService: ConfirmationService, private fb: FormBuilder, private route: ActivatedRoute,private toastService: ToastNotificationService) {
+   constructor(private cdr: ChangeDetectorRef, private apiService: ApiService, private router: Router, private confirmationService: ConfirmationService, private fb: FormBuilder, private route: ActivatedRoute, private toastService: ToastNotificationService) {
       this.pickupLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedPickup'));
       this.dropLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedDrop'));
       this.businessDetails = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
@@ -71,9 +72,9 @@ export class AddressPreviewComponent {
       address: 'Minal Residency, Bhopal, Madhya Pradesh, India'
    };
    paymentTypes: any = [
-      { name: 'Online', value: 'upi', img: 'pi pi-credit-card' },
-      { name: 'Wallet', value: 'wallet', img: 'pi pi-wallet' },
-      { name: 'Cash', value: 'cash', img: 'pi pi-money-bill' }
+      { name: 'Online', value: 'online', img: 'pi pi-credit-card', disabled: true },
+      { name: 'Wallet', value: 'wallet', img: 'pi pi-wallet', disabled: false },
+      { name: 'Cash', value: 'cash', img: 'pi pi-money-bill', disabled: false }
    ];
    CashTypes: any = [
       { name: 'Pickup Point', value: 'pickup' },
@@ -83,7 +84,7 @@ export class AddressPreviewComponent {
    ngOnInit(): void {
       this.loading_button = false;
       this.cdr.detectChanges();
-      console.log('s',this.loading_button)
+      console.log('s', this.loading_button)
       this.fetchDeliveryTypeList();
       this.getfinancialYear()
       this.TimeSlot()
@@ -92,16 +93,22 @@ export class AddressPreviewComponent {
       const currentDate = new Date();
       this.selectedDate = currentDate.toISOString().split('T')[0]; // Format: "yyyy-mm-dd"
       this.minDate = currentDate;
-      console.log("Default Selected Date:", this.selectedDate);
-    }
-    onDateSelect(event: Date) {
+      this.formattedDate = this.formatDateToDDMMYYYY(this.selectedDate);
+      console.log("Default Selected Date:", this.formattedDate);
+   }
+   onDateSelect(event: Date) {
       const istOffset = 5.5 * 60 * 60 * 1000; // IST offset in milliseconds
       const localDate = new Date(event.getTime() + istOffset); // Convert UTC to IST
-    
+
       this.selectedDate = localDate.toISOString().split('T')[0]; // Format as "yyyy-mm-dd"
-      console.log("Selected Date (IST):", this.selectedDate);
-    }
-    
+      this.formattedDate = this.formatDateToDDMMYYYY(this.selectedDate);
+      console.log("Selected Date (IST):", this.formattedDate);
+   }
+   formatDateToDDMMYYYY(date: string): string {
+      const [year, month, day] = date.split('-');  // date in yyyy-mm-dd format
+      return `${day}-${month}-${year}`;  // Return in dd-mm-yyyy format
+   }
+
    //  onDateSelect(event: Date) {
    //    console.log(event)
    //    this.selectedDate = event.toISOString().split('T')[0]; // Convert selected date to "yyyy-mm-dd"
@@ -116,7 +123,7 @@ export class AddressPreviewComponent {
          next: (response) => {
             if (response.status === true) {
                this.selectedDeliveryType = response.data[0].id;
-               this.order_status=response.data[0].order_status_id
+               this.order_status = response.data[0].order_status_id
                // this.deliveryList = response.data || [];
                this.deliveryList = response.data.map((deliveryType: any) => {
 
@@ -175,17 +182,17 @@ export class AddressPreviewComponent {
       const value = parts[0]; // "5.4"
       const unit = parts[1];
       if (this.newOrder.distance <= price.minimum_km) {
-         console.log("base",price.base_charges,this.newOrder.distance <= price.minimum_km)
+         console.log("base", price.base_charges, this.newOrder.distance <= price.minimum_km)
          // If the distance is within the minimum, use only the base price for the distance.
          this.price = Math.abs(price.base_charges);
       } else {
 
          // If the distance exceeds the minimum:
-      
+
          const minimumDistancePrice = Number(price.base_charges);
          const extraDistancePrice = (Number(value) - Number(price.minimum_km)) * Number(price.per_km_charge);
          this.price = minimumDistancePrice + extraDistancePrice;
-    
+
       }
 
       return Math.abs(this.price)
@@ -197,7 +204,7 @@ export class AddressPreviewComponent {
          now.setHours(hours, minutes, 0, 0);
          return now;
       }
-     
+
       const now = new Date();
 
       let openingTime = toDateTime(opening_hr);
@@ -205,7 +212,7 @@ export class AddressPreviewComponent {
 
       openingTime.setMinutes(openingTime.getMinutes());
       closingTime.setMinutes(closingTime.getMinutes());
-    
+
       if (closingTime <= openingTime) {
          return now >= openingTime || now <= closingTime;
       } else {
@@ -235,22 +242,27 @@ export class AddressPreviewComponent {
 
    onDeliveryTypeSelect(value: any) {
       this.sub_total = value.price
-      this.order_status=value.order_status_id
+      this.order_status = value.order_status_id
       this.timeslot = value.time_slot
       // this.base_price=value.price.base_price
-console.log(this.order_status,'order-status')
+      console.log(this.order_status, 'order-status')
       this.selectedDeliveryType = value.id;
-   
+
 
    }
    paymentTypesSelection(value: any): void {
+      console.log(value)
+      if (value.value == 'online') {
+         this.toastService.showError("This service is not working yet")
+      }
       this.selectedPaymentType = value.value;
+
 
 
    }
    paymentType(event: any) {
       this.selectedPayment = event.target.innerText;
-    
+
       if (this.selectedPayment == 'Pay On Pickup') {
          this.pay_on_pickup = '1'
          this.pay_on_delivery = '0'
@@ -266,42 +278,42 @@ console.log(this.order_status,'order-status')
       console.log(this.loading_button)
       if (this.loading_button) return; // Prevent multiple clicks while loading
 
-   this.loading_button = true; // Disable button immediately
-      if(this.timeslot=='1' && !this.selectedSlot){
+      this.loading_button = true; // Disable button immediately
+      if (this.timeslot == '1' && !this.selectedSlot) {
 
          this.toastService.showError("Please select time slot")
          this.loading_button = false;
          this.cdr.detectChanges();
          return;
-       }      if(this.timeslot=='1' && !this.selectedDate){
+      } if (this.timeslot == '1' && !this.selectedDate) {
 
          this.toastService.showError("Please select delivery date")
          this.loading_button = false;
          this.cdr.detectChanges();
          return;
-       }
-       
-       if (!this.selectedPaymentType ) {
+      }
+
+      if (!this.selectedPaymentType) {
          this.toastService.showError("Please select payment mode")
          this.loading_button = false;
          this.cdr.detectChanges();
          return;
-       }
-       if(this.selectedPaymentType=='cash' && !this.selectedPayment){
+      }
+      if (this.selectedPaymentType == 'cash' && !this.selectedPayment) {
 
          this.toastService.showError("Please select payment location")
          this.loading_button = false;
          this.cdr.detectChanges();
          return;
-       }
-      else if (!this.selectedDeliveryType ) {
-       this.toastService.showError("Please select Delivery Type")
-       this.loading_button = false;
-       this.cdr.detectChanges();
+      }
+      else if (!this.selectedDeliveryType) {
+         this.toastService.showError("Please select Delivery Type")
+         this.loading_button = false;
+         this.cdr.detectChanges();
          return;
-       }
+      }
       try {
-        
+
          this.apiService.last_invoice({ business_id: this.businessDetails.id }).subscribe({
             next: (data: any) => {
                // this.loading_button = true;
@@ -310,9 +322,9 @@ console.log(this.order_status,'order-status')
                console.log(this.listofInvoice)
                if (this.listofInvoice) {
                   this.addInvoice(this.listofInvoice)
-                  
 
-                 
+
+
                }
 
                else {
@@ -362,7 +374,7 @@ console.log(this.order_status,'order-status')
       payload.for_date = formattedDate
       payload.delivery_id = this.deliveryId
       payload.created_on_date = formattedDate
-      payload.for_booking_date =this.selectedDate
+      payload.for_booking_date = this.selectedDate
       payload.drop_name = this.dropLocation.person_name
       payload.drop_mobile = this.dropLocation?.person_phone_no
       payload.pickup_name = this.pickupLocation?.person_name
@@ -374,7 +386,7 @@ console.log(this.order_status,'order-status')
                console.log(data.status)
                if (data.status) {
                   // this.loading_button = true;
-                  console.log('i',this.loading_button )
+                  console.log('i', this.loading_button)
                   // this.listofInvoice = ApiResponse.data;
                   this.invoice_id = ApiResponse?.data?.id
                   this.editDelivery(this.deliveryId)
@@ -393,7 +405,7 @@ console.log(this.order_status,'order-status')
                   // this.router.navigate(['/order-list']);
                   // this.messageService.showThankyou()
                } else {
-                  this.toastService.showError(data.msg); 
+                  this.toastService.showError(data.msg);
                   this.loading_button = false;
                   this.cdr.detectChanges();
                }
@@ -410,8 +422,8 @@ console.log(this.order_status,'order-status')
          console.log('Error in the catch block', error);
       }
    }
- 
-  
+
+
    addTransaction(id: any) {
       const currentDate = new Date();
       const formattedDate = currentDate.toISOString().split('T')[0];
@@ -428,20 +440,20 @@ console.log(this.order_status,'order-status')
          this.apiService.addTransaction(payload).subscribe({
             next: (data: any) => {
                // this.loading_button = true;
-               console.log('i',this.loading_button )
+               console.log('i', this.loading_button)
                let ApiResponse: any = data;
                // this.clearLocal()
                // this.addNotification()
-               if(data.status){
-                
-               // this.router.navigate(['/dashboard']);
-             
-             
-              
-               // this.toastService.showSuccess("Order Placed Successfully")
-            }
-               else{
-                  this.toastService.showError('Error in Payment'); 
+               if (data.status) {
+
+                  // this.router.navigate(['/dashboard']);
+
+
+
+                  // this.toastService.showSuccess("Order Placed Successfully")
+               }
+               else {
+                  this.toastService.showError('Error in Payment');
                }
                // this.listofInvoice = ApiResponse.data;
                // if(  this.selectedPaymentType == 'cash'){}
@@ -467,7 +479,7 @@ console.log(this.order_status,'order-status')
       payload.business_id = this.businessDetails.id
       payload.order_delivery_details_id = id
       payload.status = 1
-      payload.order_status_id=this.order_status
+      payload.order_status_id = this.order_status
       payload.delivery_type_id = this.selectedDeliveryType
       payload.order_value = this.sub_total
       payload.delivery_charges = this.sub_total
@@ -483,14 +495,14 @@ console.log(this.order_status,'order-status')
       payload.drop_address = this.dropLocation.address_details
       payload.pickup_address = this.pickupLocation.address_details
       payload.parcel_weight = this.listofInvoice
-      payload.invoice_id=this.invoice_id ? this.invoice_id: 0
+      payload.invoice_id = this.invoice_id ? this.invoice_id : 0
       // payload.user_id=
       try {
          this.apiService.edit_order_delivery_details(payload).subscribe({
             next: (data: any) => {
                let ApiResponse: any = data;
-            this.addNotification()
-            // this.loading_button = true;
+               this.addNotification()
+               // this.loading_button = true;
                // this.listofDelivery = ApiResponse.data;
                // this.clearLocal()
                // this.router.navigate(['/order-list']);
@@ -512,7 +524,7 @@ console.log(this.order_status,'order-status')
       payload.business_id = this.businessDetails.id
       payload.order_delivery_details_id = id
       payload.status = 1
-      payload.order_status_id=this.order_status
+      payload.order_status_id = this.order_status
       payload.delivery_type_id = this.selectedDeliveryType
       payload.order_value = this.sub_total
       payload.delivery_charges = this.sub_total
@@ -528,14 +540,14 @@ console.log(this.order_status,'order-status')
       payload.drop_address = this.dropLocation.address_details
       payload.pickup_address = this.pickupLocation.address_details
       payload.parcel_weight = this.listofInvoice
-      payload.invoice_id=this.invoice_id ? this.invoice_id: 0
+      payload.invoice_id = this.invoice_id ? this.invoice_id : 0
       // payload.user_id=
       try {
          this.apiService.edit_order_delivery_details(payload).subscribe({
             next: (data: any) => {
                let ApiResponse: any = data;
-            // this.addNotification()
-            // this.loading_button = true;
+               // this.addNotification()
+               // this.loading_button = true;
                // this.listofDelivery = ApiResponse.data;
                // this.clearLocal()
                // this.router.navigate(['/order-list']);
@@ -554,12 +566,12 @@ console.log(this.order_status,'order-status')
 
 
    addNotification() {
-      if(!this.invoice_id){
-console.log("nf",this.invoice_id)
-         this.toastService.showSuccess('Your Order is Successfully Cancelled'); 
+      if (!this.invoice_id) {
+         console.log("nf", this.invoice_id)
+         this.toastService.showSuccess('Your Order is Successfully Cancelled');
          return;
-      }else{
-         console.log("f",this.invoice_id)
+      } else {
+         console.log("f", this.invoice_id)
       }
       let payload = {
          "user_id": environment.riderId,
@@ -567,11 +579,15 @@ console.log("nf",this.invoice_id)
          "delivery_id": this.deliveryId,
          "invoice_id": this.invoice_id,
          "details": {
-            "distance":this.newOrder.distance,
-            'pickup_address':this.pickupLocation.address_details,
-            'order_status':this.order_status,
-            'delivery_type':this.selectedDeliveryType
-        }
+            "distance": this.newOrder.distance,
+            'pickup_address': this.pickupLocation.address_details,
+            'order_status': this.order_status,
+            'delivery_type': this.selectedDeliveryType
+         },
+         "pickup_location": {
+            "longitude": this.pickupLocation.lat_val,
+            "latitude": this.pickupLocation.long_val
+         }
       }
 
       try {
@@ -586,11 +602,11 @@ console.log("nf",this.invoice_id)
                   acceptLabel: 'OK',
                   rejectVisible: false, // Hides the "No" button
                   accept: () => {
-                      console.log('Thank you message displayed');
+                     console.log('Thank you message displayed');
                   }
-                  
-              });
-              this.loading_button = false;
+
+               });
+               this.loading_button = false;
             },
             error: (error: any) => {
                console.log('Error fetching data', error);
@@ -603,14 +619,14 @@ console.log("nf",this.invoice_id)
       }
    }
    clearLocal() {
- 
+
       localStorage.removeItem('selectedPickup');
       localStorage.removeItem('selectedDrop');
       localStorage.removeItem('new-order');
       this.router.navigate(['/dashboard']);
    }
    cancel() {
-      this.order_status=25
+      this.order_status = 25
       this.editDeliveries(this.deliveryId)
       localStorage.removeItem('selectedPickup');
       localStorage.removeItem('selectedDrop');

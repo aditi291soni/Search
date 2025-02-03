@@ -35,42 +35,43 @@
 <!-- Delivery Types -->
 <h4>Delivery Type</h4>
 <div class="grid-3">
-   <ng-container  *ngFor="let delivery of deliveryList">
-   <div class="recent-order-item hovered"  (click)="onDeliveryTypeSelect(delivery)" *ngIf="delivery?.pickup"
-      [class.selected]="selectedDeliveryType === delivery.id" >
-         <div class="header" >
+   <ng-container *ngFor="let delivery of deliveryList">
+      <div class="recent-order-item hovered" (click)="onDeliveryTypeSelect(delivery)" *ngIf="delivery?.pickup"
+         [class.selected]="selectedDeliveryType === delivery.id">
+         <div class="header">
             <h4>{{delivery.delivery_name}}</h4>
             <h4>{{this.businessDetails.currency_symbol}} {{delivery.price | number: '1.2-2'}} </h4>
          </div>
          <div>{{delivery.pickup_label}}{{delivery.eta}}.</div>
-         
+
       </div>
    </ng-container>
-   </div>
+</div>
 <br>
 
 <!-- Payment Modes -->
 
 <h4 *ngIf="timeslot === '1'">Select Date Slot</h4>
 
-  
 
-<p-calendar *ngIf="timeslot === '1'"   [minDate]="minDate"  id="dob"  dateFormat="yy-mm-dd" appendTo="body" [showIcon]="true"   [(ngModel)]="selectedDate" 
-(onSelect)="onDateSelect($event)"
+
+<p-calendar *ngIf="timeslot === '1'" [minDate]="minDate" id="dob" dateFormat="yy-mm-dd" appendTo="body"
+   [showIcon]="true" [(ngModel)]="formattedDate" (onSelect)="onDateSelect($event)"
    [style]="{'width': '100%'}"></p-calendar>
 
 <h4 *ngIf="timeslot === '1'">Select Time Slot</h4>
 
-   <p-select (onChange)="onSlotChange($event)" *ngIf="timeslot === '1'" [options]="timeSlot" optionValue="id" optionLabel="slot_name"
-      placeholder="Select Time Slot" class="w-full">
-   </p-select>
+<p-select (onChange)="onSlotChange($event)" *ngIf="timeslot === '1'" [options]="timeSlot" optionValue="id"
+   optionLabel="slot_name" placeholder="Select Time Slot" class="w-full">
+</p-select>
 
 <br *ngIf="timeslot === '1'">
 
 <!-- Payment Modes -->
 <h4>Payment Modes</h4>
-<div class="container" >
-   <div class="recent-order-item" (click)="paymentTypesSelection(payment)" *ngFor="let payment of paymentTypes" [class.selected]="selectedPaymentType === payment.value">
+<div class="container">
+   <div class="recent-order-item" (click)="paymentTypesSelection(payment)" *ngFor="let payment of paymentTypes"
+      [class.selected]="selectedPaymentType === payment.value" [class.disabled]="payment.disabled">
       <i [class]="payment.img"></i> {{payment.name}}
    </div>
 
@@ -83,12 +84,8 @@
    </div> -->
 </div>
 <div>
-   <p-select *ngIf="selectedPaymentType=== 'cash'"  (click)="paymentType($event)"
-   [options]="CashTypes" 
-   optionValue="value" 
-   optionLabel="name" 
-   placeholder="Payment At" 
-   class="w-full">
+   <p-select *ngIf="selectedPaymentType=== 'cash'" (click)="paymentType($event)" [options]="CashTypes"
+      optionValue="value" optionLabel="name" placeholder="Payment At" class="w-full">
    </p-select>
 </div>
 
@@ -100,6 +97,7 @@
 <div class="text-center">
    <div class="space">
       <button pButton class="p-button-outlined p-button-danger ml-5" label="Cancel" (click)="cancel()"></button>
-      <button [loading]="loading_button" [disabled]="loading_button" pButton type="submit" label="Submit" (click)="getlastinvoice()"></button>
+      <button [loading]="loading_button" [disabled]="loading_button" pButton type="submit" label="Submit"
+         (click)="getlastinvoice()"></button>
    </div>
 </div>

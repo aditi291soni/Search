@@ -24,29 +24,46 @@
 }
 
 .full-width {
-   width: 100%;
+   width: 100% !important;
+   /* border: 1px solid red; */
 }
 
 .thin {
    font-weight: 300;
    font-size: 14px;
 }
-.flex{
+
+.flex {
    display: flex;
    justify-content: space-around;
 }
-.margin-top{
+
+.margin-top {
    margin-top: 1.5rem !important;
    font-size: 13px !important;
 }
+
 .mandatory {
    color: red;
    font-size: 16px;
    margin-left: 5px;
 }
-.sign{
-   
+
+.sign {
+
    font-size: 13px !important;
    color: #198ccd !important;
    font-weight: 700 !important;
+}
+
+.password-container {
+   position: relative;
+}
+
+.password-container i {
+   position: absolute;
+   right: 10px;
+   top: 50%;
+   transform: translateY(-50%);
+   cursor: pointer;
 }

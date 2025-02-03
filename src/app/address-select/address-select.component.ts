@@ -11,13 +11,14 @@ import { ButtonModule } from 'primeng/button';
 @Component({
    selector: 'app-address-select',
    standalone: true,
-   imports: [CommonModule, SkeletonModule,ButtonModule],
+   imports: [CommonModule, SkeletonModule, ButtonModule],
    templateUrl: './address-select.component.html',
    styleUrls: ['./address-select.component.css'],
 })
 export class AddressSelectComponent {
    addressList: any[] = []; // The variable to store the address list
    loading: boolean = true; // Indicates whether data is currently loading
+   searchQuery: any;
 
    /**
     * Constructor to inject the necessary services.
@@ -30,10 +31,10 @@ export class AddressSelectComponent {
       private apiService: ApiService,
       private activatedRoute: ActivatedRoute,
       private router: Router
-   ) { 
+   ) {
 
 
-      
+
    }
 
    /**
@@ -42,8 +43,23 @@ export class AddressSelectComponent {
     */
    ngOnInit(): void {
       this.fetchAddressList();
+      this.sortAddressList();
+      this.activatedRoute.queryParams.subscribe(params => {
+         this.searchQuery = params['search'] || '';  // Default to empty string if no 'search' param is found
+         console.log('Search Query:', this.searchQuery);  // Log search query for debugging
+         this.filterAddress();  // Trigger the filter after the search query is updated
+      });
    }
-
+   filterAddress(): void {
+      if (this.searchQuery.trim()) {
+         this.addressList = this.addressList.filter(item =>
+            Object.values(item).some(value =>
+               value && value.toString().toLowerCase().includes(this.searchQuery.toLowerCase())
+            )
+         );
+         console.log('Filtered Orders:', this.addressList);  // Log filtered orders for debugging
+      }
+   }
    /**
     * Fetches the address list from the API and populates the addressList array.
     * If a business ID is not found in localStorage, logs an error and stops loading.
@@ -62,6 +78,9 @@ export class AddressSelectComponent {
          next: (response) => {
             if (response.status === true) {
                this.addressList = response.data || [];
+               this.addressList.sort((a, b) => a.person_name.toLowerCase().localeCompare(b.person_name.toLowerCase()));
+               console.log(this.addressList)
+               // localStorage.setItem('address', JSON.stringify(this.addressList));
             } else {
                console.error('Error fetching list of business:', response.message);
             }
@@ -102,24 +121,29 @@ export class AddressSelectComponent {
          window.history.back();
       });
    }
-   addPickUpAddress(){
-      
-         const currentRoute = this.router.url;
-   
-         
-   
-   
-         // Check the current route and save the address accordingly
-         if (currentRoute.includes('select-pickup')) {
-            this.router.navigate(['orders/new-order/add-address/','pickup']);
-         } else if (currentRoute.includes('select-drop')) {
-            this.router.navigate(['orders/new-order/add-address/','drop']);
-         } else {
-            console.error('Unknown route, no address saved');
-         }
-   
-       
-         // this.router.navigate(['orders/new-order/add-address/',key]);
-        
-       }
+
+   sortAddressList() {
+      this.addressList.sort((a, b) => a.person_name.toLowerCase().localeCompare(b.person_name.toLowerCase()));
+      console.log(this.addressList)
+   }
+   addPickUpAddress() {
+
+      const currentRoute = this.router.url;
+
+
+
+
+      // Check the current route and save the address accordingly
+      if (currentRoute.includes('select-pickup')) {
+         this.router.navigate(['orders/new-order/add-address/', 'pickup']);
+      } else if (currentRoute.includes('select-drop')) {
+         this.router.navigate(['orders/new-order/add-address/', 'drop']);
+      } else {
+         console.error('Unknown route, no address saved');
+      }
+
+
+      // this.router.navigate(['orders/new-order/add-address/',key]);
+
+   }
 }

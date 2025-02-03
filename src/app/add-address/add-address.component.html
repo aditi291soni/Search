@@ -3,8 +3,8 @@
 
 <div class="container">
    <div class="search-box-container" *ngIf="!isFormVisible">
-      <input #searchBox type="text" pInputText placeholder="Search for an address..." class="search-box"  />
-      <button pButton class="current-location-btn"  (click)="currentLocation()">
+      <input #searchBox type="text" pInputText placeholder="Search for an address..." class="search-box" />
+      <button pButton class="current-location-btn" (click)="currentLocation()">
          <mat-icon class="icon">gps_fixed</mat-icon>
          <!-- <i class="pi pi-map-marker"></i> -->
       </button>
@@ -13,49 +13,50 @@
    <div #mapContainer [ngClass]="{'map-container': true, 'shrink': isFormVisible}"></div>
 
    <div class="centered" *ngIf="!isFormVisible">
-      <button pButton label="Add Address" class="add-btn" (click)="submitForm('save')"></button>
+      <button pButton label="Add Details" class="add-btn" (click)="submitForm('save')"></button>
    </div>
 
-   <form *ngIf="isFormVisible" [formGroup]="projectForm" >
+   <form *ngIf="isFormVisible" [formGroup]="projectForm">
       <div class="form-group">
-         <div class="address_details">Address Detail  <span class="mandatory">*</span></div>
-         <textarea pInputText p-autoTextarea id="address_details" type="text" formControlName="address_details" readonly ></textarea>
+         <div class="address_details">Address Detail <span class="mandatory">*</span></div>
+         <textarea pInputText p-autoTextarea id="address_details" type="text" formControlName="address_details"
+            readonly></textarea>
       </div>
       <div class="form-group">
-         <div class="address_details">Name  <span class="mandatory">*</span></div>
+         <div class="address_details">Name <span class="mandatory">*</span></div>
          <input pInputText id="address_details" type="text" formControlName="person_name" />
       </div>
       <div class="form-group">
-         <div class="address_details">Phone  <span class="mandatory">*</span></div>
+         <div class="address_details">Phone <span class="mandatory">*</span></div>
          <input pInputText id="city" type="text" maxlength="10" minlength="10" formControlName="person_phone_no" />
       </div>
-   
+
       <div class="form-group">
-         <div class="address_details">Address Title  <span class="mandatory">*</span></div>
+         <div class="address_details">Address Title <span class="mandatory">*</span></div>
          <input pInputText id="state" type="text" formControlName="address_name" />
       </div>
-   
+
       <div class="form-group">
          <div class="address_details">Floor, Flat, House.no, Building, Apartment</div>
          <input pInputText id="house_no" type="text" formControlName="house_no" />
       </div>
-   
+
       <div class="form-group">
          <div class="address_details">Landmark</div>
          <input pInputText id="landmark" type="text" formControlName="landmark" />
       </div>
-   
+
       <div class="form-group">
          <div class="address_details">City <span class="mandatory">*</span></div>
-         <input pInputText  type="text" formControlName="city"  />
+         <input pInputText type="text" formControlName="city" />
       </div>
       <div class="form-group">
          <div class="address_details">Pincode</div>
-         <input pInputText  type="text" maxlength="6" minlength="6" formControlName="postal_code"   />
+         <input pInputText type="text" maxlength="6" minlength="6" formControlName="postal_code" />
       </div>
    </form>
-   
+
    <div class="form-group" *ngIf="isFormVisible">
-      <button pButton label="Save" class="save-btn" (click)="addAddress()" ></button>
+      <button pButton label="Save" class="save-btn" (click)="addAddress()"></button>
    </div>
 </div>

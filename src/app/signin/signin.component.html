@@ -4,20 +4,29 @@
       <div>Welcome back to Dropzone</div>
       <form (ngSubmit)="onSubmit()" class="signin-form" [formGroup]="signinForm">
          <div class="p-field">
-            <div class="thin">Username  <span class="mandatory">*</span></div>
+            <div class="thin">Username <span class="mandatory">*</span></div>
             <input class="full-width" id="email" type="text" pInputText placeholder="Enter your Email or Phone"
-            formControlName="email_or_phone" name="email" required />
-            <div *ngIf="signinForm.get('email_or_phone')?.invalid && signinForm.get('email_or_phone')?.touched" class="mandatory">
+               formControlName="email_or_phone" name="email" required />
+            <div *ngIf="signinForm.get('email_or_phone')?.invalid && signinForm.get('email_or_phone')?.touched"
+               class="mandatory">
                <small>Email or Phone is required.</small>
             </div>
          </div>
          <div class="p-field">
-            <div class="thin">Password  <span class="mandatory">*</span></div>
-            <input class="full-width" id="password" type="password" pInputText placeholder="Enter your Password"
-              formControlName="password" name="password" required />
-              <div *ngIf="signinForm.get('password')?.invalid && signinForm.get('password')?.touched" class="mandatory">
+            <div class="thin">Password <span class="mandatory">*</span></div>
+            <!-- <div class="password-container">
+               <input class="full-width" id="password" [type]="showPassword ? 'text' : 'password'" pInputText
+                  placeholder="Enter your Password" formControlName="password" name="password" required />
+               <i class="pi" [class.pi-eye]="!showPassword" [class.pi-eye-slash]="showPassword"
+                  (click)="togglePasswordVisibility()"></i>
+            </div> -->
+            <p-password class="full-width" id="password" toggleMask formControlName="password"
+               placeholder="Enter your Password" inputStyleClass="full-width">
+            </p-password>
+            <div *ngIf="signinForm.get('password')?.invalid && signinForm.get('password')?.touched" class="mandatory">
                <small *ngIf="signinForm.get('password')?.hasError('required')">Password number is required.</small>
-               <small *ngIf="signinForm.get('password')?.hasError('maxlength')">Password must be more than 6 digits.</small>
+               <small *ngIf="signinForm.get('password')?.hasError('maxlength')">Password must be more than 6
+                  digits.</small>
             </div>
          </div>
 
@@ -29,7 +38,8 @@
             <!-- <a (click)="redirectToSignUp()" class="margin-top" routerLinkActive="active" >Sign up </a> -->
          </div>
          <br>
-         <a (click)="redirectToSignUp()" class="margin-top" routerLinkActive="active" >Create new Account? <span class="sign">Sign Up</span> </a>
+         <a (click)="redirectToSignUp()" class="margin-top" routerLinkActive="active">Create new Account? <span
+               class="sign">Sign Up</span> </a>
       </form>
    </p-card>
 </div>

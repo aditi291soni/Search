@@ -1,0 +1,10 @@
+<div *ngIf="searchResults.length > 0" class="search-results">
+   <ul>
+      <li *ngFor="let result of searchResults">
+         <span>{{ result.name }}</span> - <span>{{ result.description }}</span>
+      </li>
+   </ul>
+</div>
+<div *ngIf="searchResults.length === 0 && searchQuery" class="no-results">
+   No results found.
+</div>

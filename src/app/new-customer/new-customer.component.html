@@ -4,40 +4,43 @@
 
 <div class="">
    <div *ngIf="!isSearched">
-      <app-search *ngIf="!this.userId " (userSelected)="handleUserSelected($event)" (isSearched)="userSearched($event)"></app-search>
+      <app-search *ngIf="!this.userId " (userSelected)="handleUserSelected($event)"
+         (isSearched)="userSearched($event)"></app-search>
       <!-- <h3 class="mb8">Enter Phone Number</h3>
       <input pInputText type="tel" id="phone" />
    </div>
    <button pButton type="button" label="Search" class="p-button-contained"></button> -->
-</div>
+   </div>
 
-<form [formGroup]="profileForm" >
-<div class="form-container" *ngIf="isSearched== true">
-   <div class="col">
-      <label for="phone-number">Phone Number<span class="mandatory">*</span></label>
-      <input pInputText type="tel" id="phone-number" minlength="10" maxlength="10" formControlName="phone" placeholder="Enter Phone no"/>
-   </div>
-   <div class="col">
-      <label for="full-name">Full Name <span class="mandatory">*</span></label>
-      <input pInputText type="text" id="full-name" formControlName="first_name" placeholder="Enter Full name" />
-   </div>
-   <div class="col">
+   <form [formGroup]="profileForm">
+      <div class="form-container" *ngIf="isSearched== true">
+         <div class="col">
+            <label for="phone-number">Phone Number<span class="mandatory">*</span></label>
+            <input pInputText type="tel" id="phone-number" minlength="10" maxlength="10" formControlName="phone"
+               placeholder="Enter Phone no" />
+         </div>
+         <div class="col">
+            <label for="full-name">Full Name <span class="mandatory">*</span></label>
+            <input pInputText type="text" id="full-name" formControlName="first_name" placeholder="Enter Full name" />
+         </div>
+         <!-- <div class="col">
       <label for="email">Email Address <span class="mandatory">*</span></label>
       <input pInputText type="email" id="email" formControlName="email" placeholder="Enter email" />
-   </div>
-   <!-- <div class="col">
+   </div> -->
+         <!-- <div class="col">
       <label for="dob">Date of Birth</label>
       <p-calendar [(ngModel)]="dob" id="dob"  dateFormat="yy-mm-dd" appendTo="body" [showIcon]="true"
          [style]="{'width': '100%'}"></p-calendar>
    </div> -->
 
-</div>
-</form>
-<br>
+      </div>
+   </form>
+   <br>
 
 
-<!-- Bottom Buttons -->
-<div class="button-group bottom-buttons" *ngIf="isSearched== true">
-   <!-- <button pButton type="button" label="Cancel" class="p-button-outlined p-button-danger"></button> -->
-   <button pButton type="submit" label="Save" class="p-button-contained p-button-success" (click)="onSubmit()"></button>
-</div>
+   <!-- Bottom Buttons -->
+   <div class="button-group bottom-buttons" *ngIf="isSearched== true">
+      <button pButton type="button" label="Reset" class="p-button-outlined p-button-danger" (click)="reset()"></button>
+      <button pButton type="submit" label="Save" class="p-button-contained p-button-success"
+         (click)="onSubmit()"></button>
+   </div>

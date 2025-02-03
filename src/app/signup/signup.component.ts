@@ -9,14 +9,15 @@ import { ToastNotificationService } from '../services/toast-notification.service
 import { CommonModule } from '@angular/common';
 import { SkeletonModule } from 'primeng/skeleton';
 import { environment } from '../../environments/environment';
+import { PasswordModule } from 'primeng/password';
 
 @Component({
-  selector: 'app-signup',
-  standalone: true,
-    imports: [  ButtonModule, CardModule, CommonModule,InputTextModule, ButtonModule, CommonModule, SkeletonModule, FormsModule, 
-           ReactiveFormsModule,],
-  templateUrl: './signup.component.html',
-  styleUrl: './signup.component.css'
+   selector: 'app-signup',
+   standalone: true,
+   imports: [ButtonModule, CardModule, CommonModule, InputTextModule, ButtonModule, CommonModule, SkeletonModule, FormsModule, PasswordModule,
+      ReactiveFormsModule,],
+   templateUrl: './signup.component.html',
+   styleUrl: './signup.component.css'
 })
 export class SignupComponent {
 
@@ -25,29 +26,30 @@ export class SignupComponent {
    loading: boolean = false;
    business: any[] = [];
    signInForm: any;
+   showPassword: boolean = false;
    constructor(
       private apiService: ApiService,
       private router: Router,
       private toastService: ToastNotificationService,
-      private fb: FormBuilder ,
+      private fb: FormBuilder,
    ) {
-      this.signInForm= this.fb.group({
+      this.signInForm = this.fb.group({
          email: ['', [Validators.required, Validators.email]],
-         first_name: ['', [Validators.required, ]],
+         first_name: ['', [Validators.required,]],
          phone: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
          password: ['', [Validators.required]],
          password_confirmation: ['', [Validators.required]],
          super_admin: [environment.superAdminId, [Validators.required]],
-       })
-    }
-    redirectToSignUp() {
+      })
+   }
+   redirectToSignUp() {
       this.router.navigate(['/auth/sign-in']); // Navigates to the route
-    }
+   }
    onSubmit(): void {
       // Start the loading state
       this.loading = true;
-this.signInForm.value.password_confirmation=this.signInForm.value.password
-    
+      this.signInForm.value.password_confirmation = this.signInForm.value.password
+
       this.apiService.signUp(this.signInForm.value).subscribe({
          next: (response) => {
             // Handle successful sign-in
@@ -61,7 +63,7 @@ this.signInForm.value.password_confirmation=this.signInForm.value.password
                localStorage.setItem('authToken', response.data.token);
                localStorage.setItem('userData', JSON.stringify(response.data));
                this.toastService.showSuccess('Signup successful!');
-              
+
 
             } else {
                // Show error notification if credentials are invalid
@@ -83,5 +85,8 @@ this.signInForm.value.password_confirmation=this.signInForm.value.password
             this.loading = false;
          },
       });
+   }
+   togglePasswordVisibility(): void {
+      this.showPassword = !this.showPassword;
    }
 }

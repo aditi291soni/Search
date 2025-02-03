@@ -33,7 +33,7 @@ export class ApiService {
     * @returns An observable that emits the response from the sign-in API.
     * @throws Will throw an error if the API request fails.
     */
-   signIn(payload:object): Observable<any> {
+   signIn(payload: object): Observable<any> {
       return this.http.post(`${this.baseUrl}/sign-in`, payload).pipe(
          catchError((error) => {
             console.error('Error signing in:', error); // Log error for debugging
@@ -42,7 +42,7 @@ export class ApiService {
       );
    }
 
-   signUp(payload:object): Observable<any> {
+   signUp(payload: object): Observable<any> {
       return this.http.post(`${this.baseUrl}/sign-up`, payload).pipe(
          catchError((error) => {
             console.error('Error signing in:', error); // Log error for debugging
@@ -64,8 +64,8 @@ export class ApiService {
          })
       );
    }
-   list_of_banner(payload:object): Observable<any> {
-      return this.http.post(`${this.baseUrl}/get-super-announcement-list`,payload, this.getHttpOptions()).pipe(
+   list_of_banner(payload: object): Observable<any> {
+      return this.http.post(`${this.baseUrl}/get-super-announcement-list`, payload, this.getHttpOptions()).pipe(
          catchError((error) => {
             console.error('Error fetching the list of businesses:', error); // Log error for debugging
             return throwError(() => new Error('Failed to fetch the list of businesses')); // Return a user-friendly error message
@@ -82,8 +82,8 @@ export class ApiService {
          })
       );
    }
-   last_invoice(params:object): Observable<any> {
-     
+   last_invoice(params: object): Observable<any> {
+
       return this.http.post(`${this.baseUrl}/get-last-invoice`, params, this.getHttpOptions()).pipe(
          catchError((error) => {
             console.error('Error fetching the list of addresses:', error); // Log error for debugging
@@ -91,8 +91,8 @@ export class ApiService {
          })
       );
    }
-   add_address(params:object): Observable<any> {
-     
+   add_address(params: object): Observable<any> {
+
       return this.http.post(`${this.baseUrl}/addAddress`, params, this.getHttpOptions()).pipe(
          catchError((error) => {
             console.error('Error fetching the list of addresses:', error); // Log error for debugging
@@ -102,8 +102,8 @@ export class ApiService {
    }
 
 
-   add_user(params:object): Observable<any> {
-     
+   add_user(params: object): Observable<any> {
+
       return this.http.post(`${this.baseUrl}/addUser`, params, this.getHttpOptions()).pipe(
          catchError((error) => {
             console.error('Error fetching the list of addresses:', error); // Log error for debugging
@@ -111,8 +111,8 @@ export class ApiService {
          })
       );
    }
-   add_role_allot(params:object): Observable<any> {
-     
+   add_role_allot(params: object): Observable<any> {
+
       return this.http.post(`${this.baseUrl}/add-role-allot`, params, this.getHttpOptions()).pipe(
          catchError((error) => {
             console.error('Error fetching the list of addresses:', error); // Log error for debugging
@@ -120,8 +120,8 @@ export class ApiService {
          })
       );
    }
-   get_user(params:object): Observable<any> {
-     
+   get_user(params: object): Observable<any> {
+
       return this.http.post(`${this.baseUrl}/getUser`, params, this.getHttpOptions()).pipe(
          catchError((error) => {
             console.error('Error fetching the list of addresses:', error); // Log error for debugging
@@ -130,8 +130,8 @@ export class ApiService {
       );
    }
 
-   search_user(params:object): Observable<any> {
-     
+   search_user(params: object): Observable<any> {
+
       return this.http.post(`${this.baseUrl}/search-users`, params, this.getHttpOptions()).pipe(
          catchError((error) => {
             console.error('Error fetching the list of addresses:', error); // Log error for debugging
@@ -139,8 +139,8 @@ export class ApiService {
          })
       );
    }
-   edit_user(params:object): Observable<any> {
-     
+   edit_user(params: object): Observable<any> {
+
       return this.http.post(`${this.baseUrl}/editUser`, params, this.getHttpOptions()).pipe(
          catchError((error) => {
             console.error('Error fetching the list of addresses:', error); // Log error for debugging
@@ -148,8 +148,8 @@ export class ApiService {
          })
       );
    }
-   getOrderDeliveryDetail(params:object): Observable<any> {
-     
+   getOrderDeliveryDetail(params: object): Observable<any> {
+
       return this.http.post(`${this.baseUrl}/get-order-delivery-details`, params, this.getHttpOptions()).pipe(
          catchError((error) => {
             console.error('Error fetching the list of addresses:', error); // Log error for debugging
@@ -157,8 +157,8 @@ export class ApiService {
          })
       );
    }
-   getDelivery(params:object): Observable<any> {
-     
+   getDelivery(params: object): Observable<any> {
+
       return this.http.post(`${this.baseUrl}/get-delivery-type`, params, this.getHttpOptions()).pipe(
          catchError((error) => {
             console.error('Error fetching the list of addresses:', error); // Log error for debugging
@@ -166,8 +166,8 @@ export class ApiService {
          })
       );
    }
-   getTimeSlots(params:object): Observable<any> {
-     
+   getTimeSlots(params: object): Observable<any> {
+
       return this.http.post(`${this.baseUrl}/get-time-slot`, params, this.getHttpOptions()).pipe(
          catchError((error) => {
             console.error('Error fetching the list of addresses:', error); // Log error for debugging
@@ -176,8 +176,8 @@ export class ApiService {
       );
    }
 
-   getOrderStatus(params:object): Observable<any> {
-     
+   getOrderStatus(params: object): Observable<any> {
+
       return this.http.post(`${this.baseUrl}/get-order-status-list`, params, this.getHttpOptions()).pipe(
          catchError((error) => {
             console.error('Error fetching the list of addresses:', error); // Log error for debugging
@@ -185,8 +185,8 @@ export class ApiService {
          })
       );
    }
-   getInvoice(params:object): Observable<any> {
-     
+   getInvoice(params: object): Observable<any> {
+
       return this.http.post(`${this.baseUrl}/get-invoice`, params, this.getHttpOptions()).pipe(
          catchError((error) => {
             console.error('Error fetching the list of addresses:', error); // Log error for debugging
@@ -211,8 +211,8 @@ export class ApiService {
          })
       );
    }
-   getTransactionList(params:object): Observable<any> {
-     
+   getTransactionList(params: object): Observable<any> {
+
       return this.http.post(`${this.baseUrl}/get-transaction-list`, params, this.getHttpOptions()).pipe(
          catchError((error) => {
             console.error('Error fetching the list of addresses:', error); // Log error for debugging
@@ -220,8 +220,8 @@ export class ApiService {
          })
       );
    }
-   getTimeSlot(params:object): Observable<any> {
-     
+   getTimeSlot(params: object): Observable<any> {
+
       return this.http.post(`${this.baseUrl}/get-time-slot-list`, params, this.getHttpOptions()).pipe(
          catchError((error) => {
             console.error('Error fetching the list of addresses:', error); // Log error for debugging
@@ -229,8 +229,8 @@ export class ApiService {
          })
       );
    }
-   getDeliveryType(params:object): Observable<any> {
-     
+   getDeliveryType(params: object): Observable<any> {
+
       return this.http.post(`${this.baseUrl}/get-delivery-type-list`, params, this.getHttpOptions()).pipe(
          catchError((error) => {
             console.error('Error fetching the list of addresses:', error); // Log error for debugging
@@ -282,7 +282,7 @@ export class ApiService {
    }
    getStateList(countryId: string): Observable<any> {
       const payload = { country_id: countryId }; // Add super_admin_id to payload
-      return this.http.get(`${this.baseUrl}/states?country_id=101`,this.getHttpOptions()).pipe(
+      return this.http.get(`${this.baseUrl}/states?country_id=101`, this.getHttpOptions()).pipe(
          catchError((error) => {
             console.error('Error fetching the list of business:', error); // Log error for debugging
             return throwError(() => new Error('Failed to fetch the list of business')); // Return a user-friendly error message
@@ -291,17 +291,17 @@ export class ApiService {
    }
    get_financial_year_list(): Observable<any> {
 
-      return this.http.get(`${this.baseUrl}/get-financial-year-list`,this.getHttpOptions()).pipe(
+      return this.http.get(`${this.baseUrl}/get-financial-year-list`, this.getHttpOptions()).pipe(
          catchError((error) => {
             console.error('Error fetching the list of business:', error); // Log error for debugging
             return throwError(() => new Error('Failed to fetch the list of business')); // Return a user-friendly error message
          })
       );
    }
-   
-   
+
+
    addBusiness(params: Object): Observable<any> {
-     
+
       return this.http.post(`${this.baseUrl}/add-business`, params, this.getHttpOptions()).pipe(
          catchError((error) => {
             console.error('Error fetching the list of business:', error); // Log error for debugging
@@ -310,7 +310,7 @@ export class ApiService {
       );
    }
    editBusiness(params: Object): Observable<any> {
-     
+
       return this.http.post(`${this.baseUrl}/edit-business`, params, this.getHttpOptions()).pipe(
          catchError((error) => {
             console.error('Error fetching the list of business:', error); // Log error for debugging
@@ -318,10 +318,10 @@ export class ApiService {
          })
       );
    }
-   
+
 
    getBusiness(params: Object): Observable<any> {
-     
+
       return this.http.post(`${this.baseUrl}/get-business`, params, this.getHttpOptions()).pipe(
          catchError((error) => {
             console.error('Error fetching the list of business:', error); // Log error for debugging
@@ -330,7 +330,7 @@ export class ApiService {
       );
    }
    addInvoice(params: Object): Observable<any> {
-     
+
       return this.http.post(`${this.baseUrl}/add-invoice`, params, this.getHttpOptions()).pipe(
          catchError((error) => {
             console.error('Error fetching the list of business:', error); // Log error for debugging
@@ -340,7 +340,7 @@ export class ApiService {
    }
 
    addTransaction(params: Object): Observable<any> {
-     
+
       return this.http.post(`${this.baseUrl}/add-transaction`, params, this.getHttpOptions()).pipe(
          catchError((error) => {
             console.error('Error fetching the list of business:', error); // Log error for debugging
@@ -349,8 +349,8 @@ export class ApiService {
       );
    }
    addNotification(params: Object): Observable<any> {
-     
-      return this.http.post(`${this.baseUrl}/add-notification-allotment`, params, this.getHttpOptions()).pipe(
+
+      return this.http.post(`${this.baseUrl}/active-rider-location-for-order`, params, this.getHttpOptions()).pipe(
          catchError((error) => {
             console.error('Error fetching the list of business:', error); // Log error for debugging
             return throwError(() => new Error('Failed to fetch the list of business')); // Return a user-friendly error message
@@ -358,7 +358,7 @@ export class ApiService {
       );
    }
    edit_order_delivery_details(params: Object): Observable<any> {
-     
+
       return this.http.post(`${this.baseUrl}/edit-order-delivery-details`, params, this.getHttpOptions()).pipe(
          catchError((error) => {
             console.error('Error fetching the list of business:', error); // Log error for debugging
@@ -383,12 +383,12 @@ export class ApiService {
    getLocalValueInJSON(value: any) {
       let localValueInString = JSON.stringify(value);
       try {
-        let localValueConvertInJSONFormat = JSON.parse(localValueInString);      
-        // console.log(localValueConvertInJSONFormat);
-        return JSON.parse(localValueConvertInJSONFormat);
-      } catch (error:any) {
-        // console.error("Error parsing JSON:", error.message);
-        console.error("Error parsing JSON:", error);
+         let localValueConvertInJSONFormat = JSON.parse(localValueInString);
+         // console.log(localValueConvertInJSONFormat);
+         return JSON.parse(localValueConvertInJSONFormat);
+      } catch (error: any) {
+         // console.error("Error parsing JSON:", error.message);
+         console.error("Error parsing JSON:", error);
       }
-    }
+   }
 }

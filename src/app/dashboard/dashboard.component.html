@@ -1,5 +1,5 @@
 <!-- Original content -->
-<h2 *ngIf="!loading">Welcome, {{this.userInfo?.first_name | titlecase  }} 👋 </h2>
+<h2 *ngIf="!loading">Welcome, {{this.userInfo?.first_name | titlecase }} 👋 </h2>
 <p-skeleton *ngIf="loading" height="2rem" width="50%"></p-skeleton>
 <br>
 
@@ -11,8 +11,8 @@
 <!-- <div *ngIf="!loading">
    <app-corousel></app-corousel>
 </div> -->
-<!-- TODO chnag --> 
-<img  class="banner-img" *ngIf="!loading"
+<!-- TODO chnag -->
+<img class="banner-img" *ngIf="!loading"
    src="https://ik.imagekit.io/praveenarbs/api-images/super-announcement/24/17368555934940400.jpg" alt="banner" />
 <br><br>
 
@@ -55,24 +55,24 @@
    <ng-container *ngIf="order.length==0">
       <app-no-data-found></app-no-data-found>
    </ng-container>
-   <div class="recent-order-item"  *ngFor="let order of order" (click)="navigateToOrderDetails(order.id)">
-      <div class="recent-order-flex"  >
+   <div class="recent-order-item" *ngFor="let order of order" (click)="navigateToOrderDetails(order.id)">
+      <div class="recent-order-flex">
          <div>
-            <div class="subtext2 mt-2">Pickup Address</div>
+            <div class="subtext2 mt-2">Sender Detail</div>
             <div class="maintext">{{order?.pickup_name | titlecase}}</div>
             <div>{{order?.pickup_mobile}}</div>
-            <div class="subtext2">Drop Address</div>
+            <div class="subtext2">Receiver Detail</div>
             <div class="maintext">{{order?.drop_name | titlecase}}</div>
             <div class="subtext">{{order?.drop_mobile}}</div>
-      
+
          </div>
          <div class="order-no">
             <div class="subtext2">Order No.</div>
             <div class="maintext2">#{{order.order_no}}</div>
          </div>
       </div>
- 
-     
+
+
    </div>
 
 </div>

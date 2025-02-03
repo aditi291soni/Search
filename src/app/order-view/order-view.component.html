@@ -21,28 +21,28 @@
 
       </div>
    </div>
-
    <div class="main-container">
       <div class="left">
-         <div class="header">Drop Person</div>
+         <div class="header">Sender Name</div>
+         <div class="strong">{{invoice?.pickup_name | titlecase}}</div>
+      </div>
+      <div class="right">
+         <div class="header">Sender Phone</div>
+         <div class="strong">{{invoice?.pickup_mobile}}</div>
+      </div>
+   </div>
+   <div class="main-container">
+      <div class="left">
+         <div class="header">Receiver Name</div>
          <div class="strong">{{invoice?.drop_name | titlecase}}</div>
       </div>
       <div class="right">
-         <div class="header">Phone Number</div>
+         <div class="header">Receiver Phone</div>
          <div class="strong">{{invoice?.drop_mobile}}</div>
       </div>
    </div>
 
-   <div class="main-container">
-      <div class="left">
-         <div class="header">Pickup Person</div>
-         <div class="strong">{{invoice?.pickup_name | titlecase}}</div>
-      </div>
-      <div class="right">
-         <div class="header">Phone Number</div>
-         <div class="strong">{{invoice?.pickup_mobile}}</div>
-      </div>
-   </div>
+
 
    <div class="main-container">
       <div class="left">
@@ -62,7 +62,7 @@
       </div>
       <div class="right">
          <div class="header">Payment Mode</div>
-         <div class="strong">{{ this.order?.delivery_payment_status !== 'cash' 
+         <div class="strong">{{ this.order?.delivery_payment_status !== 'cash'
             ? (this.order?.delivery_payment_status | titlecase)
             : (this.order?.pay_on_pickup == '0' ? 'Pay On Drop' : 'Pay On Pick up') }}</div>
       </div>
@@ -70,9 +70,10 @@
    <div class="main-container">
       <div class="left">
          <div class="header">Amount</div>
-         <div class="strong">{{this.businessDetails?.currency_symbol ?this.businessDetails?.currency_symbol : '₹'}}{{invoice?.subtotal}}</div>
+         <div class="strong">{{this.businessDetails?.currency_symbol ?this.businessDetails?.currency_symbol :
+            '₹'}}{{invoice?.subtotal}}</div>
       </div>
-    
+
    </div>
 </div>
 
@@ -141,11 +142,11 @@
    </div>
    <button (click)="showTimeline()" pButton [label]="timelineshow ? 'Hide' : 'Show'"></button>
 </div>
-<div class="time-con" *ngIf="timelineshow" >
+<div class="time-con" *ngIf="timelineshow">
    <p-timeline *ngIf="isMobile" [value]="events" [layout]="isMobile ? 'vertical' : 'horizontal'" align="alternate">
       <ng-template let-event pTemplate="content">
          <div class="timeline-item">
-          
+
             <div class="icon-wrapper" [ngStyle]="{'color': event.color}">
                <i class="status-icon" [class]="event.icon"></i>
             </div>
@@ -161,14 +162,14 @@
    <p-timeline *ngIf="!isMobile" [value]="events" layout="horizontal" class="small-timeline">
       <!-- Custom Marker Icons -->
       <ng-template pTemplate="marker" let-event let-i="index">
-         <i [class]="event.icon"  style="font-size: 1.5rem"></i>
+         <i [class]="event.icon" style="font-size: 1.5rem"></i>
       </ng-template>
 
       <!-- Custom Content -->
       <ng-template pTemplate="content" let-event>
          <div class="p-d-flex p-ai-center">
             <div class="p-mr-2">
-               <b>{{event.status  }}</b>
+               <b>{{event.status }}</b>
             </div>
          </div>
       </ng-template>
