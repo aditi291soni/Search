@@ -14,15 +14,15 @@
          </div>
          <div class="p-field">
             <div class="thin">Password <span class="mandatory">*</span></div>
-            <!-- <div class="password-container">
+            <div class="password-container">
                <input class="full-width" id="password" [type]="showPassword ? 'text' : 'password'" pInputText
                   placeholder="Enter your Password" formControlName="password" name="password" required />
                <i class="pi" [class.pi-eye]="!showPassword" [class.pi-eye-slash]="showPassword"
                   (click)="togglePasswordVisibility()"></i>
-            </div> -->
-            <p-password class="full-width" id="password" toggleMask formControlName="password"
+            </div>
+            <!-- <p-password class="full-width" id="password" toggleMask formControlName="password"
                placeholder="Enter your Password" inputStyleClass="full-width">
-            </p-password>
+            </p-password> -->
             <div *ngIf="signinForm.get('password')?.invalid && signinForm.get('password')?.touched" class="mandatory">
                <small *ngIf="signinForm.get('password')?.hasError('required')">Password number is required.</small>
                <small *ngIf="signinForm.get('password')?.hasError('maxlength')">Password must be more than 6

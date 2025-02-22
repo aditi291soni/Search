@@ -1,17 +1,77 @@
 <form [formGroup]="form">
-   <div *ngIf="loading" class="full-page-skeleton">
-      <p-skeleton [width]="'100%'" [height]="'3rem'" class="heading-skeleton"></p-skeleton>
-      <div *ngFor="let i of [1, 2, 3, 4]" class="card-skeleton">
-         <p-skeleton [width]="'100%'" [height]="'6rem'"></p-skeleton>
+   <div *ngIf="loading">
+
+      <div class="recent-order-item">
+         <div class="recent-order-flex">
+            <div>
+               <p-skeleton
+                  [style]="{ 'height': '20px', 'width': '150px', 'margin-bottom': '5px','margin-top': '10px' }"></p-skeleton>
+               <!-- <p-skeleton [style]="{ 'height': '15px', 'width': '120px','margin-bottom': '5px' }"></p-skeleton> -->
+            </div>
+            <!-- <div>
+               <p-skeleton [style]="{ 'height': '20px', 'width': '100px' }"></p-skeleton>
+            </div> -->
+         </div>
+         <!-- <p-skeleton [style]="{ 'height': '20px', 'width': '150px', 'margin-bottom': '5px' }"></p-skeleton> -->
+         <div class="option-containers ">
+            <ng-container *ngIf="loading">
+               <p-skeleton class="option-item" *ngFor="let item of [1, 2, ]" width="90%" height="60px"></p-skeleton>
+            </ng-container>
+
+         </div>
+         <p-skeleton
+            [style]="{ 'height': '20px', 'width': '150px', 'margin-bottom': '5px','margin-top': '10px' }"></p-skeleton>
+         <div class="option-container ">
+            <ng-container *ngIf="loading">
+               <p-skeleton class="option-item " *ngFor="let item of [1, 2, ]" width="90%" height="40px"></p-skeleton>
+            </ng-container>
+
+         </div>
+         <p-skeleton
+            [style]="{ 'height': '20px', 'width': '150px', 'margin-bottom': '5px' ,'margin-top': '10px' }"></p-skeleton>
+         <div class="option-container ">
+            <ng-container *ngIf="loading">
+               <p-skeleton class="option-item" *ngFor="let item of [1, 2, ]" width="90%" height="40px"></p-skeleton>
+            </ng-container>
+
+         </div>
+         <p-skeleton
+            [style]="{ 'height': '20px', 'width': '150px', 'margin-bottom': '5px' ,'margin-top': '10px' }"></p-skeleton>
+         <div class="option-containerss ">
+            <ng-container *ngIf="loading">
+               <p-skeleton class="option-item" *ngFor="let item of [1,2,3,4]" width="90%" height="40px"></p-skeleton>
+            </ng-container>
+
+         </div>
+         <!-- <p-skeleton [style]="{   'margin-bottom': '5px' ,'margin-top': '10px' }"></p-skeleton> -->
+         <div class="option-containerss " style="margin-top: 5px;">
+            <ng-container *ngIf="loading">
+               <p-skeleton class="option-item" *ngFor="let item of [1,2,3]" width="90%" height="40px"></p-skeleton>
+            </ng-container>
+
+         </div>
+         <p-skeleton
+            [style]="{ 'height': '20px', 'width': '150px', 'margin-bottom': '5px' ,'margin-top': '10px' }"></p-skeleton>
+         <div class="option-container ">
+            <!-- <p-skeleton [style]="{ 'height': '20px', 'width': '150px', 'margin-bottom': '5px' }"></p-skeleton> -->
+            <ng-container *ngIf="loading">
+               <p-skeleton class="option-item" *ngFor="let item of [1, 2, ]" width="90%" height="40px"></p-skeleton>
+            </ng-container>
+
+         </div>
+         <!-- <div class="recent-order-item hovered" *ngFor="let item of [1]">
+            <p-skeleton [style]="{ 'height': '30px', 'width': '100%' }"></p-skeleton>
+            <p-skeleton [style]="{ 'height': '30px', 'width': '100%' }"></p-skeleton>
+         </div>
+         <div class="recent-order-item hovered" *ngFor="let item of [1, 2, 3]">
+            <p-skeleton [style]="{ 'height': '10px', 'width': '100%' }"></p-skeleton>
+            <p-skeleton [style]="{ 'height': '10px', 'width': '80%' }"></p-skeleton>
+         </div> -->
+
       </div>
-      <p-skeleton [width]="'100%'" [height]="'3rem'" class="heading-skeleton"></p-skeleton>
-      <p-skeleton [width]="'100%'" [height]="'2rem'" class="input-skeleton"></p-skeleton>
-      <p-skeleton [width]="'30%'" [height]="'3rem'" class="button-skeleton"></p-skeleton>
-      <br />
-      <div class="button-group">
-         <p-skeleton [width]="'45%'" [height]="'3rem'"></p-skeleton>
-         <p-skeleton [width]="'45%'" [height]="'3rem'"></p-skeleton>
-      </div>
+
+      <!-- Address List -->
+
    </div>
 
    <div *ngIf="!loading">
@@ -26,8 +86,11 @@
 
       <h3>Select Pickup Location<span class="mandatory">*</span></h3>
       <div *ngIf="!pickupLocation" class="card-container">
-         <input class="mb" pInputText type="text" placeholder="Pickup Address" (click)="navigateToPickupSelect()" />
-         <button pButton type="button" icon="pi pi-map-marker" label="Select on Map" class="map-button" (click)="addPickUpAddress('pickup')"></button>
+         <!-- <input class="mb" pInputText type="text" placeholder="Pickup Address" (click)="navigateToPickupSelect()" /> -->
+         <button pButton type="button" icon="pi pi-map-marker" label="Saved Address" class="map-buttons"
+            (click)="navigateToPickupSelect()"></button>
+         <button pButton type="button" label="Select on Map" class="map-button" (click)="addPickUpAddress('pickup')">
+            <mat-icon class="icon">gps_fixed</mat-icon></button>
       </div>
       <div *ngIf="pickupLocation" class="address-card">
          <div class="address-info">
@@ -45,11 +108,17 @@
             <p>{{ pickupLocation?.address_details }}</p>
          </div>
       </div>
-
+      <small *ngIf="submitted &&  !pickupLocation?.address_details " class="error-text">
+         Pickup Address is required
+      </small>
       <h3>Select Drop Location<span class="mandatory">*</span></h3>
       <div *ngIf="!dropLocation" class="card-container">
-         <input class="mb" pInputText type="text" placeholder="Drop Address" (click)="navigateToDropSelect()" />
-         <button pButton type="button" icon="pi pi-map-marker" label="Select on Map" class="map-button" (click)="addPickUpAddress('drop')"></button>
+         <button pButton type="button" icon="pi pi-map-marker" label="Saved Address" class="map-buttons"
+            (click)="navigateToDropSelect()"></button>
+         <!-- <input class="mb" pInputText type="text" formControlName="drop_address" placeholder="Drop Address" (click)="navigateToDropSelect()" /> -->
+         <button pButton type="button" label="Select on Map" class="map-button" (click)="addPickUpAddress('drop')"
+            class="map-button">
+            <mat-icon class="icon">gps_fixed</mat-icon></button>
       </div>
       <div *ngIf="dropLocation" class="address-card">
          <div class="address-info">
@@ -63,14 +132,18 @@
                   <i class="pi pi-times"></i> <!-- PrimeNG Close Icon -->
                </button>
             </div>
-            <p *ngIf="dropLocation?.house_no">{{ dropLocation?.house_no }},<ng-container *ngIf="dropLocation?.landmark">{{ dropLocation?.landmark }}</ng-container> </p>
+            <p *ngIf="dropLocation?.house_no">{{ dropLocation?.house_no }},<ng-container
+                  *ngIf="dropLocation?.landmark">{{ dropLocation?.landmark }}</ng-container> </p>
             <p>{{ dropLocation?.address_details }}</p>
          </div>
       </div>
-
-      <h3>Enter Parcel Details</h3>
+      <small *ngIf=" !dropLocation?.address_details &&  submitted " class="error-text">
+         Drop Address is required
+      </small>
+      <h3>Enter Parcel Details <span class="mandatory">*</span></h3>
       <div class="categories">
-         <div class="c-item" (click)="setParcel(category)" *ngFor="let category of categories">{{ category }}</div>
+         <div class="c-item" [class.selected]="form.get('package_details')?.value === category"
+            (click)="setParcel(category)" *ngFor="let category of categories">{{ category }}</div>
          <!-- <div class="c-item">Book</div>
          <div class="c-item">Medicines</div>
          <div class="c-item">Documents</div>
@@ -79,15 +152,29 @@
          <div class="c-item">Other</div> -->
       </div>
 
-      <div class="card-container">
-         <input class="mb" pInputText type="text" placeholder="Parcel Details" formControlName="package_details" />
-         <input pInputText type="text" placeholder="Instructions" formControlName="instructions" />
-      </div>
 
+      <div class="card-containers">
+         <input class="mb" pInputText type="text" placeholder="Parcel Details" formControlName="package_details"
+            [ngClass]="{'error-border': submitted && form.get('package_details')?.invalid}" />
+         <!-- <input pInputText type="text" placeholder="Instructions" formControlName="instructions" /> -->
+      </div>
+      <div class="card-containers">
+         <!-- <textarea class="mb" pInputTextarea placeholder="Parcel Details" formControlName="package_details"
+            [ngClass]="{'error-border': submitted && form.get('package_details')?.invalid}"></textarea> -->
+         <textarea rows="5" cols="30" pTextarea placeholder="Instructions" formControlName="instructions"></textarea>
+         <!-- <textarea pInputTextarea placeholder="Instructions" formControlName="instructions"
+            style="height: 100px;"></textarea> -->
+      </div>
+      <small
+         *ngIf="form.get('package_details')?.invalid && form.get('package_details')?.hasError('required') && form.get('package_details')?.touched"
+         class="error-text">
+         Parcel Details are required
+      </small>
       <div class="bottom-buttons">
-         <button pButton type="button" label="Cancel" class="p-button-outlined p-button-danger"></button>
-         <button pButton type="submit" [loading]="loading_button" [disabled]="loading_button" label="Continue" class="p-button-contained p-button-success"
-            (click)="calculateDistanceNews()"></button>
+         <button pButton type="button" label="Cancel" class="p-button-outlined p-button-danger"
+            (click)="cancel()"></button>
+         <button pButton type="submit" [loading]="loading_button" [disabled]="loading_button" label="Continue"
+            class="p-button-contained p-button-success" (click)="calculateDistanceNews()"></button>
       </div>
    </div>
 </form>

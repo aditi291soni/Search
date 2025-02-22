@@ -14,12 +14,13 @@ import { NoDataFoundComponent } from '../no-data-found/no-data-found.component';
    standalone: true
 })
 export class OrdersComponent {
-   loading: boolean = false;
+   loading: boolean = true;
    userInfo: any;
    businessDetails: any;
    order: any[] = [];
    searchQuery: any;
-
+   order_status: any;
+   orders: any[] = [];
 
    /**
     * Creates an instance of DashboardComponent.
@@ -30,7 +31,7 @@ export class OrdersComponent {
    ) {
       this.userInfo = this.apiService.getLocalValueInJSON(localStorage.getItem('userInfo'));
       this.businessDetails = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
-
+      this.order_status = this.apiService.getLocalValueInJSON(localStorage.getItem('order-status'));
    }
 
    /**
@@ -55,34 +56,51 @@ export class OrdersComponent {
    }
    filterOrders(): void {
       if (this.searchQuery.trim()) {
-         this.order = this.order.filter(item =>
+         this.orders = this.order.filter(item =>
             Object.values(item).some(value =>
                value && value.toString().toLowerCase().includes(this.searchQuery.toLowerCase())
             )
          );
-         console.log('Filtered Orders:', this.order);  // Log filtered orders for debugging
+         console.log('Filtered Orders:', this.order);
+         // Log filtered orders for debugging
+      } else {
+         // this.order = this.order
+         this.orders = [...this.order];
       }
    }
 
    /**
     * Fetches the list of businesses from the API and updates the component state.
     */
+
+   getDynamicStatusName(statusId: number): string {
+      const status = this.order_status.find((s: { id: number; }) => s.id === statusId);
+      console.log(statusId)
+      return status ? status.name_for_user : "N/A"; // Return status name if found, else 'Unknown'
+   }
    fetchOrderList(): void {
-      this.loading = true;
+      // this.loading = true;
       let payload: any = {};
       payload.business_id = this.businessDetails.id;
 
 
-      this.apiService.getOrderList(payload).subscribe({
+      this.apiService.getOrderDelivery(payload).subscribe({
          next: (response) => {
             if (response.status === true) {
-               this.order = response.data;
-
+               // this.order = response.data;
+               this.order = response.data
+                  .filter((order: any) => order.order_no)
+                  .map((order: any) => ({
+                     ...order,
+                     status_name: this.getDynamicStatusName(order.order_status_id)
+                  }));
+               this.orders = this.order
+               console.log(this.orders)
                // localStorage.setItem('order', JSON.stringify(this.order));
-
+               this.loading = false;
             } else {
                console.error('Error fetching list of business:', response.message);
-               this.loading = false;
+
             }
          },
          error: (err) => {

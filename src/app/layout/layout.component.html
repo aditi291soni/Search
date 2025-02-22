@@ -12,13 +12,17 @@
          <button pButton icon="pi pi-bars" class="menu-toggle" (click)="toggleSidebar()"></button>
          <!-- <button pButton icon="pi pi-search" class="menu-toggle search-icon" (click)="toggleSearch()"></button> -->
 
-
       </div>
-
+      <div class="mobile-search-bar" *ngIf="isSmallDevice  && showSearchBar">
+         <div class="search-bar">
+            <input type="text" placeholder="Search..." [(ngModel)]="searchQuery" (input)="onSearch()" />
+            <button pButton icon="pi pi-search" class="search-btn" (click)="cancel()"></button>
+         </div>
+      </div>
       <!-- Right-aligned icons for notification and user profile -->
       <div class="topbar-right">
          <!-- <button pButton icon="pi pi-bell" class="topbar-btn"></button> -->
-         <button pButton icon="pi pi-cog" routerLink="/settings" class="topbar-btn"></button>
+         <button pButton icon="pi pi-user" routerLink="/settings" class="topbar-btn"></button>
          <p-confirmDialog></p-confirmDialog>
          <!-- <button
             pButton
@@ -37,22 +41,32 @@
          <div class="sidebar-logo-container">
             <img class="sidebar-logo" src="assets/brand/logo.png" alt="logo-png">
          </div>
+         <div style="font-size: x-large;text-align: center;  color: var(--text-primary);">
+            Wallet : {{this.businessDetail?.currency_symbol}}{{wallet | number :'1.0-0'}}
+         </div>
+
          <ul>
-            <li routerLink="/dashboard" (click)="toggleSidebar()"><a routerLink="/dashboard" routerLinkActive="active"
+            <li routerLink="/dashboard"><a routerLink="/dashboard" routerLinkActive="active"
                   (click)="toggleSidebar()"><i class="pi pi-home"></i> Dashboard</a></li>
-            <li routerLink="/orders" (click)="toggleSidebar()"><a routerLink="/orders" routerLinkActive="active"
-                  (click)="toggleSidebar()"><i class="pi pi-box"></i>
+            <li routerLink="/orders"><a routerLink="/orders" routerLinkActive="active" (click)="toggleSidebar()"><i
+                     class="pi pi-box"></i>
                   Orders</a></li>
-            <li routerLink="/customers" (click)="toggleSidebar()"><a routerLink="/customers" routerLinkActive="active"
-                  (click)="toggleSidebar()"><i class="pi pi-users"></i> Customers</a></li>
-            <li routerLink="/transactions" (click)="toggleSidebar()"><a routerLink="/transactions"
-                  routerLinkActive="active" (click)="toggleSidebar()"><i class="pi pi-credit-card"></i> Transactions</a>
-            </li>
-            <li routerLink="/settings" (click)="toggleSidebar()"> <a routerLink="/settings" routerLinkActive="active"
-                  (click)="toggleSidebar()"><i class="pi pi-cog"></i>
-                  Settings</a></li>
-            <li (click)="logout();toggleSidebar()"><a routerLinkActive="active" class="red"
-                  (click)="logout();toggleSidebar()"><i class="pi pi-sign-out red"></i>
+            <li routerLink="/address/list-of-address"><a routerLink="/address/list-of-address" routerLinkActive="active"
+                  (click)="toggleSidebar()"> <i class="pi pi-map-marker icon"></i>
+                  Saved Address</a></li>
+            <!-- <li routerLink="/customers" (click)="toggleSidebar()"><a routerLink="/customers" routerLinkActive="active"
+                  (click)="toggleSidebar()"><i class="pi pi-users"></i> Customers</a></li> -->
+            <!-- <li routerLink="/transactions"><a routerLink="/transactions" routerLinkActive="active"
+                  (click)="toggleSidebar()"><i class="pi pi-credit-card"></i> Transactions</a>
+            </li> -->
+
+
+            <li routerLink="/settings"> <a routerLink="/settings" routerLinkActive="active" (click)="toggleSidebar()"><i
+                     class="pi pi-user"></i>
+                  Profile</a></li>
+
+            <li (click)="logout();"><a routerLinkActive="active" class="red" (click)="logout();toggleSidebar()"><i
+                     class="pi pi-sign-out red"></i>
                   Logout</a></li>
          </ul>
       </div>

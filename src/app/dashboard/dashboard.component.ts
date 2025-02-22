@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ApiService } from '../services/api.service';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
@@ -6,11 +6,12 @@ import { Router, RouterModule } from '@angular/router';
 import { SkeletonModule } from 'primeng/skeleton';
 import { NoDataFoundComponent } from '../no-data-found/no-data-found.component';
 import { CorouselComponent } from '../corousel/corousel.component';
+import { environment } from '../../environments/environment';
 
 @Component({
    selector: 'app-dashboard',
    standalone: true,
-   imports: [CommonModule, ButtonModule, RouterModule, SkeletonModule,NoDataFoundComponent],
+   imports: [CommonModule, ButtonModule, RouterModule, SkeletonModule, NoDataFoundComponent],
    templateUrl: './dashboard.component.html',
    styleUrls: ['./dashboard.component.css'],
 })
@@ -28,16 +29,18 @@ export class DashboardComponent implements OnInit {
    loading: boolean = false;
    userInfo: any;
    businessDetails: any;
-   order: any[]=[];
+   order: any[] = [];
+   orderstatus: any[] = [];
 
    /**
     * Creates an instance of DashboardComponent.
     * @param {ApiService} apiService - The service to interact with the API.
     */
-   constructor(private apiService: ApiService, private router: Router) {
+   constructor(private apiService: ApiService, private router: Router, private cdr: ChangeDetectorRef,) {
       this.userInfo = this.apiService.getLocalValueInJSON(localStorage.getItem('userData'));
       this.businessDetails = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
-
+      this.orderstatus = this.apiService.getLocalValueInJSON(localStorage.getItem('order-status'));
+      // this.orderStatus = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
    }
 
    /**
@@ -46,6 +49,7 @@ export class DashboardComponent implements OnInit {
     */
    ngOnInit(): void {
       this.fetchOrderList();
+      this.getOrderStatus()
       this.clearLocal()
    }
 
@@ -55,14 +59,27 @@ export class DashboardComponent implements OnInit {
    fetchOrderList(): void {
       this.loading = true;
       let payload: any = {};
-      payload.business_id = this.businessDetails.id;
-      payload.per_page = 3
+      payload.business_id = this.businessDetails?.id;
+      // payload.per_page = 3
       payload.page = 1
 
-      this.apiService.getOrderList(payload).subscribe({
+      this.apiService.getOrderDelivery(payload).subscribe({
          next: (response) => {
-            if (response.status === true) {
-               this.order = response.data;
+            if (response.status == true) {
+               // this.order = response.data;
+               this.cdr.detectChanges();
+
+
+
+               // Ensure orders have order_status.id matched correctly
+               this.order = response.data
+                  .filter((order: any) => order.order_no)
+                  .slice(0, 3)
+                  .map((order: any) => ({
+                     ...order,
+                     status_name: this.getDynamicStatusName(order?.order_status_id)
+                  }));
+               this.cdr.detectChanges();
             } else {
                console.error('Error fetching list of business:', response.message);
                this.loading = false;
@@ -84,5 +101,31 @@ export class DashboardComponent implements OnInit {
       localStorage.removeItem('selectedPickup');
       localStorage.removeItem('selectedDrop');
       localStorage.removeItem('new-order');
+   }
+
+   getOrderStatus(): void {
+      let payload = {
+         super_admin_id: environment.superAdminId,
+      };
+
+      this.apiService.getOrderStatus(payload).subscribe({
+         next: (response) => {
+            if (response.status == true) {
+               this.orderstatus = response.data;
+               localStorage.setItem('order-status', JSON.stringify(this.orderstatus));
+               this.cdr.detectChanges();
+            } else {
+               console.error('Error fetching order status:', response.message);
+            }
+         },
+         error: (err) => console.error('Error fetching order status:', err),
+         complete: () => (this.loading = false),
+      });
+   }
+   getDynamicStatusName(statusId: number): string {
+      const status = this.orderstatus.find(s => s.id == statusId);
+      console.log("kk", statusId, status)
+      this.cdr.detectChanges();
+      return status ? status.name_for_user : "N/A"; // Return status name if found, else 'Unknown'
    }
 }

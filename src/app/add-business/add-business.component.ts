@@ -15,7 +15,7 @@ import { Select } from 'primeng/select';
 @Component({
    selector: 'app-add-business',
    imports: [InputTextModule, ButtonModule, CommonModule, SkeletonModule, FormsModule, Select,
-      ReactiveFormsModule,  ToastModule],
+      ReactiveFormsModule, ToastModule],
    templateUrl: './add-business.component.html',
    styleUrl: './add-business.component.css',
    standalone: true,
@@ -33,15 +33,15 @@ export class AddBusinessComponent {
    business_id: any;
    constructor(private fb: FormBuilder, private apiService: ApiService, private route: ActivatedRoute, private router: Router,) {
       this.route.params.subscribe((params) => {
-     
+
          this.business_id = params['id'];
-       });
-    }
+      });
+   }
 
    ngOnInit(): void {
       // Initialize the form group with controls
       this.businessForm = this.fb.group({
-         name: ['', [Validators.required, ]],
+         name: ['', [Validators.required,]],
          owner: ['', [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)]],
          email: ['', [Validators.required, Validators.email]],
          phone: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.maxLength(10), Validators.minLength(10)]],
@@ -56,8 +56,8 @@ export class AddBusinessComponent {
          country_id: ['101']
       });
       this.getlistofState()
-      if(this.business_id){
-this.getBusiness()
+      if (this.business_id) {
+         this.getBusiness()
       }
    }
 
@@ -160,7 +160,7 @@ this.getBusiness()
          }
       });
       this.loading = true;
-      this.businessForm.value.business_id=this.business_id
+      this.businessForm.value.business_id = this.business_id
       this.apiService.editBusiness(this.businessForm.value).subscribe({
          next: (data: any) => {
             this.loading = false;
@@ -187,12 +187,12 @@ this.getBusiness()
       if (this.businessForm.valid) {
          console.log(this.businessForm.value);
          // this.businessForm.country_id='101'
-         if(this.business_id){
+         if (this.business_id) {
             this.editBusiness(this.businessForm.value)
-         }else{
+         } else {
             this.addBusiness(this.businessForm.value)
          }
-       
+
       } else {
          console.log('Form is invalid');
       }
@@ -208,25 +208,25 @@ this.getBusiness()
       // }
 
    }
-  getBusiness() {
+   getBusiness() {
       try {
-         this.apiService.getBusiness({business_id:this.business_id}).subscribe({
+         this.apiService.getBusiness({ business_id: this.business_id }).subscribe({
             next: (data: any) => {
                let ApiResponse: any = data.data;
-              this.businessForm.patchValue({
-               name: ApiResponse?.name,
-               owner:ApiResponse?.owner,
-               email: ApiResponse?.email,
-               phone: ApiResponse?.plain_phone,
-               address: ApiResponse?.address,
-               city: ApiResponse?.city,
-               pincode: ApiResponse?.pincode,
-               state_id: ApiResponse?.state_id,
-              
-               logo_image: ApiResponse?.image,
-         
-              })
+               this.businessForm.patchValue({
+                  name: ApiResponse?.name,
+                  owner: ApiResponse?.owner,
+                  email: ApiResponse?.email,
+                  phone: ApiResponse?.plain_phone,
+                  address: ApiResponse?.address,
+                  city: ApiResponse?.city,
+                  pincode: ApiResponse?.pincode,
+                  state_id: Number(ApiResponse?.state_id),
 
+                  logo_image: ApiResponse?.image,
+
+               })
+               console.log(this.businessForm.value)
             },
             error: (error: any) => {
                console.log('Error fetching data', error);
@@ -257,15 +257,15 @@ this.getBusiness()
    }
    resetForm() {
       this.businessForm.reset({
-        name: '',
-        owner: '',
-        email: '',
-        phone: '',
-        address: '',
-        city: '',
-        pincode: '',
-        state_id: null,  // Ensure dropdowns reset correctly
+         name: '',
+         owner: '',
+         email: '',
+         phone: '',
+         address: '',
+         city: '',
+         pincode: '',
+         state_id: null,  // Ensure dropdowns reset correctly
       });
-    }
-    
+   }
+
 }

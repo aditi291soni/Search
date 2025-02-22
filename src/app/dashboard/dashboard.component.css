@@ -136,3 +136,15 @@ p-skeleton.banner-img {
       margin-top: 1rem;
    }
 }
+
+.text-success {
+   color: green;
+}
+
+.text-danger {
+   color: red;
+}
+
+.text-dark {
+   color: rgb(7, 7, 7);
+}

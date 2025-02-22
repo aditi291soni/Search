@@ -22,14 +22,21 @@
       <p-skeleton class="option-item" *ngFor="let item of [1, 2, 3]" width="90%" height="40px"></p-skeleton>
    </ng-container>
    <ng-template #optionsContent>
-      <div>
+      <!-- <div>
          <div routerLink="/orders" class="option-item"><i class="pi pi-box"></i> Orders</div>
          <div routerLink="/customers" class="option-item"><i class="pi pi-users"></i> Customers</div>
-      </div>
-      <div class="option-container-item" routerLink="/customers/new-customer">
+         <div routerLink="/customers" class="option-item"><i class="pi pi-users"></i> Customers</div>
+      </div> -->
+      <div class="option-container-item" routerLink="/orders">
          <div class="option-item full-height">
-            <i class="pi pi-user-plus"></i>
-            <a class="router-link">New Customer</a>
+            <i class="pi pi-box"></i>
+            <a class="router-link">Orders</a>
+         </div>
+      </div>
+      <div class="option-container-item" routerLink="/address/list-of-address">
+         <div class="option-item full-height">
+            <i class="pi pi-map-marker icon"></i>
+            <a class="router-link">Saved Address</a>
          </div>
       </div>
       <div class="option-container-item" routerLink="/orders/new-order">
@@ -55,20 +62,29 @@
    <ng-container *ngIf="order.length==0">
       <app-no-data-found></app-no-data-found>
    </ng-container>
-   <div class="recent-order-item" *ngFor="let order of order" (click)="navigateToOrderDetails(order.id)">
+   <div class="recent-order-item" *ngFor="let order of order" (click)="navigateToOrderDetails(order.invoice_id)">
       <div class="recent-order-flex">
          <div>
-            <div class="subtext2 mt-2">Sender Detail</div>
-            <div class="maintext">{{order?.pickup_name | titlecase}}</div>
-            <div>{{order?.pickup_mobile}}</div>
-            <div class="subtext2">Receiver Detail</div>
-            <div class="maintext">{{order?.drop_name | titlecase}}</div>
-            <div class="subtext">{{order?.drop_mobile}}</div>
+            <!-- <div class="subtext2 mt-2">Sender Detail</div>
+            <div class="maintext">{{order?.pickup_name | titlecase}}</div> -->
+            <div class="subtext2 mt-2">From: <span class="maintext">{{ order.pickup_person_name | titlecase }}</span>
+            </div>
+            <div>{{order?.pickup_phone_no}}</div>
+            <div class="subtext2 mt-2">To: <span class="maintext">{{ order?.drop_person_name| titlecase }}</span></div>
+            <!-- <div class="subtext2">Receiver Detail</div>
+            <div class="maintext">{{order?.drop_name | titlecase}}</div> -->
+            <div class="subtext">{{order?.drop_phone_no}}</div>
 
          </div>
          <div class="order-no">
             <div class="subtext2">Order No.</div>
             <div class="maintext2">#{{order.order_no}}</div>
+            <!-- <div class="subtext2">Order Status.</div> -->
+            <div class="maintext2" [ngClass]="{
+               'text-success': order.status_name == 'Delivered',
+               'text-danger ': order.status_name == 'Cancelled',
+               'text-dark': order.status_name!== 'Delivered' && order.status_name !== 'Cancelled'
+            }">{{order.status_name}}</div>
          </div>
       </div>
 

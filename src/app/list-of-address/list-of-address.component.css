@@ -42,7 +42,7 @@ p-skeleton {
    border-radius: 8px;
    min-height: 90px;
    padding: 8px 12px;
-   cursor: pointer;
+   /* cursor: pointer; */
    background: var(--background-light);
    /* Optional background for cards */
 }
@@ -88,12 +88,6 @@ p-skeleton {
    white-space: nowrap;
 }
 
-.p-button-outlined .p-button-danger {
-   color: red !important;
-   border-color: red !important;
-   white-space: nowrap;
-}
-
 .p-button-label {
    font-weight: 100 !important;
 }
@@ -101,3 +95,28 @@ p-skeleton {
 .p-button {
    font-size: 1rem !important;
 }
+
+
+
+
+
+
+
+
+.close-icon {
+   /* position: absolute !important; */
+   top: -5px;
+   right: 0px !important;
+   cursor: pointer;
+   font-size: 18px;
+   color: red;
+   font-weight: bold;
+}
+
+/* .recent-order-item {
+   position: relative;
+   padding: 10px;
+   border: 1px solid #ddd;
+   border-radius: 5px;
+   margin-bottom: 10px;
+} */

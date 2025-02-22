@@ -32,7 +32,7 @@
 }
 
 .maintext {
-   font-size: large;
+   font-size: medium;
    font-weight: 500;
 }
 
@@ -64,6 +64,18 @@
    gap: 1rem;
 }
 
-.order-no{
+.order-no {
    text-align: end;
+}
+
+.text-success {
+   color: green;
+}
+
+.text-danger {
+   color: red;
+}
+
+.text-dark {
+   color: rgb(7, 7, 7);
 }

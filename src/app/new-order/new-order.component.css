@@ -68,12 +68,41 @@
    margin-left: 5px;
 }
 
+.error-text {
+   color: red;
+   font-size: 12px;
+   margin-top: 4px;
+   display: block;
+}
+
+.error-border {
+   border: 1px solid red !important;
+}
+
+
 .card-container {
    display: grid;
    grid-template-columns: 1fr 1fr;
    gap: 10px;
    align-items: center;
    margin-bottom: 14px;
+}
+
+.card-containers {
+   display: grid;
+   grid-template-columns: 1fr;
+   gap: 10px;
+   align-items: center;
+   margin-bottom: 14px;
+}
+
+.card-containers input {
+   padding: 8px;
+   margin: 6px 0px;
+   font-size: 14px;
+   border: 1px solid #ccc;
+   border-radius: 4px;
+   width: 100%;
 }
 
 .card-container input {
@@ -83,6 +112,12 @@
    border: 1px solid #ccc;
    border-radius: 4px;
    width: 100%;
+}
+
+.icon {
+   overflow: none !important;
+   font-size: 15px !important;
+   height: 16px !important;
 }
 
 .map-button {
@@ -96,6 +131,19 @@
    border-radius: 4px;
    background-color: var(--info-main);
    color: var(--text-secondary);
+}
+
+.map-buttons {
+   width: 100%;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   padding: 8px;
+   font-size: 14px;
+   border: 1px solid #ccc;
+   border-radius: 4px;
+   background-color: #007bff;
+   color: #ffffff;
 }
 
 .drop-location {
@@ -124,7 +172,7 @@
 
 @media screen and (max-width: 768px) {
    .card-container {
-      display: block;
+      /* display: block; */
    }
 
    .mb {
@@ -217,4 +265,49 @@
 .close-button i {
    font-size: 18px;
    /* Adjust icon size */
+}
+
+
+
+
+
+.recent-orders-container {
+   margin-top: 1rem;
+}
+
+.recent-order-item {
+   border: 1px solid var(--primary-light);
+   margin-bottom: 10px;
+   border-radius: 8px;
+   min-height: 90px;
+   padding: 8px 12px;
+   cursor: pointer;
+   background: var(--background-light);
+   /* Optional background for cards */
+}
+
+.recent-order-item:hover {
+   box-shadow: 0px 0px 0.5px 1px var(--primary-light);
+}
+
+.recent-order-flex {
+   display: flex;
+   justify-content: space-between;
+   align-items: flex-start;
+   /* Aligns skeletons at the top */
+}
+
+.option-container {
+   display: grid;
+   grid-template-columns: repeat(2, 1fr);
+}
+
+.option-containers {
+   display: grid;
+   grid-template-columns: repeat(3, 1fr);
+}
+
+.option-containerss {
+   display: grid;
+   grid-template-columns: repeat(4, 1fr);
 }

@@ -2,9 +2,9 @@
    border: 1px solid var(--primary-light);
    border-radius: 8px;
    padding: 12px;
-   margin-top: 8px;
+   margin-top: 1px;
    position: relative;
-   margin-bottom: 20px;
+   margin-bottom: 10px;
 }
 
 .thin {
@@ -34,7 +34,7 @@
    display: flex;
    justify-content: space-between;
    align-items: center;
-   margin-bottom: 8px;
+   margin-bottom: 1px;
 }
 
 .left {
@@ -84,7 +84,7 @@
 
 .timeline {
    border-left: 2px dotted gray;
-   height: 20px;
+   height: 10px;
    margin: 10px 8px;
 }
 
@@ -136,4 +136,33 @@
    display: flex;
    justify-content: space-between;
    align-items: center;
+}
+
+
+.text-success {
+   color: green;
+}
+
+.text-danger {
+   color: red;
+}
+
+.text-dark {
+   color: rgb(7, 7, 7);
+}
+
+.card-containers {
+   display: flex;
+   justify-content: end;
+   margin-bottom: 3px;
+
+}
+
+.card-containers input {
+   padding: 8px;
+   margin: 6px 0px;
+   font-size: 14px;
+   border: 1px solid #ccc;
+   border-radius: 4px;
+   width: 100%;
 }

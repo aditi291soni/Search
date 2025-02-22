@@ -71,7 +71,7 @@ export class SigninComponent {
       // Start the loading state
       this.loading = true;
       if (this.signinForm.invalid) {
-         this.signinForm.markAllAsTouched();
+         // this.signinForm.markAllAsTouched();
          this.loading = false;
          return;
       }

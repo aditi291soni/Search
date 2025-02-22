@@ -8,6 +8,8 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { environment } from '../../environments/environment';
 import { MapGeocoder } from '@angular/google-maps';
 import { ToastNotificationService } from '../services/toast-notification.service';
+import { MatIconModule } from '@angular/material/icon';
+import { TextareaModule } from 'primeng/textarea';
 interface Location {
    person_name: string;
    person_phone_no: string;
@@ -20,7 +22,7 @@ interface Location {
 @Component({
    selector: 'app-new-order',
    standalone: true,
-   imports: [CommonModule, SkeletonModule, ButtonModule, ReactiveFormsModule, FormsModule],
+   imports: [CommonModule, SkeletonModule, ButtonModule, ReactiveFormsModule, FormsModule, MatIconModule, TextareaModule],
    templateUrl: './new-order.component.html',
    styleUrls: ['./new-order.component.css'],
 })
@@ -32,7 +34,7 @@ export class NewOrderComponent {
    // pickupLocation: Location | null = JSON.parse(localStorage.getItem('pickupLocation') || 'null');
    // dropLocation: Location | null = JSON.parse(localStorage.getItem('dropLocation') || 'null');
    addressList: any[] = []; // List of available addresses for pickup/drop
-
+   submitted = false;
    form: FormGroup;
    businessDetails: any;
    pickupLocation: any;
@@ -43,7 +45,7 @@ export class NewOrderComponent {
    distanceResult: string = '';
    categories: string[] = ['Food', 'Book', 'Medicines', 'Documents', 'Grocery', 'Cake', 'Other'];
 
-   constructor(private apiService: ApiService, private router: Router, private fb: FormBuilder,  private toastService: ToastNotificationService) {
+   constructor(private apiService: ApiService, private router: Router, private fb: FormBuilder, private toastService: ToastNotificationService) {
       this.distanceMatrixService = new google.maps.DistanceMatrixService();
       this.pickupLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedPickup'));
       this.dropLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedDrop'));
@@ -58,8 +60,8 @@ export class NewOrderComponent {
          drop_latitude: [this.dropLocation?.lat_val],
          pickup_latitude: [this.pickupLocation?.lat_val],
          pickup_longitude: [this.pickupLocation?.long_val],
-         package_details: [''],
-         status:['1'],
+         package_details: ['', Validators.required],
+         status: ['1'],
          pickup_address_id: [this.pickupLocation ? this.pickupLocation.id : '', Validators.required],
          drop_address_id: [this.dropLocation ? this.dropLocation.id : '', Validators.required],
       });
@@ -91,6 +93,12 @@ export class NewOrderComponent {
 
          });
       }
+      if (this.newOrder.vehicle_type_id) {
+         this.form.patchValue({
+            vehicle_type_id: this.newOrder?.vehicle_type_id,
+         });
+         this.selectedVehicle = this.newOrder?.vehicle_type_id;
+      }
 
    }
 
@@ -99,9 +107,18 @@ export class NewOrderComponent {
       this.apiService.getVehicleTypeList(superAdminId).subscribe({
          next: (response) => {
             if (response.status === true) {
-               this.selectedVehicle = response.data[0].id;
-               this.form.get('vehicle_type_id')?.setValue(response.data[0].id);
                this.vehicleTypeList = response.data || [];
+               if (!this.newOrder) {
+                  this.selectedVehicle = response.data[0].id;
+
+                  this.form.get('vehicle_type_id')?.setValue(response.data[0].id);
+
+               } else {
+                  this.selectedVehicle = this.newOrder.vehicle_type_id;
+
+                  this.form.get('vehicle_type_id')?.setValue(this.newOrder.vehicle_type_id);
+               }
+
             } else {
                console.error('Error fetching vehicle types:', response.message);
             }
@@ -118,16 +135,17 @@ export class NewOrderComponent {
    selectVehicle(vehicleId: number): void {
       this.selectedVehicle = vehicleId;
       this.form.get('vehicle_type_id')?.setValue(vehicleId);
+      console.log(this.form.value, vehicleId)
       localStorage.setItem('new-order', JSON.stringify(this.form.value));
    }
-setParcel(category: string): void {
-   this.form.get('package_details')?.setValue(category);
-}
+   setParcel(category: string): void {
+      this.form.get('package_details')?.setValue(category);
+   }
    addDelivery() {
 
       if (!this.form.valid) {
          this.loading_button = false;
-         this.toastService.showError('Please fill in all required fields correctly.');
+         // this.toastService.showError('Please fill in all required fields correctly.');
          // Show an error message for invalid form
          //   this.messageService.showError('Please fill in all required fields correctly.', 'Error');
          return; // Stop further execution
@@ -135,7 +153,10 @@ setParcel(category: string): void {
 
       let payload = this.form.value;
       payload.business_id = this.businessDetails.id;
-
+      payload.pickup_person_name = this.pickupLocation.person_name;
+      payload.drop_person_name = this.dropLocation.person_name;
+      payload.pickup_phone_no = this.pickupLocation.person_phone_no;
+      payload.drop_phone_no = this.dropLocation.person_phone_no;
       payload.delivery_staff_id = 0;
       payload.distance = this.distance
 
@@ -144,12 +165,12 @@ setParcel(category: string): void {
       try {
          this.apiService.createDelivery(payload).subscribe({
             next: (data: any) => {
-               if(data.status){
-               this.router.navigate(['orders/new-order/order-preview', data?.data?.id]);
-               let ApiResponse: any = data;
-               }else{
-                  this.toastService.showError(data.msg); 
-                  this.loading_button = false; 
+               if (data.status) {
+                  this.router.navigate(['orders/new-order/order-preview', data?.data?.id]);
+                  let ApiResponse: any = data;
+               } else {
+                  this.toastService.showError(data.msg);
+                  this.loading_button = false;
                }
                //       this.delivery_id=data.data.id
                //       localStorage.setItem('delivery_id', JSON.stringify(this.delivery_id));
@@ -174,7 +195,7 @@ setParcel(category: string): void {
          });
       } catch (error) {
          console.log('Error in the catch block', error);
-            this.loading_button = false;
+         this.loading_button = false;
       }
    }
 
@@ -201,12 +222,14 @@ setParcel(category: string): void {
       //   alert("Please add exactly two addresses to calculate the distance.");
       //   return;
       // }
+      this.submitted = true
       if (!this.pickupLocation && !this.dropLocation) {
          this.loading_button = false;
-         this.toastService.showError('Please add exactly two addresses to calculate the distance.');
+         // this.toastService.showError('Please add exactly two addresses to calculate the distance.');
          // alert("Please add exactly two addresses to calculate the distance.");
          return;
-       }
+
+      }
       this.loading_button = true;
 
       const origin = new google.maps.LatLng(this.pickupLocation?.lat_val, this.pickupLocation?.long_val);
@@ -229,7 +252,7 @@ setParcel(category: string): void {
                this.distanceResult = `Distance: ${this.distance}, Duration: ${duration}`;
                console.log(this.distanceResult)
                this.addDelivery()
-              
+
             } else {
                this.loading_button = false;
                console.error("Error calculating distance:", status);
@@ -249,7 +272,7 @@ setParcel(category: string): void {
          next: (response) => {
             if (response.status === true) {
                this.router.navigate(['orders/new-order/order-preview']);
-
+               this.submitted = false
             } else {
                console.error('Error fetching list of business:', response.message);
                this.loading = false;
@@ -275,9 +298,17 @@ setParcel(category: string): void {
       localStorage.removeItem('selectedDrop');
       // this.form.get('dropLocation')?.reset();
    }
-   addPickUpAddress(key:string){
-     console.log(key)
-        this.router.navigate(['orders/new-order/add-address/',key]);
-       
-      }
+   addPickUpAddress(key: string) {
+      console.log(key)
+      this.router.navigate(['orders/new-order/add-address/', key]);
+
+   }
+   cancel() {
+      this.clearDropAddress()
+      this.clearPickupAddress()
+      localStorage.removeItem('selectedPickup');
+      localStorage.removeItem('selectedDrop');
+      localStorage.removeItem('new-order');
+      this.router.navigate(['/dashboard']);
+   }
 }

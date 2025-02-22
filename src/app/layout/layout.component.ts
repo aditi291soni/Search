@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';  // Import FormsModule for ngModel
 import { ActivatedRoute, Router, RouterModule, RouterOutlet } from '@angular/router';
 import { SidebarModule } from 'primeng/sidebar';
@@ -10,6 +10,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { SearchComponent } from '../search/search.component';
 import { SearchBarService } from '../services/search-bar.service';
+import { environment } from '../../environments/environment';
+import { ApiService } from '../services/api.service';
 
 @Component({
    selector: 'app-layout',
@@ -27,15 +29,28 @@ export class LayoutComponent {
    searchQuery = ''; // Stores search input
    profileMenu: any;
    searchResults: any[] = [];
+   isSearchVisible: boolean = false;
+
+   userData: any;
+   showSearchBar: boolean = false;
+   wallet: any = 0;
+   loading: boolean = false;
+   businessDetail: any;
    constructor(private router: Router, private toastService: ToastNotificationService, private confirmationService: ConfirmationService,
-      private searchService: SearchBarService, private activatedRoute: ActivatedRoute
+      private searchService: SearchBarService, private activatedRoute: ActivatedRoute, private apiService: ApiService,
    ) {
+      this.userData = this.apiService.getLocalValueInJSON(localStorage.getItem('userData'));
+      this.businessDetail = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
 
       this.updateDeviceView();
       window.addEventListener('resize', this.updateDeviceView.bind(this));
    }
    ngOnInit(): void {
-
+      this.router.events.subscribe(() => {
+         this.checkSearchBarVisibility();
+      });
+      this.checkSearchBarVisibility();
+      this.getWalletAmount()
    }
 
    handleGlobalSearch(query: string) {
@@ -45,7 +60,18 @@ export class LayoutComponent {
    toggleSidebar() {
       this.isSidebarVisible = !this.isSidebarVisible;
    }
+   checkSearchBarVisibility() {
+      const allowedUrls = [
+         '/dashboard',
+         '/settings',
+         '/orders/new-order',
+         '/orders/new-order/order-preview/779',
+         '/orders/new-order/add-address/drops',
+      ];
 
+      const currentUrl = this.router.url;
+      this.showSearchBar = !allowedUrls.some(url => currentUrl.includes(url));
+   }
    // Method to detect small device view
    updateDeviceView() {
       this.isSmallDevice = window.innerWidth <= 768;
@@ -63,9 +89,9 @@ export class LayoutComponent {
    toggleSearch() {
       const searchBar = document.querySelector('.search-bar-mobile') as HTMLElement;
 
-      if (searchBar) {
-         searchBar.style.display = searchBar.style.display === 'flex' ? 'none' : 'flex';
-      }
+      // if (searchBar) {
+      //    searchBar.style.display = searchBar.style.display === 'flex' ? 'none' : 'flex';
+      // }
    }
    logout() {
 
@@ -88,15 +114,24 @@ export class LayoutComponent {
    goToProfile() {
 
    }
+   cancel() {
 
+   }
    onSearch() {
       if (this.searchQuery.trim()) {
          this.router.navigate([], {
             relativeTo: this.activatedRoute,
-            queryParams: { search: this.searchQuery }, // Add the search query as a query parameter
+            queryParams: this.searchQuery.trim() ? { search: this.searchQuery } : {},
+            // queryParams: { search: this.searchQuery }, // Add the search query as a query parameter
 
          });
          // console.log(this.searchQuery)
+      } else {
+         this.router.navigate([], {
+            relativeTo: this.activatedRoute,
+            queryParams: { search: '' }, // Add the search query as a query parameter
+
+         });
       }
       // if (this.searchQuery.trim()) {
       //    // Call the search service to get results based on the query
@@ -107,5 +142,48 @@ export class LayoutComponent {
       // } else {
       //    this.searchResults = [];
       // }
+   }
+   @HostListener('document:click', ['$event'])
+   handleClickOutside(event: Event) {
+      const sidebarElement = document.querySelector('.sidebar');
+      const toggleButton = document.querySelector('.menu-toggle');
+
+      // Prevent any background click actions when sidebar is open
+      event.stopPropagation();
+      if (
+         this.isSidebarVisible &&
+         sidebarElement &&
+         toggleButton &&
+         !sidebarElement.contains(event.target as Node) &&
+         !toggleButton.contains(event.target as Node)
+      ) {
+         this.isSidebarVisible = false;
+      }
+
+   }
+   getWalletAmount(): void {
+      let payload: any = {};
+      payload.super_admin_id = environment.superAdminId;
+      payload.user_id = this.userData.id;
+      // payload.vehicle_type_id = this.newOrder.vehicleType;
+      this.apiService.get_wallet_amount(payload).subscribe({
+         next: (response) => {
+            if (response.status === true) {
+               this.wallet = response?.data?.total_balance; // All time slots
+
+
+
+            } else {
+               this.wallet = 0;
+               console.error('Error fetching time slots:', response.message);
+            }
+         },
+         error: (err) => {
+            console.error('Error fetching vehicle types:', err);
+         },
+         complete: () => {
+            this.loading = false;
+         },
+      });
    }
 }

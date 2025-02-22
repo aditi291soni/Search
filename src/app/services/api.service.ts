@@ -50,7 +50,7 @@ export class ApiService {
          })
       );
    }
-   /**
+   /**f
     * Fetches the list of businesses from the API.
     * 
     * @returns An observable that emits the list of businesses.
@@ -72,7 +72,38 @@ export class ApiService {
          })
       );
    }
-
+   get_wallet_amount(payload: object): Observable<any> {
+      return this.http.post(`${this.baseUrl}/get-total-wallet-balance`, payload, this.getHttpOptions()).pipe(
+         catchError((error) => {
+            console.error('Error fetching the list of businesses:', error); // Log error for debugging
+            return throwError(() => new Error('Failed to fetch the list of businesses')); // Return a user-friendly error message
+         })
+      );
+   }
+   add_wallet_amount(payload: object): Observable<any> {
+      return this.http.post(`${this.baseUrl}/add-wallet-balance`, payload, this.getHttpOptions()).pipe(
+         catchError((error) => {
+            console.error('Error fetching the list of businesses:', error); // Log error for debugging
+            return throwError(() => new Error('Failed to fetch the list of businesses')); // Return a user-friendly error message
+         })
+      );
+   }
+   deduct_wallet_amount(payload: object): Observable<any> {
+      return this.http.post(`${this.baseUrl}/deduct-wallet-balance`, payload, this.getHttpOptions()).pipe(
+         catchError((error) => {
+            console.error('Error fetching the list of businesses:', error); // Log error for debugging
+            return throwError(() => new Error('Failed to fetch the list of businesses')); // Return a user-friendly error message
+         })
+      );
+   }
+   delete_address(payload: any): Observable<any> {
+      return this.http.post(`${this.baseUrl}/deleteAddress`, payload, this.getHttpOptions()).pipe(
+         catchError((error) => {
+            console.error('Error fetching the list of businesses:', error); // Log error for debugging
+            return throwError(() => new Error('Failed to fetch the list of businesses')); // Return a user-friendly error message
+         })
+      );
+   }
 
    list_of_coupan(): Observable<any> {
       return this.http.post(`${this.baseUrl}/get-product-scheme-coupon-list`, this.getHttpOptions()).pipe(
@@ -179,6 +210,16 @@ export class ApiService {
    getOrderStatus(params: object): Observable<any> {
 
       return this.http.post(`${this.baseUrl}/get-order-status-list`, params, this.getHttpOptions()).pipe(
+         catchError((error) => {
+            console.error('Error fetching the list of addresses:', error); // Log error for debugging
+            return throwError(() => new Error('Failed to fetch the list of addresses')); // Return a user-friendly error message
+         })
+      );
+   }
+
+   getOrderDelivery(params: object): Observable<any> {
+
+      return this.http.post(`${this.baseUrl}/get-order-delivery-details-list`, params, this.getHttpOptions()).pipe(
          catchError((error) => {
             console.error('Error fetching the list of addresses:', error); // Log error for debugging
             return throwError(() => new Error('Failed to fetch the list of addresses')); // Return a user-friendly error message
@@ -338,7 +379,15 @@ export class ApiService {
          })
       );
    }
+   editInvoice(params: Object): Observable<any> {
 
+      return this.http.post(`${this.baseUrl}/edit-invoice`, params, this.getHttpOptions()).pipe(
+         catchError((error) => {
+            console.error('Error fetching the list of business:', error); // Log error for debugging
+            return throwError(() => new Error('Failed to fetch the list of business')); // Return a user-friendly error message
+         })
+      );
+   }
    addTransaction(params: Object): Observable<any> {
 
       return this.http.post(`${this.baseUrl}/add-transaction`, params, this.getHttpOptions()).pipe(
@@ -350,7 +399,8 @@ export class ApiService {
    }
    addNotification(params: Object): Observable<any> {
 
-      return this.http.post(`${this.baseUrl}/active-rider-location-for-order`, params, this.getHttpOptions()).pipe(
+      return this.http.post(`https://practice-world-backend.vercel.app/rider-location/active-rider-location-for-order`, params).pipe(
+         // return this.http.post(`${this.baseUrl}/active-rider-location-for-order`, params, this.getHttpOptions()).pipe(
          catchError((error) => {
             console.error('Error fetching the list of business:', error); // Log error for debugging
             return throwError(() => new Error('Failed to fetch the list of business')); // Return a user-friendly error message

@@ -1,32 +1,44 @@
 <div class="header">
    <div>
       <h2>All Orders</h2>
-      <div class="thin">List of all your orders</div>
+      <!-- <div class="thin">List of all your orders</div> -->
    </div>
    <button routerLink="/orders/new-order" pButton type="button" icon="pi pi-plus" label="New Order"
       class="p-button-outlined p-button-secondary"></button>
 </div>
 <br>
-<ng-container *ngIf="order.length==0">
-   <app-no-data-found></app-no-data-found>
-</ng-container>
+
 <div class="recent-orders-container" *ngIf="!loading">
-   <div class="recent-order-item" *ngFor="let order of order" (click)="navigateToOrderDetails(order.id)">
+   <ng-container *ngIf="orders.length==0">
+      <app-no-data-found></app-no-data-found>
+   </ng-container>
+   <div class="recent-order-item" *ngFor="let order of orders" (click)="navigateToOrderDetails(order.invoice_id)">
       <div class="recent-order-flex">
          <div>
-            <div class="subtext2 mt-2">Sender Detail</div>
-            <div class="maintext">{{ order.pickup_name | titlecase }}</div>
-            <div>{{ order.pickup_mobile }}</div>
-            <div class="subtext2">Receiver Detail</div>
-            <div class="maintext">{{ order.drop_name | titlecase }}</div>
-            <div class="mb">{{ order.drop_mobile }}</div>
+            <!-- <div class="subtext2 mt-2">Sender Detail</div>
+            <div class="maintext">{{order?.pickup_name | titlecase}}</div> -->
+            <div class="subtext2 mt-2">From: <span class="maintext">{{ order.pickup_person_name | titlecase }}</span>
+            </div>
+            <div>{{order?.pickup_phone_no}}</div>
+            <div class="subtext2 mt-2">To: <span class="maintext">{{ order?.drop_person_name| titlecase }}</span></div>
+            <!-- <div class="subtext2">Receiver Detail</div>
+            <div class="maintext">{{order?.drop_name | titlecase}}</div> -->
+            <div class="subtext">{{order?.drop_phone_no}}</div>
 
          </div>
          <div class="order-no">
             <div class="subtext2">Order No.</div>
-            <div class="maintext2">#{{ order.order_no }}</div>
+            <div class="maintext2">#{{order.order_no}}</div>
+            <!-- <div class="subtext2">Order Status.</div> -->
+            <div class="maintext2" [ngClass]="{
+               'text-success': order.status_name == 'Delivered',
+               'text-danger ': order.status_name == 'Cancelled',
+               'text-dark': order.status_name!== 'Delivered' && order.status_name !== 'Cancelled'
+            }">{{order.status_name}}</div>
          </div>
       </div>
+
+
    </div>
 </div>
 

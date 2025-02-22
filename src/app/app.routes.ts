@@ -48,6 +48,10 @@ export const routes: Routes = [
             loadComponent: () => import('./address-select/address-select.component').then(m => m.AddressSelectComponent),
          },
          {
+            path: 'address/list-of-address',
+            loadComponent: () => import('./list-of-address/list-of-address.component').then(m => m.ListOfAddressComponent),
+         },
+         {
             path: 'orders/new-order/select-drop',
             loadComponent: () => import('./address-select/address-select.component').then(m => m.AddressSelectComponent),
          },
@@ -58,6 +62,10 @@ export const routes: Routes = [
          {
             path: 'add-business',
             loadComponent: () => import('./add-business/add-business.component').then(m => m.AddBusinessComponent),
+         },
+         {
+            path: 'wallet',
+            loadComponent: () => import('./wallet-transaction/wallet-transaction.component').then(m => m.WalletTransactionComponent),
          },
          {
             path: 'edit-business/:id',
@@ -75,10 +83,7 @@ export const routes: Routes = [
             path: 'orders/new-order/add-address/:type',
             loadComponent: () => import('./add-address/add-address.component').then(m => m.AddAddressComponent),
          },
-         // {
-         //    path: 'orders/:search',
-         //    loadComponent: () => import('./orders/orders.component').then(m => m.OrdersComponent),
-         // },
+
       ],
    },
    {

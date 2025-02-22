@@ -20,16 +20,16 @@
          </div>
          <div class="p-field">
             <div class="thin">Password <span class="mandatory">*</span></div>
-            <p-password class="full-width" id="password" toggleMask formControlName="password"
+            <!-- <p-password class="full-width" id="password" toggleMask formControlName="password"
                placeholder="Enter your Password" inputStyleClass="full-width">
-            </p-password>
-            <!-- <div class="password-container">
+            </p-password> -->
+            <div class="password-container">
                <input class="full-width" id="password" [type]="showPassword ? 'text' : 'password'" pInputText
                   placeholder="Enter your Password" formControlName="password" name="password" required />
 
                <i class="pi" [class.pi-eye]="!showPassword" [class.pi-eye-slash]="showPassword"
                   (click)="togglePasswordVisibility()"></i>
-            </div> -->
+            </div>
          </div>
          <div class="form-actions flex">
             <button type="submit" pButton label="Sign Up" class="p-button-primary" [disabled]="loading"
