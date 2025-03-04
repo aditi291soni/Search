@@ -83,10 +83,15 @@ export class SigninComponent {
                // Store token and user data in localStorage
                localStorage.setItem('authToken', response.data.token);
                localStorage.setItem('userData', JSON.stringify(response.data));
-
-               // Show success notification
-               this.toastService.showSuccess('Login successful!');
-               this.fetchBusinessList()
+               if (response.data.role_id != '9') {
+                  // Show success notification
+                  this.toastService.showSuccess('Login successful!');
+                  this.fetchBusinessList()
+               } else {
+                  this.toastService.showError('Sign-in failed. Invalid credentials or other error.');
+                  return
+                  // this.router.navigate(['/login']);
+               }
                // if (response.data && response.data.business_id && response.data.business_id.length > 0) {
                //    this.router.navigate(['/add-business']);
                // const businessIdLength = response.data.business_id.length;
@@ -139,7 +144,10 @@ export class SigninComponent {
 
                if (this.business.length == 0) {
                   // Redirect to the "Add Business" page
-                  this.router.navigate(['/add-business']);
+
+                  this.router.navigate(['/dashboard']);
+
+                  // this.router.navigate(['/add-business']);
                } else if (this.business.length == 1) {
                   // Redirect to the Dashboard page
                   localStorage.setItem('bussinessDetails', JSON.stringify(this.business[0]));
@@ -149,7 +157,7 @@ export class SigninComponent {
                   this.router.navigate(['/list-of-business']);
                }
             } else {
-               this.router.navigate(['/add-business']);
+               this.router.navigate(['/dashboard']);
                console.error('Error fetching list of business:', response.message);
                this.loading = false;
             }

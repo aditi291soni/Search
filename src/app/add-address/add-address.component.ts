@@ -30,6 +30,8 @@ export class AddAddressComponent implements AfterViewInit {
    drops: any;
    submitted: boolean = false;
    isLoadingLocation = true; // Loader flag
+   listofState: any;
+   userData: any;
 
    constructor(private route: ActivatedRoute, private router: Router, private fb: FormBuilder, private apiService: ApiService, private toastService: ToastNotificationService) {
 
@@ -39,7 +41,7 @@ export class AddAddressComponent implements AfterViewInit {
          this.addressType = params['type'];
       });
       this.businessDetail = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
-
+      this.userData = this.apiService.getLocalValueInJSON(localStorage.getItem('userData'));
       //    this.pickupLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedPickup'));
       //    this.dropLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedDrop'));
       //    this.businessDetails = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
@@ -93,12 +95,12 @@ export class AddAddressComponent implements AfterViewInit {
 
    // Geofencing parameters
    cityCoordinates = { lat: 23.2369247, lng: 77.4341457 }; // MP Nagar, Bhopal
-
-   geofenceRadius = 10000; // 10 km radius (in meters)
+   // cityCoordinates = { lat: 22.7196, lng: 75.8577 };
+   geofenceRadius = 11000; // 10 km radius (in meters)
 
    ngAfterViewInit(): void {
       this.initializeMap();
-
+      this.getlistofState()
       const searchBox = new google.maps.places.SearchBox(this.searchBox.nativeElement);
       console.log('ll', searchBox)
       this.map?.addListener('bounds_changed', () => {
@@ -160,10 +162,10 @@ export class AddAddressComponent implements AfterViewInit {
 
             address_details: this.formData.address_details,
             city: this.formData.city,
-            state_id: this.businessDetail.state_id,
+            state_id: this.businessDetail ? this.businessDetail.state_id : this.getStateId(),
 
             state: this.formData.state,
-            country: this.formData.country,
+            country: '101',
             postal_code: this.formData.postal_code,
             lat_val: this.formData.lat_val,
             long_val: this.formData.long_val
@@ -175,7 +177,23 @@ export class AddAddressComponent implements AfterViewInit {
 
    }
 
+   getlistofState() {
+      try {
+         this.apiService.getStateList('101').subscribe({
+            next: (data: any) => {
+               let ApiResponse: any = data;
+               this.listofState = ApiResponse.data;
 
+            },
+            error: (error: any) => {
+               console.log('Error fetching data', error);
+            }
+         });
+      } catch (error) {
+         console.log('Error in the catch block', error);
+      }
+
+   }
    currentLocation() {
       this.isLoadingLocation = true; // Start loading
 
@@ -210,8 +228,12 @@ export class AddAddressComponent implements AfterViewInit {
          localStorage.setItem('selectedPickup', JSON.stringify(this.projectForm.value));
       }
 
+      if (this.businessDetail) {
+         this.projectForm.value.business_id = this.businessDetail.id
+      } else {
+         this.projectForm.value.user_id = this.userData.id
+      }
 
-      this.projectForm.value.business_id = this.businessDetail.id
       this.apiService.add_address(this.projectForm.value).subscribe({
          next: (data: any) => {
             if (data?.data?.status) {
@@ -246,8 +268,8 @@ export class AddAddressComponent implements AfterViewInit {
          address_name: this.formData.address_name,
          address_details: this.formData.address_details,
          city: this.formData.city,
-         state_id: this.businessDetail.state_id,
-         country_id: this.businessDetail.country_id,
+         state_id: this.businessDetail ? this.businessDetail.state_id : this.getStateId(),
+         country_id: '101',
          state: this.formData.state,
          country: this.formData.country,
          postal_code: this.formData.postal_code,
@@ -484,5 +506,16 @@ export class AddAddressComponent implements AfterViewInit {
 
    openForm(): void {
       this.isFormVisible = true;
+   }
+   getStateId() {
+      if (!this.formData.state || !this.listofState?.length) {
+         return null; // Return null if state or list is empty
+      }
+
+      const matchedState = this.listofState.find((state: any) =>
+         state.name.toLowerCase() === this.formData.state.toLowerCase()
+      );
+
+      return matchedState ? matchedState.id : null; // Return state ID if found, otherwise null
    }
 }

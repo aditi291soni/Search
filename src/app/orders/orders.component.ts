@@ -29,7 +29,7 @@ export class OrdersComponent {
    constructor(private apiService: ApiService, private router: Router, private activatedRoute: ActivatedRoute, private cdRef: ChangeDetectorRef
 
    ) {
-      this.userInfo = this.apiService.getLocalValueInJSON(localStorage.getItem('userInfo'));
+      this.userInfo = this.apiService.getLocalValueInJSON(localStorage.getItem('userData'));
       this.businessDetails = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
       this.order_status = this.apiService.getLocalValueInJSON(localStorage.getItem('order-status'));
    }
@@ -81,7 +81,12 @@ export class OrdersComponent {
    fetchOrderList(): void {
       // this.loading = true;
       let payload: any = {};
-      payload.business_id = this.businessDetails.id;
+      payload.business_id = 983;
+      if (this.businessDetails && this.businessDetails.id) {
+         payload.for_business_id = this.businessDetails.id
+      } else {
+         payload.for_user_id = this?.userInfo?.id
+      }
 
 
       this.apiService.getOrderDelivery(payload).subscribe({
@@ -89,7 +94,7 @@ export class OrdersComponent {
             if (response.status === true) {
                // this.order = response.data;
                this.order = response.data
-                  .filter((order: any) => order.order_no)
+                  .filter((order: any) => order.order_no && order.order_status_id !== 35)
                   .map((order: any) => ({
                      ...order,
                      status_name: this.getDynamicStatusName(order.order_status_id)

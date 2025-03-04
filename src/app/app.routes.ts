@@ -8,15 +8,18 @@ export const routes: Routes = [
       path: '',
       redirectTo: '/dashboard',
       pathMatch: 'full',
+
    },
    {
       path: '',
       component: LayoutComponent,
       canActivate: [authGuard],
+
       children: [
          {
             path: 'dashboard',
             loadComponent: () => import('./dashboard/dashboard.component').then(m => m.DashboardComponent),
+
          },
          {
             path: 'orders',
@@ -74,6 +77,10 @@ export const routes: Routes = [
          {
             path: 'list-of-business',
             loadComponent: () => import('./business-list/business-list.component').then(m => m.BusinessListComponent),
+         },
+         {
+            path: 'list-of-coupan',
+            loadComponent: () => import('./list-of-coupan/list-of-coupan.component').then(m => m.ListOfCoupanComponent),
          },
          {
             path: 'orders/order-view/:invoice_id',

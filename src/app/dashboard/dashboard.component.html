@@ -1,5 +1,6 @@
 <!-- Original content -->
-<h2 *ngIf="!loading">Welcome, {{this.userInfo?.first_name | titlecase }} 👋 </h2>
+<h2 *ngIf="!loading">Welcome, {{this.userInfo?.first_name | titlecase }} <br> {{this.businessDetails?.name | titlecase
+   }} </h2>
 <p-skeleton *ngIf="loading" height="2rem" width="50%"></p-skeleton>
 <br>
 

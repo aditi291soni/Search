@@ -37,6 +37,7 @@ export class OrderViewComponent {
    status_id: any;
    colorcode: any = '#000000';
    user: any;
+   cancellation = 0;
    order_status: any;
    loading_button: boolean = false;
    userData: any;
@@ -106,13 +107,14 @@ export class OrderViewComponent {
             if (response.status === true) {
                this.order = response.data || {};
                this.status_id = this.order?.order_status_id
+
                console.log(this.status_id)
                console.log(this.order)
                if (response.data?.parcel_weight) {
                   this.getUser(response.data?.parcel_weight)
                }
 
-               this.getTimeSlot(this.order?.time_slot);
+               this.getTimeSlot(this.order?.time_slot_id);
                this.getDelivery(this.order?.delivery_type_id);
                this.getOrderStatus();
                this.getDynamicStatusName(this.order.order_status_id)
@@ -130,10 +132,10 @@ export class OrderViewComponent {
       // if (!this.order?.order_status_id) return;
 
       const excludeMap: { [key: number]: number[] } = {
-         45: [34, 26, 25],
-         42: [33, 26, 25],
-         43: [34, 26, 25],
-         40: [34, 26, 25]
+         45: [34, 26, 25, 35],
+         42: [33, 26, 25, 35],
+         43: [34, 26, 25, 35],
+         40: [34, 26, 25, 35]
       };
 
       this.filteredOrderStatus = this.orderstatus.filter(status =>
@@ -203,6 +205,7 @@ export class OrderViewComponent {
             if (response.status === true) {
                this.delivery_name = response.data || [];
                this.colorcode = response.data.color_code
+               console.log("cancel", this.delivery_name.cancelation_charges)
 
 
             } else {
@@ -268,6 +271,8 @@ export class OrderViewComponent {
          icon: index <= currentIndex ? 'pi pi-check-circle' : 'pi pi-circle-off',
          color: index <= currentIndex ? 'green' : 'gray',
          lineColor: index <= currentIndex ? 'green' : 'gray',
+         textColor: index <= currentIndex ? 'black' : 'gray', // Text color logic
+         iconColor: index <= currentIndex ? 'green' : 'gray'
       }));
       console.log(this.events)
    }
@@ -279,14 +284,21 @@ export class OrderViewComponent {
       this.status ? this.status.name_for_user : "N/A"; // Return status name if found, else 'Unknown'
    }
    cancels() {
+      console.log("c", this.status, this.cancellation)
 
-      this.status_id = 25
+      if (this.status.id
+         == 30 || this.status.id
+         == 29) {
+         this.cancellation = Number(this.delivery_name.cancelation_charges)
+      }
+
+      console.log("c1", this.status, this.cancellation)
 
       if (this.invoice?.bill_status == '1') {
          this.add_wallet_amount()
          this.creaditTransaction(this.invoiceId)
       }
-
+      this.status_id = 25
       this.editDeliveries()
       this.editInvoice()
 
@@ -297,6 +309,9 @@ export class OrderViewComponent {
       // localStorage.removeItem('selectedDrop');
       // localStorage.removeItem('new-order');
       // this.router.navigate(['/dashboard']);
+      setTimeout(() => {
+         this.router.navigate(['/dashboard']);
+      }, 3000);
 
    }
 
@@ -304,7 +319,8 @@ export class OrderViewComponent {
       let payload: any = {};
       payload.super_admin_id = environment.superAdminId;
       payload.user_id = this.userData.id;
-      payload.amount = this.invoice?.subtotal;
+      payload.amount = this.invoice?.subtotal - this.cancellation;
+      console.log("c4", this.invoice?.subtotal, this.cancellation, payload.amount)
       // payload.vehicle_type_id = this.newOrder.vehicleType;
       this.apiService.add_wallet_amount(payload).subscribe({
          next: (response) => {
@@ -327,7 +343,7 @@ export class OrderViewComponent {
    }
    editDeliveries() {
       let payload: any = {}
-      payload.business_id = this.businessDetails.id
+      payload.business_id = this.businessDetails ? this.businessDetails.id : null
       payload.order_delivery_details_id = this.deliveryId
       payload.status = 1
       payload.order_status_id = 25
@@ -388,7 +404,7 @@ export class OrderViewComponent {
 
       console.log(event)
       this.confirmationService.confirm({
-         target: event.target as EventTarget,
+         // target: event.target as EventTarget,
          message: 'Do you want to cancel this order?',
          header: ' ',
          icon: 'pi pi-info-circle',
@@ -417,14 +433,17 @@ export class OrderViewComponent {
       const currentDate = new Date();
       const formattedDate = currentDate.toISOString().split('T')[0];
       let payload: any = {}
-      payload.business_id = this.businessDetails.id
+      payload.business_id = 983
+      // payload.business_id = this.businessDetails ? this.businessDetails.id : null
       // payload.for_user_id=this.userId ? this.userId : this.default
       payload.invoice_id = id
-      payload.cr_amont = this.invoice.subtotal
-      payload.amount = this.invoice.subtotal
+      payload.cr_amont = this.invoice.subtotal - Number(this.cancellation)
+      payload.amount = this.invoice.subtotal - Number(this.cancellation)
       payload.super_admin_id = environment.superAdminId
       payload.created_on_date = formattedDate
       payload.payment_date = formattedDate
+      payload.pay_for_ledger = this.order.pay_on == '138' ? '138' : '139'
+      console.log("c5", this.invoice?.subtotal, this.cancellation, payload.amount)
       try {
          this.apiService.addTransaction(payload).subscribe({
             next: (data: any) => {

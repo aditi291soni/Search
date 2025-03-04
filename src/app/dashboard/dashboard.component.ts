@@ -48,9 +48,20 @@ export class DashboardComponent implements OnInit {
     * Initiates fetching the business list and manages the loading state.
     */
    ngOnInit(): void {
+
       this.fetchOrderList();
-      this.getOrderStatus()
-      this.clearLocal()
+      this.getOrderStatus();
+      this.clearLocal();
+      this.cdr.detectChanges();
+
+
+
+
+      // this.fetchOrderList();
+
+      // this.getOrderStatus()
+      // this.clearLocal()
+      // this.cdr.detectChanges();
    }
 
    /**
@@ -59,7 +70,13 @@ export class DashboardComponent implements OnInit {
    fetchOrderList(): void {
       this.loading = true;
       let payload: any = {};
-      payload.business_id = this.businessDetails?.id;
+      payload.business_id = 983;
+      if (this.businessDetails && this.businessDetails.id) {
+         payload.for_business_id = this.businessDetails.id
+      } else {
+         payload.for_user_id = this.userInfo.id
+      }
+      // payload.for_business_id = 161;
       // payload.per_page = 3
       payload.page = 1
 
@@ -73,7 +90,7 @@ export class DashboardComponent implements OnInit {
 
                // Ensure orders have order_status.id matched correctly
                this.order = response.data
-                  .filter((order: any) => order.order_no)
+                  .filter((order: any) => order.order_no && order.order_status_id !== 35)
                   .slice(0, 3)
                   .map((order: any) => ({
                      ...order,

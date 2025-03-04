@@ -44,7 +44,7 @@
          </div>
       </div>
    </div>
-
+   <p-confirmdialog />
    <!-- Address List -->
    <div *ngIf="!loading && addressList.length > 0">
       <div class="recent-order-item" *ngFor="let address of addressLists; let i = index">
@@ -56,8 +56,8 @@
                <div class="maintext">{{ address.person_name | titlecase }}</div>
             </div>
             <div>
-               <p-toast />
-               <p-confirmdialog />
+               <!-- <p-toast /> -->
+
                <div class="subtext">{{ address.address_name | titlecase }} <span class="close-icon"
                      (click)="confirm2($event,address.id)">
                      <i class="pi pi-times"></i>

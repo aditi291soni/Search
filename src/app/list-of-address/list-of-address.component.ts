@@ -29,6 +29,7 @@ export class ListOfAddressComponent {
    addressToDeleteIndex: number | null = null;
    businessDetails: any;
    addressLists: any[] = [];
+   userData: any;
    /**
     * Constructor to inject the necessary services.
     * 
@@ -45,7 +46,7 @@ export class ListOfAddressComponent {
       private cdr: ChangeDetectorRef,
    ) {
       this.businessDetails = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
-
+      this.userData = this.apiService.getLocalValueInJSON(localStorage.getItem('userData'));
 
    }
 
@@ -83,15 +84,23 @@ export class ListOfAddressComponent {
     */
    fetchAddressList(): void {
       const business = localStorage.getItem('bussinessDetails');
-      const businessId = business ? JSON.parse(business).id : null;
-
+      const user = localStorage.getItem('userData');
+      const businessId = business ? JSON.parse(business).id : 0;
+      const user_id = user ? JSON.parse(user).id : 0;
       if (!businessId) {
          console.error('Business ID not found in localStorage');
          this.loading = false;
-         return;
+
+      }
+      let payload: any = {}
+      if (this.businessDetails) {
+         payload.business_id = this.businessDetails ? this.businessDetails.id : 0;
+      } else {
+         payload.user_id = this.userData ? this.userData.id : 0;
       }
 
-      this.apiService.getAddressList(businessId).subscribe({
+
+      this.apiService.getAddressList(payload).subscribe({
          next: (response) => {
             if (response.status === true) {
                this.addressList = response.data;
@@ -135,6 +144,7 @@ export class ListOfAddressComponent {
          message: 'Do you want to delete this record?',
          header: ' ',
          icon: 'pi pi-info-circle',
+         closable: false,
          rejectLabel: 'Cancel',
          rejectButtonProps: {
             label: 'Cancel',
@@ -219,7 +229,7 @@ export class ListOfAddressComponent {
       // if (this.addressToDeleteIndex !== null) {
       // Call the delete API
 
-      this.apiService.delete_address({ address_id: id, business_id: this.businessDetails.id }).subscribe(
+      this.apiService.delete_address({ address_id: id, business_id: this.businessDetails ? this.businessDetails.id : 0 }).subscribe(
          (response) => {
             console.log('Address deleted successfully:', response);
             // Close the dialog and update the UI if necessary

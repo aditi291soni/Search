@@ -37,9 +37,10 @@ export class SignupComponent {
          email: ['', [Validators.required, Validators.email]],
          first_name: ['', [Validators.required,]],
          phone: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
-         password: ['', [Validators.required]],
+         password: ['', [Validators.required, Validators.minLength(6)]],
          password_confirmation: ['', [Validators.required]],
          super_admin: [environment.superAdminId, [Validators.required]],
+         role_id: ['4']
       })
    }
    redirectToSignUp() {
@@ -59,7 +60,8 @@ export class SignupComponent {
                // localStorage.setItem('userData', JSON.stringify(response.data));
 
                // Show success notification
-               this.router.navigate(['/add-business']);
+               // this.router.navigate(['/add-business']);
+               this.router.navigate(['/dashboard']);
                localStorage.setItem('authToken', response.data.token);
                localStorage.setItem('userData', JSON.stringify(response.data));
                this.toastService.showSuccess('Signup successful!');

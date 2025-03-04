@@ -1,0 +1,86 @@
+<!-- <div class="header">
+   <div >
+      <h2>Select Address</h2>
+      <div class="thin">Select any of the detailed addresses</div>
+
+   </div>
+   <button pButton type="button" icon="pi pi-map-marker" label="Select on Map" class="map-button " (click)="addPickUpAddress()"></button>
+
+   <div>
+   </div>
+</div> -->
+
+
+
+<div class="header">
+   <div>
+      <h2>List of Coupan</h2>
+      <!-- <div class="thin">List of addresses</div> -->
+   </div>
+   <!-- <button pButton type="button" type="button" icon="pi pi-map-marker" label="Select on Map"
+      (click)="addPickUpAddress()" class="p-button-outlined p-button-secondary">
+   </button> -->
+</div>
+
+<br>
+
+
+<div class="">
+   <!-- Skeleton Loader -->
+   <div *ngIf="loading">
+      <div *ngFor="let item of [1, 2, 3, 4, 5, 6]" class="recent-order-item">
+         <div class="recent-order-flex">
+            <div>
+               <p-skeleton [style]="{ 'height': '20px', 'width': '150px', 'margin-bottom': '5px' }"></p-skeleton>
+               <p-skeleton [style]="{ 'height': '15px', 'width': '120px' }"></p-skeleton>
+            </div>
+            <div>
+               <p-skeleton [style]="{ 'height': '20px', 'width': '100px' }"></p-skeleton>
+            </div>
+         </div>
+         <div class="recent-order-flex">
+            <p-skeleton [style]="{ 'height': '15px', 'width': '100%' }"></p-skeleton>
+            <p-skeleton [style]="{ 'height': '15px', 'width': '80%' }"></p-skeleton>
+         </div>
+      </div>
+   </div>
+
+   <!-- Address List -->
+   <div *ngIf="!loading && coupanList.length > 0">
+      <div class="recent-order-item" *ngFor="let coupan  of coupanList" (click)="applyCoupan(coupan)">
+         <div class="recent-order-flex">
+            <div>
+               <div class="maintext">{{ coupan.code | titlecase }}</div>
+            </div>
+            <div>
+               <p-toast />
+               <p-confirmdialog />
+
+            </div>
+            <div>
+               <div class="subtext">{{ coupan.name | titlecase }}</div>
+
+
+            </div>
+
+         </div>
+         <div class="recent-order-flex">
+
+            <div>
+               <div class="address">
+                  {{ coupan.feature_coupon }}
+               </div>
+               <div class="address">
+                  {{ coupan.schme_code_type }}
+               </div>
+            </div>
+            <button type="button" pButton label="Apply"></button>
+         </div>
+      </div>
+   </div>
+
+   <!-- Fallback Message -->
+   <div *ngIf="!loading && coupanList.length === 0">
+      <p>No Coupan available.</p>
+   </div>
+</div>

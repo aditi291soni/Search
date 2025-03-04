@@ -1,15 +1,16 @@
 import { Injectable, signal } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+   providedIn: 'root'
 })
 export class SearchService {
 
-  constructor() { }
+   constructor() { }
 
-  searchQuery = signal('');
+   searchQuery = signal('');
 
-  setSearchQuery(query: string) {
-    this.searchQuery.set(query);
-  }
+   setSearchQuery(query: string) {
+      this.searchQuery.set(query);
+   }
+
 }

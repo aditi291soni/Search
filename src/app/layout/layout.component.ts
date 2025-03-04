@@ -1,6 +1,6 @@
-import { Component, HostListener } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';  // Import FormsModule for ngModel
-import { ActivatedRoute, Router, RouterModule, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule, RouterOutlet, NavigationEnd } from '@angular/router';
 import { SidebarModule } from 'primeng/sidebar';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
@@ -12,6 +12,7 @@ import { SearchComponent } from '../search/search.component';
 import { SearchBarService } from '../services/search-bar.service';
 import { environment } from '../../environments/environment';
 import { ApiService } from '../services/api.service';
+import { filter } from 'rxjs';
 
 @Component({
    selector: 'app-layout',
@@ -36,21 +37,31 @@ export class LayoutComponent {
    wallet: any = 0;
    loading: boolean = false;
    businessDetail: any;
-   constructor(private router: Router, private toastService: ToastNotificationService, private confirmationService: ConfirmationService,
+   showProfileBar: boolean = false;
+   constructor(private cdr: ChangeDetectorRef, private router: Router, private toastService: ToastNotificationService, private confirmationService: ConfirmationService,
       private searchService: SearchBarService, private activatedRoute: ActivatedRoute, private apiService: ApiService,
    ) {
       this.userData = this.apiService.getLocalValueInJSON(localStorage.getItem('userData'));
       this.businessDetail = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
-
+      this.wallet = this.apiService.getLocalValueInJSON(localStorage.getItem('wallet'));
       this.updateDeviceView();
       window.addEventListener('resize', this.updateDeviceView.bind(this));
    }
    ngOnInit(): void {
       this.router.events.subscribe(() => {
          this.checkSearchBarVisibility();
+         this.wallet = this.apiService.getLocalValueInJSON(localStorage.getItem('wallet'));
       });
       this.checkSearchBarVisibility();
+      this.checkProfileBarVisibility()
       this.getWalletAmount()
+      console.log("rendered")
+      this.cdr.detectChanges();
+      this.router.events
+         .pipe(filter(event => event instanceof NavigationEnd))
+         .subscribe(() => {
+            this.getWalletAmount(); // Fetch wallet amount on every navigation
+         });
    }
 
    handleGlobalSearch(query: string) {
@@ -71,6 +82,16 @@ export class LayoutComponent {
 
       const currentUrl = this.router.url;
       this.showSearchBar = !allowedUrls.some(url => currentUrl.includes(url));
+   }
+
+   checkProfileBarVisibility() {
+      const allowedUrls = [
+         '/list-of-business',
+
+      ];
+
+      const currentUrl = this.router.url;
+      this.showProfileBar = !allowedUrls.some(url => currentUrl.includes(url));
    }
    // Method to detect small device view
    updateDeviceView() {
@@ -164,17 +185,45 @@ export class LayoutComponent {
    getWalletAmount(): void {
       let payload: any = {};
       payload.super_admin_id = environment.superAdminId;
-      payload.user_id = this.userData.id;
+      payload.user_id = this.userData ? this.userData.id : 0;
       // payload.vehicle_type_id = this.newOrder.vehicleType;
       this.apiService.get_wallet_amount(payload).subscribe({
          next: (response) => {
             if (response.status === true) {
                this.wallet = response?.data?.total_balance; // All time slots
-
+               this.cdr.detectChanges();
 
 
             } else {
                this.wallet = 0;
+               this.createWallet()
+               console.error('Error fetching time slots:', response.message);
+            }
+         },
+         error: (err) => {
+            console.error('Error fetching vehicle types:', err);
+         },
+         complete: () => {
+            this.loading = false;
+            localStorage.setItem('wallet', JSON.stringify(this.wallet));
+         },
+      });
+   }
+   createWallet(): void {
+      let payload: any = {};
+      payload.super_admin_id = environment.superAdminId;
+      payload.user_id = this.userData ? this.userData.id : 0;
+      // payload.vehicle_type_id = this.newOrder.vehicleType;
+      this.apiService.create_wallet_amount(payload).subscribe({
+         next: (response) => {
+            if (response.status === true) {
+               // this.wallet = response?.data?.total_balance; // All time slots
+               this.cdr.detectChanges();
+
+
+            } else {
+               this.wallet = 0;
+               // this.createWallet()
                console.error('Error fetching time slots:', response.message);
             }
          },

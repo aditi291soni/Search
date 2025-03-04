@@ -22,7 +22,7 @@
          <div class="form-group mb-3">
             <label for="name" class="form-label">Business Name <span class="mandatory">*</span></label>
             <input id="name" type="text" pInputText formControlName="name" placeholder="Enter Business Name"
-               class="form-control" />
+               [readonly]="this.business_id" class="form-control" />
             <div *ngIf="businessForm.get('name')?.invalid && businessForm.get('name')?.touched" class="mandatory">
                <small *ngIf="businessForm.get('name')?.hasError('required')">Business name is required.</small>
                <small *ngIf="businessForm.get('name')?.hasError('pattern')">Only letters and spaces are allowed.</small>
@@ -33,7 +33,7 @@
          <div class="form-group mb-3">
             <label for="owner" class="form-label">Owner Name <span class="mandatory">*</span></label>
             <input id="owner" type="text" pInputText formControlName="owner" placeholder="Enter Owner Name"
-               class="form-control" />
+               [readonly]="this.business_id" class="form-control" />
             <div *ngIf="businessForm.get('owner')?.invalid && businessForm.get('owner')?.touched" class="mandatory">
                <small *ngIf="businessForm.get('owner')?.hasError('required')">Owner name is required.</small>
                <small *ngIf="businessForm.get('owner')?.hasError('pattern')">Only letters and spaces are
@@ -79,7 +79,7 @@
          <div class="form-group mb-3">
             <label for="city" class="form-label">City <span class="mandatory">*</span></label>
             <input id="city" type="text" pInputText formControlName="city" placeholder="Enter City"
-               class="form-control" />
+               [readonly]="this.business_id" class="form-control" />
             <div *ngIf="businessForm.get('city')?.invalid && businessForm.get('city')?.touched" class="mandatory">
                <small>City is required.</small>
             </div>
@@ -89,7 +89,7 @@
          <div class="form-group mb-3">
             <label for="pincode" class="form-label">Pincode</label>
             <input id="pincode" type="text" pInputText formControlName="pincode" placeholder="Enter Pincode"
-               maxlength="6" class="form-control" />
+               [readonly]="this.business_id" maxlength="6" class="form-control" />
             <div *ngIf="businessForm.get('pincode')?.invalid && businessForm.get('pincode')?.touched" class="mandatory">
                <small *ngIf="businessForm.get('pincode')?.hasError('pattern')">Pincode must be 6 digits.</small>
             </div>
@@ -101,7 +101,8 @@
             <div class="w-100">
 
                <p-select appendTo="body" [options]="listofState" optionValue="id" formControlName="state_id"
-                  optionLabel="name" placeholder="Select State" filter class="w-full" [filterBy]="'name'" />
+                  [readonly]="this.business_id" optionLabel="name" placeholder="Select State" filter class="w-full"
+                  [filterBy]="'name'" />
             </div>
             <br>
             <br>

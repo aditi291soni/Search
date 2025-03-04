@@ -8,19 +8,19 @@
       </div>
 
       <!-- Left-aligned icons for smaller devices (hamburger and search) -->
-      <div class="topbar-left" *ngIf="isSmallDevice">
+      <div class="topbar-left" *ngIf="isSmallDevice && showProfileBar ">
          <button pButton icon="pi pi-bars" class="menu-toggle" (click)="toggleSidebar()"></button>
          <!-- <button pButton icon="pi pi-search" class="menu-toggle search-icon" (click)="toggleSearch()"></button> -->
 
       </div>
-      <div class="mobile-search-bar" *ngIf="isSmallDevice  && showSearchBar">
+      <div class="mobile-search-bar" *ngIf="isSmallDevice  && showSearchBar && showProfileBar">
          <div class="search-bar">
             <input type="text" placeholder="Search..." [(ngModel)]="searchQuery" (input)="onSearch()" />
             <button pButton icon="pi pi-search" class="search-btn" (click)="cancel()"></button>
          </div>
       </div>
       <!-- Right-aligned icons for notification and user profile -->
-      <div class="topbar-right">
+      <div class="topbar-right" *ngIf=" showProfileBar">
          <!-- <button pButton icon="pi pi-bell" class="topbar-btn"></button> -->
          <button pButton icon="pi pi-user" routerLink="/settings" class="topbar-btn"></button>
          <p-confirmDialog></p-confirmDialog>
@@ -42,7 +42,7 @@
             <img class="sidebar-logo" src="assets/brand/logo.png" alt="logo-png">
          </div>
          <div style="font-size: x-large;text-align: center;  color: var(--text-primary);">
-            Wallet : {{this.businessDetail?.currency_symbol}}{{wallet | number :'1.0-0'}}
+            Wallet : {{this.businessDetail ? this.businessDetail.currency_symbol : '₹'}}{{wallet | number :'1.0-0'}}
          </div>
 
          <ul>

@@ -53,7 +53,8 @@ export class AddBusinessComponent {
          gst_number: ['',],
          super_admin: [environment.superAdminId],
          logo_image: [''],
-         country_id: ['101']
+         country_id: ['101'],
+         own_business: ['1'],
       });
       this.getlistofState()
       if (this.business_id) {

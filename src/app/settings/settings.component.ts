@@ -11,11 +11,12 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { Select } from 'primeng/select';
 import { FormsModule } from '@angular/forms';
 import { ToastNotificationService } from '../services/toast-notification.service';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
    selector: 'app-settings',
    standalone: true,
-   imports: [CommonModule, ButtonModule, RouterModule, CardModule, AvatarModule, SkeletonModule, Select, FormsModule],
+   imports: [CommonModule, ButtonModule, RouterModule, CardModule, AvatarModule, SkeletonModule, FormsModule, MatIcon],
    templateUrl: './settings.component.html',
    styleUrl: './settings.component.css'
 })
@@ -30,12 +31,18 @@ export class SettingsComponent {
       this.businessDetail = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
       this.userData = this.apiService.getLocalValueInJSON(localStorage.getItem('userData'));
    }
-   loading: boolean = false;
+   loading: boolean = true;
 
    ngOnInit(): void {
-      this.selectedId = this.businessDetail.id;
-      console.log(this.selectedId)
-      this.getlistofBusiness(); // Make sure listofBusiness is populated first
+      if (this.businessDetail) {
+         this.selectedId = this.businessDetail.id;
+         console.log(this.selectedId)
+         this.getlistofBusiness(); // Make sure listofBusiness is populated first
+      } else {
+         this.loading = false;
+      }
+
+
 
 
    }
@@ -82,7 +89,7 @@ export class SettingsComponent {
          this.apiService.getListOfBusinesses().subscribe({
             next: (data: any) => {
                let ApiResponse: any = data;
-
+               this.loading = false;
                this.listofBusiness = ApiResponse.data;
                this.selectedId = this.businessDetail.id;
 

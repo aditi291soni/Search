@@ -1,12 +1,17 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
+import { SearchService } from './search.service';
+import { ApiService } from './services/api.service';
 
 export const authGuard: CanActivateFn = (route, state) => {
    const router = inject(Router);
+   const authService = inject(ApiService);
+   authService.getLocalValueInJSON(localStorage.getItem('userData'));
 
    // Replace this with your actual authentication check logic
    const isAuthenticated = checkAuthentication();
-
+   const userRoleId = authService.getLocalValueInJSON(localStorage.getItem('userData')); // Fetch role ID from the service
+   const allowedRoles = route.data?.['roles'];
    if (!isAuthenticated) {
       // Redirect to the login page
       router.navigate(['/auth/sign-in'], {

@@ -15,17 +15,27 @@
    gap: 1rem;
    /* Add spacing between cards */
 }
-.customer-name{
+
+.customer-name {
    text-align: center;
 }
-.img{width: 400px !important; height: 400px !important; font-size: 2rem;
 
-   border-radius: 50%; /* Keep it circular */
-   object-fit: cover; /* Ensures the image fills the area */}
+.img {
+   width: 400px !important;
+   height: 400px !important;
+   font-size: 2rem;
+
+   border-radius: 50%;
+   /* Keep it circular */
+   object-fit: cover;
+   /* Ensures the image fills the area */
+}
+
 .customer-card {
    display: flex;
    align-items: center;
    gap: 1rem;
+   margin-top: 10px;
    cursor: pointer;
    /* Add spacing between avatar and details */
 }
@@ -34,16 +44,19 @@
    display: flex;
    flex-direction: column;
 }
-.w-100{
+
+.w-100 {
    width: 100%;
    margin-top: 10px;
-   
+
 }
-.w-1001{
+
+.w-1001 {
    width: 100%;
-  display: flex;
-  justify-content: center;
+   display: flex;
+   justify-content: center;
 }
+
 .customer-name {
    font-weight: bold;
    font-size: 16px;
@@ -53,11 +66,46 @@
    font-size: 14px;
    color: rgb(0, 0, 0);
 }
-.p-avatar-xl{
-width: 6rem !important;
-height: 6rem !important;
+
+.p-avatar-xl {
+   width: 6rem !important;
+   height: 6rem !important;
 }
-.center{
-  display: flex;
-  justify-content: center;
+
+.center {
+   display: flex;
+   justify-content: center;
+}
+
+.custom-button {
+   color: #198ccd
+}
+
+.recent-order-item {
+   border: 1px solid var(--primary-light);
+   margin-bottom: 10px;
+   border-radius: 8px;
+   min-height: 90px;
+   padding: 8px 12px;
+   cursor: pointer;
+   background: var(--background-light);
+   /* Optional background for cards */
+}
+
+.recent-order-items:hover {
+   box-shadow: 0px 0px 0.5px 1px var(--primary-light);
+}
+
+.recent-order-items {
+   border: 1px solid var(--primary-light);
+   border-radius: 8px;
+   /* padding: 12px; */
+   /* margin-top: 10px; */
+   position: relative;
+   background: #d4eef9 !important;
+}
+
+.selected {
+   border-color: #007bff;
+   background-color: #e6f7ff;
 }

@@ -152,7 +152,11 @@ export class NewOrderComponent {
       }
 
       let payload = this.form.value;
-      payload.business_id = this.businessDetails.id;
+      // if (this.businessDetails) {
+      //    payload.business_id = this.businessDetails ? this.businessDetails.id : 488;
+      // }
+      payload.business_id = 983;
+
       payload.pickup_person_name = this.pickupLocation.person_name;
       payload.drop_person_name = this.dropLocation.person_name;
       payload.pickup_phone_no = this.pickupLocation.person_phone_no;
@@ -265,7 +269,10 @@ export class NewOrderComponent {
    createDelivery(): void {
       this.loading = true;
       let payload: any = this.form.value;
-      payload.business_id = this.businessDetails.id;
+      if (this.businessDetails) {
+         payload.business_id = this.businessDetails.id;
+      }
+
 
 
       this.apiService.createDelivery(payload).subscribe({

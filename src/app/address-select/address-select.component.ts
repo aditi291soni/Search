@@ -27,6 +27,7 @@ export class AddressSelectComponent {
    displayDialog: boolean = false;
    addressToDeleteIndex: number | null = null;
    businessDetails: any;
+   userData: any;
    /**
     * Constructor to inject the necessary services.
     * 
@@ -43,7 +44,7 @@ export class AddressSelectComponent {
    ) {
 
       this.businessDetails = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
-
+      this.userData = this.apiService.getLocalValueInJSON(localStorage.getItem('userData'));
 
    }
 
@@ -147,10 +148,15 @@ export class AddressSelectComponent {
       if (!businessId) {
          console.error('Business ID not found in localStorage');
          this.loading = false;
-         return;
-      }
 
-      this.apiService.getAddressList(businessId).subscribe({
+      }
+      let payload: any = {}
+      if (this.businessDetails) {
+         payload.business_id = this.businessDetails ? this.businessDetails.id : 0;
+      } else {
+         payload.user_id = this.userData ? this.userData.id : 0;
+      }
+      this.apiService.getAddressList(payload).subscribe({
          next: (response) => {
             if (response.status === true) {
                this.addressList = response.data || [];

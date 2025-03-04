@@ -11,13 +11,13 @@
       <!-- <button pButton type="button" type="button" icon="pi pi-map-marker" class="p-button-outlined p-button-secondary">
    </button> -->
       <button pButton type="button" style="margin-left: 5px;" type="button" class="p-button-outlined p-button-secondary"
-         (click)="makePhoneCall('123456789')">
+         (click)="makePhoneCall('8319248720')">
          <img src="/assets/brand/support.svg" alt="">
       </button>
       <p-toast />
       <p-confirmdialog />
       <button pButton type="button" type="button" style="margin-left: 5px;" icon="pi pi-times"
-         *ngIf="![29, 28, 27, 26].includes(this.status_id)" (click)="confirm2($event)"
+         *ngIf="![ 29,28, 27, 26,25].includes(this.status_id)" (click)="confirm2($event)"
          class="p-button-outlined p-button-danger">
       </button>
    </div>
@@ -42,13 +42,13 @@
       <div class="main-container">
          <div class="left">
             <div class="header">Order No.</div>
-            <div class="strong">#{{invoice?.order_no ? invoice?.order_no :0}}</div>
+            <div class="bold">#{{invoice?.order_no ? invoice?.order_no :0}}</div>
          </div>
          <div class="right">
             <div class="header">Payment Status</div>
 
             <!-- <div class="strong error">Unpaid</div> -->
-            <div class="strong error"
+            <div class="bold error"
                [ngClass]="{'text-success': invoice?.bill_status == '1', 'text-danger': invoice?.bill_status != '1'}">
                {{this.invoice?.bill_status =='1'?'Paid' :'Unpaid'}}</div>
             <!-- <div class="strong error"  @if="this.invoice?.bill_status =='0'">Unpaid</div>  -->
@@ -62,7 +62,7 @@
          </div>
          <div class="right">
             <div class="header">Sender Phone</div>
-            <div class="strong">{{invoice?.pickup_mobile}}</div>
+            <div class="strong">+91{{invoice?.pickup_mobile}}</div>
          </div>
       </div>
       <div class="main-container">
@@ -72,7 +72,7 @@
          </div>
          <div class="right">
             <div class="header">Receiver Phone</div>
-            <div class="strong">{{invoice?.drop_mobile}}</div>
+            <div class="strong">+91{{invoice?.drop_mobile}}</div>
          </div>
       </div>
 
@@ -81,27 +81,49 @@
       <div class="main-container">
          <div class="left">
             <div class="header">Delivery Type</div>
-            <div class="strong" [ngStyle]="{'color':this.colorcode}">{{this.delivery_name.delivery_name |
+            <div class="bold" [ngStyle]="{'color':this.colorcode}">{{this.delivery_name.delivery_name |
                titlecase}}</div>
-         </div>
-         <div class="right">
-            <div class="header">Time Slot</div>
-            <div class="strong">{{this.timeslot?.start_time?.slice(0, 5) }}-{{this.timeslot?.end_time?.slice(0, 5)}}
-            </div>
-         </div>
-      </div>
-
-      <div class="main-container">
-         <div class="left">
-            <div class="header">Date</div>
-            <div class="strong">{{invoice?.for_booking_date | date: 'dd-MM-yyyy'}}</div>
          </div>
          <div class="right">
             <div class="header">Payment Mode</div>
             <!-- <div class="strong">{{this.delivery_name.pay_on}}</div> -->
-            <div class="strong">{{
-               this.order.pay_on }}</div>
+            <div class="strong">{{ this.order.pay_on =='138' ? "Wallet" :
+               this.order.pay_on | titlecase}}</div>
          </div>
+         <!-- <div class="header">Time Slot</div>
+            <div class="strong">{{this.timeslot ? this.timeslot?.slot_name :'-' }}</div>
+         <div class="strong">{{this.timeslot?.start_time?.slice(0, 5) }}-{{this.timeslot?.end_time?.slice(0, 5)}}
+            </div>  -->
+
+      </div>
+      <div class="main-container">
+         <div class="left">
+            <div class="header">Created On</div>
+            <div class="strong">{{this.invoice.created_on_date | date: 'dd-MM-yyyy' }} <span
+                  *ngIf="this.invoice?.for_booking_time">({{
+                  this.invoice?.for_booking_time?.slice(0, 5) }})</span> </div>
+         </div>
+         <div class="right">
+            <div class="header">Booking Slot</div>
+            <!-- <div class="strong">{{this.timeslot ? this.timeslot?.slot_name :'-' }}</div> -->
+            <div class="strong">{{invoice?.for_booking_date | date: 'dd-MM-yyyy'}} <span
+                  *ngIf="this.timeslot?.slot_name"> {{this.timeslot ?
+                  this.timeslot?.slot_name :'' }}</span></div>
+            <!-- <div class="strong">
+            </div> -->
+         </div>
+      </div>
+      <div class="main-container">
+         <!-- <div class="left">
+            <div class="header">Date</div>
+            <div class="strong">{{invoice?.for_booking_date | date: 'dd-MM-yyyy'}}</div>
+         </div> -->
+         <!-- <div class="right">
+            <div class="header">Payment Mode</div>
+            <div class="strong">{{this.delivery_name.pay_on}}</div>
+            <div class="strong">{{
+               this.order.pay_on | titlecase}}</div>
+         </div> -->
       </div>
       <div class="main-container">
          <div class="left">
@@ -114,7 +136,7 @@
    </div>
 
    <div>
-      <h4>Rider Information</h4>
+      <h4>Rider Details</h4>
       <!-- <h4 class="add">Describes rider details allotted to order</h4> -->
       <div class="recent-order-item">
          <div class="main-container">
@@ -125,7 +147,7 @@
                   this.order.rider_name.slice(1)) : "No rider assigned" }}
                </div>
             </div>
-            <div class="right-icons">
+            <div class="right-icons" *ngIf="this.order.rider_phone && this.status_id !='25'">
                <!-- Phone Button -->
                <div class="first">
                   <button pButton type="button" class="custom-button" (click)="makePhoneCall(this.order.rider_phone)">
@@ -182,17 +204,17 @@
       <!-- <button (click)="showTimeline()" pButton [label]="timelineshow ? 'Hide' : 'Show'"></button> -->
    </div>
    <div>
-      <div class="time-con" *ngIf="timelineshow  ">
+      <div class="time-con" *ngIf="timelineshow && this.status_id !='25'  ">
          <p-timeline *ngIf="isMobile" [value]="events" [layout]="isMobile ? 'vertical' : 'horizontal'"
             align="alternate">
             <ng-template let-event pTemplate="content">
                <div class="timeline-item">
 
                   <div class="icon-wrapper" [ngStyle]="{'color': event.color}">
-                     <i class="status-icon" [class]="event.icon"></i>
+                     <i class="status-icon" [class]="event.icon" [ngStyle]="{ color: event.iconColor }"></i>
                   </div>
                   <div class="timeline-content">
-                     <h4 class="">{{ event.status }}</h4>
+                     <h4 [ngStyle]="{ color: event.textColor }">{{ event.status }}</h4>
                      <!-- <p>{{ event.description }}</p> -->
                   </div>
                </div>
@@ -203,13 +225,13 @@
          <p-timeline *ngIf="!isMobile" [value]="events" layout="horizontal" class="small-timeline">
             <!-- Custom Marker Icons -->
             <ng-template pTemplate="marker" let-event let-i="index">
-               <i [class]="event.icon" style="font-size: 1.5rem"></i>
+               <i [class]="event.icon" [ngStyle]="{ color: event.iconColor }" style="font-size: 1.5rem"></i>
             </ng-template>
 
             <!-- Custom Content -->
             <ng-template pTemplate="content" let-event>
                <div class="p-d-flex p-ai-center">
-                  <div class="p-mr-2">
+                  <div class="p-mr-2" [ngStyle]="{ color: event.textColor }">
                      <b>{{event.status }}</b>
                   </div>
                </div>
@@ -219,7 +241,7 @@
       </div>
    </div>
 </div>
-<div class="recent-orders-container" *ngIf="loading">
+<div class=" recent-orders-container" *ngIf="loading">
    <div class="recent-order-item" *ngFor="let i of [0]">
       <div class="recent-order-flex">
          <div>

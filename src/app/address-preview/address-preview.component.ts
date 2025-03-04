@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
@@ -8,14 +8,18 @@ import { environment } from '../../environments/environment';
 import { Select } from 'primeng/select';
 import { SkeletonModule } from 'primeng/skeleton';
 import { ToastNotificationService } from '../services/toast-notification.service';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { CalendarModule } from 'primeng/calendar';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { ProgressBar } from 'primeng/progressbar';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmDialog } from 'primeng/confirmdialog';
+
 
 @Component({
    selector: 'app-address-preview',
    standalone: true,
-   imports: [CommonModule, ButtonModule, Select, SkeletonModule, CalendarModule, FormsModule],
+   imports: [CommonModule, ButtonModule, Select, SkeletonModule, CalendarModule, FormsModule, ToastModule, ConfirmDialog],
    templateUrl: './address-preview.component.html',
    styleUrls: ['./address-preview.component.css'],
    animations: [
@@ -45,7 +49,7 @@ export class AddressPreviewComponent {
    listofDelivery: any;
    timeslot: any;
    selectedDeliveryType: any;
-   selectedPaymentType: any = 'wallet';
+   selectedPaymentType: any = '138';
    deliveryId: any;
    timeSlot: any;
    selectedPayment: any;
@@ -62,9 +66,14 @@ export class AddressPreviewComponent {
    submitted = false;
    wallet: any = 0;
    riderloader: boolean = false;
+   riderloaders: boolean = false;
    animationState = 'end';
    bill_status: string = '0';
-   constructor(private cdr: ChangeDetectorRef, private apiService: ApiService, private router: Router, private confirmationService: ConfirmationService, private fb: FormBuilder, private route: ActivatedRoute, private toastService: ToastNotificationService) {
+   value: number = 0;
+
+   interval: any;
+   ledger: any;
+   constructor(private messageService: MessageService, private cdr: ChangeDetectorRef, private apiService: ApiService, private router: Router, private confirmationService: ConfirmationService, private fb: FormBuilder, private route: ActivatedRoute, private toastService: ToastNotificationService, private ngZone: NgZone,) {
       this.pickupLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedPickup'));
       this.dropLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedDrop'));
       this.businessDetails = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
@@ -78,6 +87,13 @@ export class AddressPreviewComponent {
       const parts = this.newOrder.distance.split(" ");
       this.distance_value = Math.round(parts[0]); // "5.4"
       this.distance_unit = parts[1];
+      const currentDate = new Date();
+
+
+      this.selectedDate = currentDate.toISOString().split('T')[0];
+      this.formattedDate = this.formatDateToDDMMYYYY(this.selectedDate);
+      this.minDate = currentDate;
+      // console.log(this.formattedDate)
    }
    pickup = {
       name: 'Aditi Mp',
@@ -108,22 +124,27 @@ export class AddressPreviewComponent {
       this.getfinancialYear()
       this.getWalletAmount()
       this.TimeSlot()
+      this.getledger()
    }
 
 
    setDefaultDate() {
       const currentDate = new Date();
       this.selectedDate = currentDate.toISOString().split('T')[0]; // Format: "yyyy-mm-dd"
-      // this.minDate = currentDate;
+      this.minDate = currentDate;
 
       this.formattedDate = this.formatDateToDDMMYYYY(this.selectedDate);
       console.log("hhwheqw", this.selectedDate, this.formattedDate)
       // console.log("Default Selected Date:", this.selectedDate);
    }
    onDateSelect(event: Date) {
+      // const currentDate = new Date();
+
+      // this.minDate = currentDate;
+      // console.log(currentDate)
       const istOffset = 5.5 * 60 * 60 * 1000; // IST offset in milliseconds
       const localDate = new Date(event.getTime() + istOffset); // Convert UTC to IST
-
+      // this.minDa  te = localDate;
       this.selectedDate = localDate.toISOString().split('T')[0]; // Format as "yyyy-mm-dd"
       this.formattedDate = this.formatDateToDDMMYYYY(this.selectedDate);
       console.log("Selected Date (IST):", this.formattedDate);
@@ -150,7 +171,7 @@ export class AddressPreviewComponent {
          next: (response) => {
             this.deliveryList = response.data
             if (response.status === true) {
-               this.selectedDeliveryType = response.data[0].id;
+
                this.order_status = response.data[0].order_status_id
                // this.deliveryList = response.data || [];
                this.deliveryList = response.data.map((deliveryType: any) => {
@@ -167,6 +188,12 @@ export class AddressPreviewComponent {
 
 
                })
+               const firstPickupDelivery = this.deliveryList.find(delivery => delivery.pickup === true);
+
+               // ✅ Set `selectedDeliveryType` accordingly
+               this.selectedDeliveryType = firstPickupDelivery ? firstPickupDelivery.id : this.deliveryList[0]?.id;
+               this.sub_total = firstPickupDelivery ? firstPickupDelivery.price : this.deliveryList[0]?.price;
+               // this.selectedDeliveryType = this.deliveryList[0].id;
                this.sub_total = this.deliveryList[0].price
                console.log(this.deliveryList)
 
@@ -259,6 +286,7 @@ export class AddressPreviewComponent {
          },
          complete: () => {
             this.loading = false;
+            localStorage.setItem('wallet', JSON.stringify(this.wallet));
          },
       });
    }
@@ -324,7 +352,22 @@ export class AddressPreviewComponent {
          console.log('Error in the catch block', error);
       }
    }
+   getledger() {
+      try {
+         this.apiService.getLedger({ business_id: 983 }).subscribe({
+            next: (data: any) => {
+               let ApiResponse: any = data;
+               this.ledger = ApiResponse.data;
 
+            },
+            error: (error: any) => {
+               console.log('Error fetching data', error);
+            }
+         });
+      } catch (error) {
+         console.log('Error in the catch block', error);
+      }
+   }
    onDeliveryTypeSelect(value: any) {
       this.sub_total = value.price
       this.order_status = value.order_status_id
@@ -339,7 +382,7 @@ export class AddressPreviewComponent {
       console.log(value)
       if (value.value == 'online') {
          this.toastService.showError("This service is not working yet")
-      } else if (value.value == 'wallet') {
+      } else if (value.value == '138') {
 
       }
       this.selectedPaymentType = value;
@@ -418,7 +461,7 @@ export class AddressPreviewComponent {
       if (this.loading_button) return; // Prevent multiple clicks while loading
 
       this.loading_button = true; // Disable button immediately
-      if (this.wallet < this.sub_total && this.selectedPaymentType == 'wallet') {
+      if (this.wallet < this.sub_total && this.selectedPaymentType == '138') {
          // this.toastService.showError("Insufficient balance")
          this.loading_button = false;
          this.cdr.detectChanges();
@@ -444,7 +487,7 @@ export class AddressPreviewComponent {
          this.cdr.detectChanges();
          return;
       }
-      if (this.selectedPaymentType == 'cash' && !this.selectedPayment) {
+      if (this.selectedPaymentType == '139' && !this.selectedPayment) {
 
          // this.toastService.showError("Please select payment location")
          this.loading_button = false;
@@ -457,9 +500,22 @@ export class AddressPreviewComponent {
          this.cdr.detectChanges();
          return;
       }
-      try {
 
-         this.apiService.last_invoice({ business_id: this.businessDetails.id }).subscribe({
+      this.ngZone.runOutsideAngular(() => {
+         this.interval = setInterval(() => {
+            this.ngZone.run(() => {
+               this.value = this.value + Math.floor(Math.random() * 10) + 1;
+               if (this.value >= 50) {
+                  this.value = 100;
+                  // this.messageService.add({ severity: 'info', summary: 'Success', detail: 'Process Completed' });
+                  clearInterval(this.interval);
+               }
+            });
+         }, 200);
+      });
+      try {
+         this.riderloader = true;
+         this.apiService.last_invoice({ business_id: this.businessDetails ? this.businessDetails.id : null }).subscribe({
             next: (data: any) => {
                // this.loading_button = true;
                let ApiResponse: any = data;
@@ -468,6 +524,8 @@ export class AddressPreviewComponent {
                if (this.listofInvoice) {
 
                   this.addInvoice(this.listofInvoice)
+
+
                }
 
                else {
@@ -495,9 +553,18 @@ export class AddressPreviewComponent {
 
       const currentDate = new Date();
       const formattedDate = currentDate.toISOString().split('T')[0];
+      const formattedTime = currentDate.getHours().toString().padStart(2, '0') + ":" +
+         currentDate.getMinutes().toString().padStart(2, '0');
       let payload: any = {}
-      payload.business_id = this.businessDetails.id
-      payload.for_user_id = '171',
+      payload.business_id = 983
+      // payload.business_id = this.businessDetails ? this.businessDetails.id : null
+      // payload.for_business_id = this.businessDetails ? this.businessDetails.id : this.userData.id
+      if (this.businessDetails && this.businessDetails.id) {
+         payload.for_business_id = this.businessDetails ? this.businessDetails.id : null
+      } else {
+         payload.for_user_id = this.userData.id
+      }
+      payload.for_user_id = this.userData.id,
          payload.order_status_id = this.order_status
       payload.pay_on_pickup = this.pay_on_pickup,
          payload.pay_on_delivery = this.pay_on_delivery,
@@ -507,7 +574,7 @@ export class AddressPreviewComponent {
       payload.delivery_id = this.deliveryId
       // payload.end_time = this.deliveryId
       // payload.start_time = this.deliveryId
-      // payload.for_booking_time=
+      payload.for_booking_time = formattedTime
       payload.prefix_value = 'ORDER'
       payload.invoice_type = 'order'
       payload.financial_year_id = this.financial
@@ -519,7 +586,7 @@ export class AddressPreviewComponent {
       payload.for_date = formattedDate
       payload.delivery_id = this.deliveryId
       payload.created_on_date = formattedDate
-      payload.for_booking_date = this.selectedDate ? this.selectedDate : formattedDate
+      payload.for_booking_date = this.selectedDeliveryType == '42' ? this.selectedDate : formattedDate
       payload.drop_name = this.dropLocation.person_name
       payload.drop_mobile = this.dropLocation?.person_phone_no
       payload.pickup_name = this.pickupLocation?.person_name
@@ -534,12 +601,19 @@ export class AddressPreviewComponent {
                   console.log('i', this.loading_button)
                   // this.listofInvoice = ApiResponse.data;
                   this.invoice_id = ApiResponse?.data?.id
-                  this.editDelivery(this.deliveryId)
-                  if (this.selectedPaymentType == 'wallet') {
+
+                  if (this.selectedPaymentType == '138') {
                      this.deduct_wallet_amount()
                   }
-
+                  if (this.selectedPaymentType == '138') {
+                     this.bill_status = '1'
+                  } else {
+                     this.bill_status = '0'
+                  }
+                  this.editDelivery(this.deliveryId)
                   this.addTransaction(data.data.id)
+
+
                   // if(  this.selectedPaymentType == 'cash'){
                   //   this.addDeliveryAllot(this.invoice_id)
                   // }
@@ -576,14 +650,23 @@ export class AddressPreviewComponent {
       const currentDate = new Date();
       const formattedDate = currentDate.toISOString().split('T')[0];
       let payload: any = {}
-      payload.business_id = this.businessDetails.id
-      payload.for_user_id = '171',
-         // payload.order_status_id = this.order_status
-         // payload.pay_on_pickup = this.pay_on_pickup,
-         // payload.pay_on_delivery = this.pay_on_delivery,
-         // payload.for_booking_slot_id = Number(this.selectedSlot)
-         // payload.for_slot_id = this.timeslot
-         payload.super_admin_id = environment?.superAdminId
+
+      payload.business_id = 983
+      // payload.business_id = this.businessDetails ? this.businessDetails.id : null
+      if (this.businessDetails && this.businessDetails.id) {
+         payload.for_business_id = this.businessDetails ? this.businessDetails.id : null
+      } else {
+         payload.for_user_id = this.userData.id
+      }
+      // payload.for_business_id = this.businessDetails ? this.businessDetails.id : this.userData.id
+
+      payload.for_user_id = this.userData.id,
+         payload.order_status_id = this.order_status
+      // payload.pay_on_pickup = this.pay_on_pickup,
+      // payload.pay_on_delivery = this.pay_on_delivery,
+      // payload.for_booking_slot_id = Number(this.selectedSlot)
+      // payload.for_slot_id = this.timeslot
+      payload.super_admin_id = environment?.superAdminId
       payload.delivery_id = this.deliveryId
       // payload.end_time = this.deliveryId
       // payload.start_time = this.deliveryId
@@ -622,7 +705,8 @@ export class AddressPreviewComponent {
       const currentDate = new Date();
       const formattedDate = currentDate.toISOString().split('T')[0];
       let payload: any = {}
-      payload.business_id = this.businessDetails.id
+      payload.business_id = 983
+      // payload.business_id = this.businessDetails ? this.businessDetails.id : 983
       // payload.for_user_id=this.userId ? this.userId : this.default
       payload.invoice_id = id
       payload.dr_amount = this.sub_total
@@ -630,6 +714,7 @@ export class AddressPreviewComponent {
       payload.super_admin_id = environment.superAdminId
       payload.created_on_date = formattedDate
       payload.payment_date = formattedDate
+      payload.pay_for_ledger = this.selectedPaymentType
       try {
          this.apiService.addTransaction(payload).subscribe({
             next: (data: any) => {
@@ -640,13 +725,17 @@ export class AddressPreviewComponent {
                // this.clearLocal()
                // this.addNotification()
                if (data.status) {
-                  if (this.selectedPaymentType == 'wallet') {
+                  if (this.selectedPaymentType == '138') {
                      this.bill_status = '1'
                   } else {
                      this.bill_status = '0'
                   }
                   // this.router.navigate(['/dashboard']);
                   this.editInvoice()
+
+
+
+
 
 
                   // this.toastService.showSuccess("Order Placed Successfully")
@@ -677,7 +766,9 @@ export class AddressPreviewComponent {
       const currentDate = new Date();
       const formattedDate = currentDate.toISOString().split('T')[0];
       let payload: any = {}
-      payload.business_id = this.businessDetails.id
+
+      payload.business_id = 983
+      // payload.business_id = this.businessDetails ? this.businessDetails.id : null
       // payload.for_user_id=this.userId ? this.userId : this.default
       payload.invoice_id = id
       payload.cr_amont = this.sub_total
@@ -685,11 +776,12 @@ export class AddressPreviewComponent {
       payload.super_admin_id = environment.superAdminId
       payload.created_on_date = formattedDate
       payload.payment_date = formattedDate
+      payload.pay_for_ledger = this.selectedPaymentType
       try {
          this.apiService.addTransaction(payload).subscribe({
             next: (data: any) => {
                // this.loading_button = true;
-               if (this.selectedPaymentType == 'wallet') {
+               if (this.selectedPaymentType == '138') {
                   this.bill_status = '1'
                } else {
                   this.bill_status = '0'
@@ -729,8 +821,17 @@ export class AddressPreviewComponent {
       }
    }
    editDelivery(id: any) {
+      const currentDate = new Date();
+      const formattedDate = currentDate.toISOString().split('T')[0];
+      const formattedTime = currentDate.getHours().toString().padStart(2, '0') + ":" +
+         currentDate.getMinutes().toString().padStart(2, '0');
       let payload: any = {}
-      payload.business_id = this.businessDetails.id
+      payload.business_id = 983
+      if (this.businessDetails && this.businessDetails.id) {
+         payload.for_business_id = this.businessDetails ? this.businessDetails.id : null
+      } else {
+         payload.for_user_id = this.userData.id
+      }      // payload.business_id = this.businessDetails ? this.businessDetails.id : null
       payload.order_delivery_details_id = id
       payload.status = 1
       payload.order_status_id = this.order_status
@@ -738,9 +839,11 @@ export class AddressPreviewComponent {
       payload.order_value = this.sub_total
       payload.delivery_charges = this.sub_total
       payload.time_slot = this.timeslot
+      payload.for_booking_time = formattedTime
       payload.pickup_address_id = this.pickupLocation.id
       payload.drop_address_id = this.dropLocation.id
-      payload.delivery_payment_status = this.selectedPaymentType
+      // payload.delivery_payment_status = this.selectedPaymentType
+      payload.delivery_payment_status = this.bill_status
       payload.drop_person_name = this.dropLocation.person_name
       payload.drop_phone_no = this.dropLocation.person_phone_no
       payload.pickup_person_name = this.pickupLocation.person_name
@@ -750,6 +853,7 @@ export class AddressPreviewComponent {
       payload.pickup_address = this.pickupLocation.address_details
       payload.parcel_weight = this.listofInvoice
       payload.invoice_id = this.invoice_id ? this.invoice_id : 0
+      payload.bill_status = this.bill_status;
       payload.pay_on = this.selectedPayment ? this.selectedPayment : this.selectedPaymentType
       payload.time_slot_id = Number(this.selectedSlot)
       // payload.user_id=
@@ -758,6 +862,8 @@ export class AddressPreviewComponent {
             next: (data: any) => {
                let ApiResponse: any = data;
                this.addNotification()
+
+
                // this.loading_button = true;
                // this.listofDelivery = ApiResponse.data;
                // this.clearLocal()
@@ -777,7 +883,16 @@ export class AddressPreviewComponent {
 
    editDeliveries(id: any) {
       let payload: any = {}
-      payload.business_id = this.businessDetails.id
+
+      payload.business_id = 983
+
+
+      if (this.businessDetails && this.businessDetails.id) {
+         payload.for_business_id = this.businessDetails ? this.businessDetails.id : null
+      } else {
+         payload.for_user_id = this.userData.id
+      }
+
       payload.order_delivery_details_id = id
       payload.status = 1
       payload.for_booking_slot_id = Number(this.selectedSlot)
@@ -786,9 +901,11 @@ export class AddressPreviewComponent {
       payload.order_value = this.sub_total
       payload.delivery_charges = this.sub_total
       payload.time_slot = this.timeslot
+      payload.bill_status = this.bill_status;
       payload.pickup_address_id = this.pickupLocation.id
       payload.drop_address_id = this.dropLocation.id
-      payload.delivery_payment_status = this.selectedPaymentType
+      // payload.delivery_payment_status = this.selectedPaymentType
+      payload.delivery_payment_status = this.bill_status
       payload.drop_person_name = this.dropLocation.person_name
       payload.drop_phone_no = this.dropLocation.person_phone_no
       payload.pickup_person_name = this.pickupLocation.person_name
@@ -849,10 +966,13 @@ export class AddressPreviewComponent {
             "latitude": Number(this.pickupLocation.lat_val)
          }
       }
+
       console.log(typeof (payload.pickup_location.latitude))
       try {
+
          this.apiService.addNotification(payload).subscribe({
             next: (data: any) => {
+
                if (data.status) {
 
                   console.log("api call3")
@@ -868,25 +988,116 @@ export class AddressPreviewComponent {
                         this.animationState = this.animationState === 'start' ? 'end' : 'start';
                      }, 500);
 
-                     // if (this.order_status != '33') {
-
-                     //    this.confirmationService.confirm({
-                     //       message: 'Thank Your Order Placed Successfully!',
-                     //       header: 'Thank You!',
-                     //       icon: 'pi pi-check-circle',
-                     //       acceptLabel: 'OK',
-                     //       rejectVisible: false, // Hides the "No" button
-                     //       accept: () => {
-                     //          console.log('Thank you message displayed');
-                     //       }
-
-                     //    });
-                     //    this.riderloader = false
-                     //    this.clearLocal()
-                     //    return
-                     // }
 
 
+
+                  }
+
+                  else if (this.selectedDeliveryType == '45') {
+
+                     this.confirmationService.confirm({
+                        message: 'Thank Your Order Placed Successfully and will be delivered soon under Standard Delivery!',
+                        header: 'Thank You!',
+                        icon: 'pi pi-check-circle',
+                        acceptLabel: 'OK',
+                        rejectVisible: false, // Hides the "No" button
+                        accept: () => {
+                           console.log('Thank you message displayed');
+                        }
+
+                     });
+                     this.clearLocal()
+
+                  }
+                  else if (this.selectedDeliveryType == '42') {
+
+                     this.confirmationService.confirm({
+                        message: 'Thank Your Order Placed Successfully and will be delivered soon as per Schedule!',
+                        header: 'Thank You!',
+                        icon: 'pi pi-check-circle',
+                        acceptLabel: 'OK',
+                        rejectVisible: false, // Hides the "No" button
+                        accept: () => {
+                           console.log('Thank you message displayed');
+                        }
+
+                     });
+                     this.clearLocal()
+                  }
+                  else {
+                     // this.ngZone.runOutsideAngular(() => {
+                     //    this.interval = setInterval(() => {
+                     //       this.ngZone.run(() => {
+                     //          this.value = this.value + Math.floor(Math.random() * 10) + 1;
+                     //          if (this.value >= 100) {
+                     //             this.value = 100;
+                     //             // this.messageService.add({ severity: 'info', summary: 'Success', detail: 'Process Completed' });
+                     //             clearInterval(this.interval);
+                     //          }
+                     //       });
+                     //    }, 200);
+                     // });
+                     // setTimeout(() => {
+
+                     this.confirmationService.confirm({
+                        message: 'Thank Your Order Placed Successfully and will be delivered soon !',
+                        header: 'Thank You!',
+                        icon: 'pi pi-check-circle',
+                        acceptLabel: 'OK',
+                        rejectVisible: false, // Hides the "No" button
+                        accept: () => {
+                           console.log('Thank you message displayed');
+                        }
+
+                     });
+                     // }, 45000); // 45 seconds delay
+                     this.clearLocal()
+                  }
+               }
+               else {
+                  this.riderloader = true;
+                  // this.ngZone.runOutsideAngular(() => {
+                  //    this.interval = setInterval(() => {
+                  //       this.ngZone.run(() => {
+                  //          this.value = this.value + Math.floor(Math.random() * 10) + 1;
+                  //          if (this.value >= 100) {
+                  //             this.value = 100;
+                  //             // this.messageService.add({ severity: 'info', summary: 'Success', detail: 'Process Completed' });
+                  //             clearInterval(this.interval);
+                  //          }
+                  //       });
+                  //    }, 200);
+                  // });
+
+                  console.log(this.selectedDeliveryType, "rider")
+
+                  if (this.selectedDeliveryType == '43' || this.selectedDeliveryType == '40') {
+                     this.startDeliveryCheck()
+                     setTimeout(() => {
+                        this.router.navigate(['/dashboard']);
+                     }, 3000);
+                     this.order_status = 35,
+                        this.confirmationService.confirm({
+                           message: 'No Rider is Available at your Location please try Standard or Schedule Delivery!',
+                           header: 'Sorry!',
+                           icon: 'pi pi-times-circle',
+                           acceptLabel: 'OK',
+                           rejectVisible: false, // Hides the "No" button
+                           // styleClass: 'custom-confirm-dialog', // Custom class for styling
+
+                           accept: () => {
+                              console.log('Thank you message displayed Express');
+                           }
+
+                        });
+                     if (this.selectedPaymentType == '138') {
+                        this.add_wallet_amount()
+                     }
+                     this.creaditTransaction(this.invoice_id)
+                     this.cancel()
+                     // this.noorder()
+                     this.loading_button = false;
+                     // I have added this temproray code to check the rider is available or not in standarad as because we were getting status false for temporary server.
                   }
 
                   else if (this.selectedDeliveryType == '45') {
@@ -918,58 +1129,6 @@ export class AddressPreviewComponent {
                      });
                      this.clearLocal()
                   }
-                  else {
-                     this.confirmationService.confirm({
-                        message: 'Thank Your Order Placed Successfully and will be delivered soon !',
-                        header: 'Thank You!',
-                        icon: 'pi pi-check-circle',
-                        acceptLabel: 'OK',
-                        rejectVisible: false, // Hides the "No" button
-                        accept: () => {
-                           console.log('Thank you message displayed');
-                        }
-
-                     });
-                     this.clearLocal()
-                  }
-               }
-               else {
-                  this.riderloader = true;
-                  console.log(this.selectedDeliveryType, "rider")
-                  if (this.selectedDeliveryType == '43' || this.selectedDeliveryType == '40') {
-                     this.confirmationService.confirm({
-                        message: 'No Rider is Available at your Location please try Standard or Schedule Delivery',
-                        // header: 'Thank You!',
-                        icon: 'pi pi-check-circle',
-                        acceptLabel: 'OK',
-                        rejectVisible: false, // Hides the "No" button
-                        accept: () => {
-                           console.log('Thank you message displayed');
-                        }
-
-                     });
-                     if (this.selectedPaymentType == 'wallet') {
-                        this.add_wallet_amount()
-                     }
-                     this.creaditTransaction(this.invoice_id)
-                     this.clearLocal()
-                     this.loading_button = false;
-                     // I have added this temproray code to check the rider is available or not in standarad as because we were getting status false for temporary server.
-                  } else if (this.selectedDeliveryType == '45') {
-                     this.confirmationService.confirm({
-                        message: 'Thank Your Order Placed Successfully and will be delivered soon under Standard Delivery!',
-                        header: 'Thank You!',
-                        icon: 'pi pi-check-circle',
-                        acceptLabel: 'OK',
-                        rejectVisible: false, // Hides the "No" button
-                        accept: () => {
-                           console.log('Thank you message displayed');
-                        }
-
-                     });
-                     this.clearLocal()
-
-                  }
                }
                this.loading_button = false;
             },
@@ -979,8 +1138,10 @@ export class AddressPreviewComponent {
 
                this.confirmationService.confirm({
                   message: 'No Rider is Available at your Location please try Standard or Schedule Delivery',
-                  // header: 'Thank You!',
-                  icon: 'pi pi-check-circle',
+                  header: 'Sorry!',
+                  icon: 'pi pi-times-circle',
+                  // styleClass: 'custom-confirm-dialog', // Custom class for styling
+
                   acceptLabel: 'OK',
                   rejectVisible: false, // Hides the "No" button
                   accept: () => {
@@ -989,10 +1150,11 @@ export class AddressPreviewComponent {
 
                });
                this.cancel()
-               if (this.selectedPaymentType == 'wallet') {
+               if (this.selectedPaymentType == '138') {
                   this.add_wallet_amount()
                }
                this.creaditTransaction(this.invoice_id)
+               this.editInvoice()
                // this.clearLocal()
                this.loading_button = false;
 
@@ -1002,7 +1164,7 @@ export class AddressPreviewComponent {
       } catch (error) {
          console.log('Error in the catch block', error);
       }
-
+      this.getWalletAmount()
    }
 
    startDeliveryCheck() {
@@ -1021,23 +1183,27 @@ export class AddressPreviewComponent {
 
             this.confirmationService.confirm({
                message: 'No Rider is Available at your Location please try Standard or Schedule Delivery',
-               // header: 'Thank You!',
-               icon: 'pi pi-check-circle',
+               header: 'Sorry!',
+               icon: 'pi pi-times-circle',
                acceptLabel: 'OK',
+               // style: 'custom-confirm-dialog', // Custom class for styling
+
                rejectVisible: false, // Hides the "No" button
                accept: () => {
-                  console.log('Thank you message displayed');
+                  console.log('Thank you message displayed Else');
                }
 
             });
+            this.order_status = 35
             this.cancel()
-            if (this.selectedPaymentType == 'wallet') {
+            if (this.selectedPaymentType == '138') {
                this.add_wallet_amount()
             }
 
             this.creaditTransaction(this.invoice_id)
             // this.clearLocal()
             this.loading_button = false;
+
             this.editInvoice()
             return;
          }
@@ -1126,35 +1292,84 @@ export class AddressPreviewComponent {
       }
    }
    cancels() {
+      // this.riderloader = false;
       this.bill_status = '0'
       this.order_status = 25
-      if (this.selectedPaymentType == 'wallet') {
+      if (this.selectedPaymentType == '138') {
          this.add_wallet_amount()
       }
       this.creaditTransaction(this.invoice_id)
+      this.editInvoice()
       // this.clearLocal()
       this.loading_button = false;
-      this.editInvoice()
-      localStorage.removeItem('selectedPickup');
-      localStorage.removeItem('selectedDrop');
-      localStorage.removeItem('new-order');
-      this.router.navigate(['/dashboard']);
+      this.cancel()
+
 
    }
    cancel() {
-      this.order_status = 25
+      this.getWalletAmount()
+      // this.order_status = 25
       this.editDeliveries(this.deliveryId)
 
       localStorage.removeItem('selectedPickup');
       localStorage.removeItem('selectedDrop');
       localStorage.removeItem('new-order');
-      this.router.navigate(['/dashboard']);
+      sessionStorage.setItem('dashboardLoaded', 'false');
+      this.riderloaders = false;
+      setTimeout(() => {
+         this.router.navigate(['/dashboard']);
+      }, 3000);
+      return;
+
+   }
+   noorder() {
+      this.getWalletAmount()
+      // this.order_status = 25
+      this.editDeliveries(this.deliveryId)
+      this.riderloaders = false;
    }
    clearLocal() {
 
       localStorage.removeItem('selectedPickup');
       localStorage.removeItem('selectedDrop');
       localStorage.removeItem('new-order');
-      this.router.navigate(['/dashboard']);
+      this.riderloaders = false;
+      setTimeout(() => {
+         this.router.navigate(['/dashboard']);
+      }, 3000);
+      return;
+
+   }
+   confirm2(event: Event) {
+
+      console.log(event)
+      this.confirmationService.confirm({
+         // target: event.target as EventTarget,
+         message: 'Do you want to cancel this order?',
+         header: ' ',
+         icon: 'pi pi-info-circle',
+         rejectLabel: 'Cancel',
+         closable: false,
+         rejectButtonProps: {
+            label: 'Cancel',
+            severity: 'secondary',
+            outlined: true,
+         },
+         acceptButtonProps: {
+            label: 'Confirm',
+            severity: 'danger',
+         },
+
+         accept: () => {
+            console.log(event.target)
+
+            this.cancels()
+            this.confirmationService.close();
+            // this.messageService.add({ severity: 'info', summary: 'Confirmed', detail: 'Record deleted' });
+         },
+         reject: () => {
+            this.confirmationService.close();
+         },
+      });
    }
 }
