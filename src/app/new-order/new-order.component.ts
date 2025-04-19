@@ -108,6 +108,7 @@ export class NewOrderComponent {
          next: (response) => {
             if (response.status === true) {
                this.vehicleTypeList = response.data || [];
+
                if (!this.newOrder) {
                   this.selectedVehicle = response.data[0].id;
 
@@ -171,6 +172,7 @@ export class NewOrderComponent {
             next: (data: any) => {
                if (data.status) {
                   this.router.navigate(['orders/new-order/order-preview', data?.data?.id]);
+                  localStorage.setItem('delivery_id', JSON.stringify(data?.data?.id));
                   let ApiResponse: any = data;
                } else {
                   this.toastService.showError(data.msg);

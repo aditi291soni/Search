@@ -113,6 +113,7 @@ export class ListOfAddressComponent {
                console.log(this.addressList);
                this.addressLists = [...this.addressList];
                this.cdr.detectChanges();
+               this.loading = false
                // localStorage.setItem('address', JSON.stringify(this.addressList));
             } else {
                console.error('Error fetching list of business:', response.message);
@@ -157,12 +158,14 @@ export class ListOfAddressComponent {
          },
 
          accept: () => {
+            this.loading = true
             console.log(event.target)
             this.deleteAddress(addressId)
 
             // this.messageService.add({ severity: 'info', summary: 'Confirmed', detail: 'Record deleted' });
          },
          reject: () => {
+            this.loading = false
             this.confirmationService.close();
          },
       });

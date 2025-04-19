@@ -141,7 +141,7 @@
                [class.selected]="selectedPaymentType == '138'">
                <i class="pi pi-wallet"></i> Wallet
             </div>
-            <div class="recent-order-items" *ngIf="selectedDeliveryType !='43'" (click)="paymentTypesSelection('139')"
+            <div class="recent-order-items" *ngIf="autoaccept == 1" (click)="paymentTypesSelection('139')"
                [class.selected]="selectedPaymentType == '139'">
                <i class="pi pi-money-bill"></i> Cash
             </div>
@@ -167,7 +167,13 @@
       </small>
 
       <div>
+         <!-- <div class="text-center ">
+            <div class="space">
+               <button pButton class="p-button-outlined p-button-secondary ml-5" label="Apply Coupan"
+                  (click)="coupan()"></button>
 
+            </div>
+         </div> -->
 
 
 
@@ -207,7 +213,10 @@
             <p class="search-text"> {{this.selectedDeliveryType == '43' || this.selectedDeliveryType == '40' ?
                "Searching for a rider" :"Creating your Order"}}<span class="dots"></span></p>
          </div>
+
          <img src="assets/brand/rider2.gif" alt="" [@searching]="animationState">
+
+
          <!-- <i class="pi pi-spin pi-spinner" [@searching]="animationState"></i> -->
 
       </div>

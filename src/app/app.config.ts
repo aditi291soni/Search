@@ -16,17 +16,20 @@ export const appConfig: ApplicationConfig = {
       providePrimeNG({
          theme: {
             preset: Noir,
+            options: {
+               darkModeSelector: false,
+            }
          },
       }),
       provideRouter(routes),
       provideHttpClient(withInterceptors([authInterceptor])), // Register the interceptor here
       MessageService, provideAnimationsAsync(), provideServiceWorker('ngsw-worker.js', {
-            enabled: !isDevMode(),
-            registrationStrategy: 'registerWhenStable:30000'
-          }), provideServiceWorker('ngsw-worker.js', {
-            enabled: !isDevMode(),
-            registrationStrategy: 'registerWhenStable:30000'
-          }),  // Provide MessageService globally
+         enabled: !isDevMode(),
+         registrationStrategy: 'registerWhenStable:30000'
+      }), provideServiceWorker('ngsw-worker.js', {
+         enabled: !isDevMode(),
+         registrationStrategy: 'registerWhenStable:30000'
+      }),  // Provide MessageService globally
       // ToastModule,     // Ensure ToastModule is available globally
    ],
 };

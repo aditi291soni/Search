@@ -77,11 +77,14 @@
    <div *ngIf="!loading">
       <h3>Select Vehicle<span class="mandatory">*</span></h3>
       <div class="vehicle-cards">
-         <div *ngFor="let vehicle of vehicleTypeList" class="vehicle-card"
-            [class.selected]="form.get('vehicle_type_id')?.value === vehicle.id" (click)="selectVehicle(vehicle.id)">
-            <img [src]="vehicle.image" alt="{{ vehicle.vehicle_type }}" class="vehicle-image" />
-            <div class="vehicle-name">{{ vehicle?.vehicle_type }}</div>
-         </div>
+         <ng-container *ngFor="let vehicle of vehicleTypeList">
+            <div class="vehicle-card" *ngIf="vehicle.status =='1'"
+               [class.selected]="form.get('vehicle_type_id')?.value === vehicle.id" (click)="selectVehicle(vehicle.id)">
+               <img [src]="vehicle.image" alt="{{ vehicle.vehicle_type }}" class="vehicle-image" />
+               <div class="vehicle-name">{{ vehicle?.vehicle_type }}</div>
+            </div>
+         </ng-container>
+
       </div>
 
       <h3>Select Pickup Location<span class="mandatory">*</span></h3>

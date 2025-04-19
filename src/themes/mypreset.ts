@@ -35,22 +35,22 @@ const Noir = definePreset(Aura, {
                textColor: '#415b61',  // Set custom text color for light mode
             },
          },
-         dark: {
-            primary: {
-               color: palette.primary.light,  // Light color for primary in dark mode
-               inverseColor: palette.primary.main,  // Inverse of primary main color
-               // hoverColor: palette.primary.light,  // Lighter color for hover
-               activeColor: palette.primary.light,  // Lighter color for active
-            },
-            highlight: {
-               background: 'rgba(250, 250, 250, .16)',  // A subtle highlight background for dark mode
-               focusBackground: 'rgba(250, 250, 250, .24)',  // A bit darker for focus background
-               color: 'rgba(255,255,255,.87)',  // Light color for text in dark mode
-               focusColor: 'rgba(255,255,255,.87)',  // Focus text color
-               headingColor: 'rgba(255, 255, 255, 0.9)',  // Set custom heading color for dark mode
-               textColor: 'rgba(255, 255, 255, 0.87)',  // Set custom text color for dark mode
-            },
-         },
+         // dark: {
+         //    primary: {
+         //       color: palette.primary.light,  // Light color for primary in dark mode
+         //       inverseColor: palette.primary.main,  // Inverse of primary main color
+         //       // hoverColor: palette.primary.light,  // Lighter color for hover
+         //       activeColor: palette.primary.light,  // Lighter color for active
+         //    },
+         //    highlight: {
+         //       background: 'rgba(250, 250, 250, .16)',  // A subtle highlight background for dark mode
+         //       focusBackground: 'rgba(250, 250, 250, .24)',  // A bit darker for focus background
+         //       color: 'rgba(255,255,255,.87)',  // Light color for text in dark mode
+         //       focusColor: 'rgba(255,255,255,.87)',  // Focus text color
+         //       headingColor: 'rgba(255, 255, 255, 0.9)',  // Set custom heading color for dark mode
+         //       textColor: 'rgba(255, 255, 255, 0.87)',  // Set custom text color for dark mode
+         //    },
+         // },
       },
       focusRing: {
          width: '2px',

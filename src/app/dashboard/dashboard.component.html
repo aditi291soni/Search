@@ -13,8 +13,16 @@
    <app-corousel></app-corousel>
 </div> -->
 <!-- TODO chnag -->
-<img class="banner-img" *ngIf="!loading"
-   src="https://ik.imagekit.io/praveenarbs/api-images/super-announcement/24/17368555934940400.jpg" alt="banner" />
+<p-carousel *ngIf="!loading" [value]="listofBanner" [numVisible]="1" [numScroll]="1" [circular]="true"
+   [autoplayInterval]="4000" [showIndicators]="true">
+
+   <ng-template pTemplate="item" let-listofBanner>
+      <img [src]="listofBanner" alt="banner" style="width: 100%; " />
+   </ng-template>
+
+</p-carousel>
+<!-- <img class="banner-img" *ngIf="!loading"
+   src="https://ik.imagekit.io/praveenarbs/api-images/super-announcement/24/17368555934940400.jpg" alt="banner" /> -->
 <br><br>
 
 <!-- Options as Actions -->

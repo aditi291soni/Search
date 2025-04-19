@@ -7,11 +7,12 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { NoDataFoundComponent } from '../no-data-found/no-data-found.component';
 import { CorouselComponent } from '../corousel/corousel.component';
 import { environment } from '../../environments/environment';
+import { CarouselModule } from 'primeng/carousel';
 
 @Component({
    selector: 'app-dashboard',
    standalone: true,
-   imports: [CommonModule, ButtonModule, RouterModule, SkeletonModule, NoDataFoundComponent],
+   imports: [CommonModule, ButtonModule, RouterModule, SkeletonModule, NoDataFoundComponent, CarouselModule],
    templateUrl: './dashboard.component.html',
    styleUrls: ['./dashboard.component.css'],
 })
@@ -21,7 +22,23 @@ export class DashboardComponent implements OnInit {
     * @type {any[]}
     */
    business: any[] = [];
-
+   responsiveOptions = [
+      {
+         breakpoint: '1024px',
+         numVisible: 1,
+         numScroll: 1
+      },
+      {
+         breakpoint: '768px',
+         numVisible: 1,
+         numScroll: 1
+      },
+      {
+         breakpoint: '560px',
+         numVisible: 1,
+         numScroll: 1
+      }
+   ];
    /**
     * Indicates whether data is currently loading.
     * @type {boolean}
@@ -31,6 +48,8 @@ export class DashboardComponent implements OnInit {
    businessDetails: any;
    order: any[] = [];
    orderstatus: any[] = [];
+   orderComplete: any;
+   listofBanner: any;
 
    /**
     * Creates an instance of DashboardComponent.
@@ -40,7 +59,7 @@ export class DashboardComponent implements OnInit {
       this.userInfo = this.apiService.getLocalValueInJSON(localStorage.getItem('userData'));
       this.businessDetails = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
       this.orderstatus = this.apiService.getLocalValueInJSON(localStorage.getItem('order-status'));
-      // this.orderStatus = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
+      this.orderComplete = this.apiService.getLocalValueInJSON(localStorage.getItem('orderComplete'));
    }
 
    /**
@@ -51,6 +70,7 @@ export class DashboardComponent implements OnInit {
 
       this.fetchOrderList();
       this.getOrderStatus();
+      this.getlistofBanner()
       this.clearLocal();
       this.cdr.detectChanges();
 
@@ -63,11 +83,75 @@ export class DashboardComponent implements OnInit {
       // this.clearLocal()
       // this.cdr.detectChanges();
    }
+   getlistofBanner() {
+      this.loading = true
+      try {
+         this.apiService.list_of_banner({ business_id: 983 }).subscribe({
+            next: (data: any) => {
+               if (data.status) {
+                  let ApiResponse: any = data;
+                  // this.listofBanner = ApiResponse.data;
 
+                  this.listofBanner = ApiResponse.data
+                     // .filter((banner: any) =>
+
+                     //    banner.super_admin_id == environment.superAdminId && banner.plat_from == 'vendor-app'
+                     // )
+                     .map((banner: any) => banner.image + '?tr=w-300,h-120');
+
+                  console.log("banner", this.listofBanner)
+
+
+               } else {
+
+                  this.loading = false
+               }
+
+            },
+            error: (error: any) => {
+
+               console.log('Error fetching data', error);
+            }
+         });
+      } catch (error) {
+         console.log('Error in the catch block', error);
+      }
+   }
+   editDeliveries(data: any) {
+      console.log("data", data)
+
+
+      let payload = {
+
+         business_id: data.business_id,
+         status: data.status,
+         order_delivery_details_id: data.id,
+         order_status_id: 25, // Update only order_status_id
+      };
+      try {
+         this.apiService.edit_order_delivery_details(payload).subscribe({
+            next: (data: any) => {
+               let ApiResponse: any = data;
+               localStorage.setItem('orderComplete', 'true');
+
+
+            },
+            error: (error: any) => {
+               console.log('Error fetching data', error);
+
+               this.cdr.detectChanges();
+            }
+         });
+      } catch (error) {
+         console.log('Error in the catch block', error);
+      }
+   }
    /**
     * Fetches the list of businesses from the API and updates the component state.
     */
+
    fetchOrderList(): void {
+
       this.loading = true;
       let payload: any = {};
       payload.business_id = 983;
@@ -90,12 +174,19 @@ export class DashboardComponent implements OnInit {
 
                // Ensure orders have order_status.id matched correctly
                this.order = response.data
+
                   .filter((order: any) => order.order_no && order.order_status_id !== 35)
                   .slice(0, 3)
                   .map((order: any) => ({
                      ...order,
                      status_name: this.getDynamicStatusName(order?.order_status_id)
                   }));
+               // if (!this.orderComplete) {
+               //    this.editDeliveries(this.order[0]
+
+
+               //    )
+               // }
                this.cdr.detectChanges();
             } else {
                console.error('Error fetching list of business:', response.message);

@@ -16,6 +16,8 @@
       </button>
       <p-toast />
       <p-confirmdialog />
+      <!-- <p-progressSpinner *ngIf="loadings" styleClass="custom-spinner"></p-progressSpinner> -->
+
       <button pButton type="button" type="button" style="margin-left: 5px;" icon="pi pi-times"
          *ngIf="![ 29,28, 27, 26,25].includes(this.status_id)" (click)="confirm2($event)"
          class="p-button-outlined p-button-danger">
@@ -131,7 +133,13 @@
             <div class="strong">{{this.businessDetails?.currency_symbol ?this.businessDetails?.currency_symbol :
                '₹'}}{{invoice?.subtotal}}</div>
          </div>
-
+         <div class="right">
+            <div class="header">Vehicle Type</div>
+            <!-- <div class="strong">{{this.timeslot ? this.timeslot?.slot_name :'-' }}</div> -->
+            <div class="strong">{{vehicle_name}} </div>
+            <!-- <div class="strong">
+            </div> -->
+         </div>
       </div>
    </div>
 

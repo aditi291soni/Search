@@ -3,7 +3,7 @@ import { ButtonModule } from 'primeng/button';
 import { TimelineModule } from 'primeng/timeline';
 import { ApiService } from '../services/api.service';
 import { FormBuilder } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { CommonModule } from '@angular/common';
 import { ToastNotificationService } from '../services/toast-notification.service';
@@ -11,11 +11,14 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { ConfirmDialog, ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { Subscription } from 'rxjs';
+
 @Component({
    selector: 'app-order-view',
    standalone: true,
    providers: [ConfirmationService, MessageService],
-   imports: [ButtonModule, TimelineModule, CommonModule, SkeletonModule, ConfirmDialog, ToastModule],
+   imports: [ButtonModule, TimelineModule, CommonModule, SkeletonModule, ConfirmDialog, ToastModule, ProgressSpinnerModule],
    templateUrl: './order-view.component.html',
    styleUrls: ['./order-view.component.css'],
 })
@@ -24,6 +27,7 @@ export class OrderViewComponent {
    isMobile = window.innerWidth < 768;
    order: any = {};
    loading: boolean = true;
+   loadings: boolean = false;
    invoice: any;
    invoiceId: any;
    businessDetails: any;
@@ -41,6 +45,8 @@ export class OrderViewComponent {
    order_status: any;
    loading_button: boolean = false;
    userData: any;
+   intervalId: any;
+   vehicle_name: any;
 
    constructor(
       private apiService: ApiService,
@@ -63,11 +69,21 @@ export class OrderViewComponent {
    ngOnInit(): void {
       this.getInvoice();
 
+      // this.intervalId = setInterval(() => {
+      //    this.getInvoice(); // Call API periodically
+      // }, 10000);
+
 
    }
-
+   ngOnDestroy(): void {
+      // Clear interval when component is destroyed to avoid memory leaks
+      if (this.intervalId) {
+         clearInterval(this.intervalId);
+      }
+   }
    @HostListener('window:resize', ['$event'])
    onResize(event: Event) {
+      console.log((event.target as Window))
       this.isMobile = (event.target as Window).innerWidth < 768;
    }
 
@@ -116,6 +132,7 @@ export class OrderViewComponent {
 
                this.getTimeSlot(this.order?.time_slot_id);
                this.getDelivery(this.order?.delivery_type_id);
+               this.getVehicle(this.order?.vehicle_type_id)
                this.getOrderStatus();
                this.getDynamicStatusName(this.order.order_status_id)
 
@@ -216,7 +233,28 @@ export class OrderViewComponent {
 
       });
    }
+   getVehicle(id: any): void {
+      this.loading = true;
+      let payload = {
+         super_admin_id: environment.superAdminId,
+         vehicle_type_id: id,
+      };
 
+      this.apiService.getVehicle(payload).subscribe({
+         next: (response) => {
+            if (response.status === true) {
+               this.vehicle_name = response?.data?.vehicle_type || [];
+
+
+
+            } else {
+               console.error('Error fetching delivery:', response.message);
+            }
+         },
+         error: (err) => console.error('Error fetching delivery:', err),
+
+      });
+   }
    getTimeSlot(id: any): void {
       let payload = {
          super_admin_id: environment.superAdminId,
@@ -421,11 +459,14 @@ export class OrderViewComponent {
 
          accept: () => {
             console.log(event.target)
+            this.loadings = true; // Show loader when user confirms
+
             this.cancels()
             // this.messageService.add({ severity: 'info', summary: 'Confirmed', detail: 'Record deleted' });
          },
          reject: () => {
             this.confirmationService.close();
+            this.loadings = false;
          },
       });
    }
@@ -437,6 +478,7 @@ export class OrderViewComponent {
       // payload.business_id = this.businessDetails ? this.businessDetails.id : null
       // payload.for_user_id=this.userId ? this.userId : this.default
       payload.invoice_id = id
+      payload.pay_to_uid = this.userData.id
       payload.cr_amont = this.invoice.subtotal - Number(this.cancellation)
       payload.amount = this.invoice.subtotal - Number(this.cancellation)
       payload.super_admin_id = environment.superAdminId

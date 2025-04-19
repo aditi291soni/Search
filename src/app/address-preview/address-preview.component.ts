@@ -1,9 +1,9 @@
-import { ChangeDetectorRef, Component, NgZone } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectorRef, Component, HostListener, NgZone } from '@angular/core';
+import { CommonModule, LocationStrategy } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { ApiService } from '../services/api.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { Select } from 'primeng/select';
 import { SkeletonModule } from 'primeng/skeleton';
@@ -14,7 +14,8 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 import { ProgressBar } from 'primeng/progressbar';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialog } from 'primeng/confirmdialog';
-
+import { Location } from '@angular/common';
+import { Platform } from '@angular/cdk/platform';
 
 @Component({
    selector: 'app-address-preview',
@@ -30,6 +31,7 @@ import { ConfirmDialog } from 'primeng/confirmdialog';
       ])
    ]
 })
+
 export class AddressPreviewComponent {
 
    businessDetails: any;
@@ -70,19 +72,28 @@ export class AddressPreviewComponent {
    animationState = 'end';
    bill_status: string = '0';
    value: number = 0;
-
+   orderComplete = false
    interval: any;
    ledger: any;
-   constructor(private messageService: MessageService, private cdr: ChangeDetectorRef, private apiService: ApiService, private router: Router, private confirmationService: ConfirmationService, private fb: FormBuilder, private route: ActivatedRoute, private toastService: ToastNotificationService, private ngZone: NgZone,) {
+   private popStateListener: any;
+   notificationTime: any;
+   autoaccept: any;
+   delivery_name: any;
+   constructor(private locationStrategy: LocationStrategy, private platform: Platform, private location: Location, private messageService: MessageService, private cdr: ChangeDetectorRef, private apiService: ApiService, private router: Router, private confirmationService: ConfirmationService, private fb: FormBuilder, private route: ActivatedRoute, private toastService: ToastNotificationService, private ngZone: NgZone,) {
       this.pickupLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedPickup'));
       this.dropLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedDrop'));
       this.businessDetails = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
       this.newOrder = this.apiService.getLocalValueInJSON(localStorage.getItem('new-order'));
       this.userData = this.apiService.getLocalValueInJSON(localStorage.getItem('userData'));
+      localStorage.setItem('orderComplete', 'false');
       this.route.params.subscribe((params) => {
 
          this.deliveryId = params['delivery_id'];
       });
+
+
+
+
       console.log(this.deliveryId)
       const parts = this.newOrder.distance.split(" ");
       this.distance_value = Math.round(parts[0]); // "5.4"
@@ -93,6 +104,7 @@ export class AddressPreviewComponent {
       this.selectedDate = currentDate.toISOString().split('T')[0];
       this.formattedDate = this.formatDateToDDMMYYYY(this.selectedDate);
       this.minDate = currentDate;
+
       // console.log(this.formattedDate)
    }
    pickup = {
@@ -115,7 +127,21 @@ export class AddressPreviewComponent {
       { name: 'Cash at Pickup (CAP)', value: 'pickup' },
       { name: 'Cash on Delivery (COD)', value: 'drop' },
 
-   ];
+   ]
+
+   @HostListener('window:popstate', ['$event'])
+
+   onPopState(event: Event) {
+      console.log('Back or Forward button clicked');
+      this.confirm2(event) // Call the back action logic
+   }
+   @HostListener('window:beforeunload', ['$event'])
+   onBeforeUnload(event: any) {
+      console.log('App or browser is about to close');
+      this.confirm2(event)
+   }
+
+
    ngOnInit(): void {
       this.loading_button = false;
       this.cdr.detectChanges();
@@ -125,6 +151,7 @@ export class AddressPreviewComponent {
       this.getWalletAmount()
       this.TimeSlot()
       this.getledger()
+
    }
 
 
@@ -189,7 +216,6 @@ export class AddressPreviewComponent {
 
                })
                const firstPickupDelivery = this.deliveryList.find(delivery => delivery.pickup === true);
-
                // ✅ Set `selectedDeliveryType` accordingly
                this.selectedDeliveryType = firstPickupDelivery ? firstPickupDelivery.id : this.deliveryList[0]?.id;
                this.sub_total = firstPickupDelivery ? firstPickupDelivery.price : this.deliveryList[0]?.price;
@@ -372,9 +398,21 @@ export class AddressPreviewComponent {
       this.sub_total = value.price
       this.order_status = value.order_status_id
       this.timeslot = value.time_slot
+      this.autoaccept = value.auto_accepted_id
+      this.delivery_name = value.delivery_name
       // this.base_price=value.price.base_price
-      console.log(this.order_status, 'order-status')
+      console.log(value.id, 'order-status')
       this.selectedDeliveryType = value.id;
+      // if (value.id == 43 || value.id == '40') {
+      //    console.log(value.id, 'selectedPaymentType')
+      //    this.paymentTypesSelection('138')
+      //    console.log(value.id, 'selectedPaymentType')
+      // }
+      if (value.auto_accepted_id == 1) {
+         console.log(value.id, 'selectedPaymentType')
+         this.paymentTypesSelection('138')
+         console.log(value.id, 'selectedPaymentType')
+      }
 
 
    }
@@ -515,7 +553,7 @@ export class AddressPreviewComponent {
       });
       try {
          this.riderloader = true;
-         this.apiService.last_invoice({ business_id: this.businessDetails ? this.businessDetails.id : null }).subscribe({
+         this.apiService.last_invoice({ business_id: 983 }).subscribe({
             next: (data: any) => {
                // this.loading_button = true;
                let ApiResponse: any = data;
@@ -543,12 +581,76 @@ export class AddressPreviewComponent {
          console.log('Error in the catch block', error);
       }
    }
-
    onSlotChange(event: any): void {
+      console.log(this.timeSlot, 'slot');
       this.selectedSlot = event.value;
+      const selectedSlotData = this.timeSlot.find((slot: any) => slot.id === this.selectedSlot);
+
+      if (selectedSlotData && selectedSlotData.start_time) {
+         const timeParts = selectedSlotData.start_time.split(':');
+         let hour = parseInt(timeParts[0], 10);
+         let minute = timeParts[1] ? parseInt(timeParts[1], 10) : 0;
+
+         if (!isNaN(hour) && !isNaN(minute)) {
+            // Subtract 1 hour and wrap around
+            let adjustedHour = (hour - 1 + 24) % 24;
+
+            // Format to 12-hour format with leading zero for minutes if needed
+            let period = adjustedHour >= 12 ? 'PM' : 'AM';
+            let hour12 = adjustedHour % 12 === 0 ? 12 : adjustedHour % 12;
+            let formattedMinutes = minute.toString().padStart(2, '0');
+
+            this.notificationTime = `${hour12}:${formattedMinutes} ${period}`;
+            console.log(this.notificationTime, 'notificationTime');
+         } else {
+            console.error('Invalid start_time format');
+            this.notificationTime = 'Invalid Time';
+         }
+      } else {
+         console.error('No matching slot found or start_time is missing');
+         this.notificationTime = 'Invalid Time';
+      }
+
       this.formattedDate = this.formatDateToDDMMYYYY(this.selectedDate);
       console.log('Selected Delivery Type:', this.formattedDate);
    }
+
+   // onSlotChange(event: any): void {
+   //    console.log(this.timeSlot, 'slot')
+   //    this.selectedSlot = event.value;
+   //    const selectedSlotData = this.timeSlot.find((slot: any) => slot.id === this.selectedSlot);
+
+   //    if (selectedSlotData && selectedSlotData.start_time) {
+   //       // Validate and parse the opening time to a number
+   //       let openingTime = parseInt(selectedSlotData.start_time, 10);
+
+   //       // Check if openingTime is a valid number
+   //       if (!isNaN(openingTime)) {
+   //          // Subtract 1 hour and handle negative time correctly (24-hour wrapping)
+   //          let notificationTime = (openingTime - 1 + 24) % 24;
+
+   //          // Convert to 12-hour format
+   //          let period = notificationTime >= 12 ? 'PM' : 'AM';
+   //          let formattedTime =
+   //             notificationTime === 0
+   //                ? `12 AM` // Handle midnight (0 as 12 AM)
+   //                : notificationTime === 12
+   //                   ? `12 PM` // Handle noon (12 as 12 PM)
+   //                   : `${notificationTime % 12 === 0 ? 12 : notificationTime % 12} ${period}`;
+
+   //          this.notificationTime = formattedTime;
+   //          console.log(this.notificationTime, 'notificationTime');
+   //       } else {
+   //          console.error('Invalid opening_hours format');
+   //          this.notificationTime = 'Invalid Time';
+   //       }
+   //    } else {
+   //       console.error('No matching slot found or opening_hours is missing');
+   //       this.notificationTime = 'Invalid Time';
+   //    }
+   //    this.formattedDate = this.formatDateToDDMMYYYY(this.selectedDate);
+   //    console.log('Selected Delivery Type:', this.formattedDate);
+   // }
    addInvoice(order_id: any) {
 
       const currentDate = new Date();
@@ -707,7 +809,7 @@ export class AddressPreviewComponent {
       let payload: any = {}
       payload.business_id = 983
       // payload.business_id = this.businessDetails ? this.businessDetails.id : 983
-      // payload.for_user_id=this.userId ? this.userId : this.default
+      payload.pay_to_uid = this.userData.id
       payload.invoice_id = id
       payload.dr_amount = this.sub_total
       payload.amount = this.sub_total
@@ -766,7 +868,7 @@ export class AddressPreviewComponent {
       const currentDate = new Date();
       const formattedDate = currentDate.toISOString().split('T')[0];
       let payload: any = {}
-
+      payload.pay_to_uid = this.userData.id
       payload.business_id = 983
       // payload.business_id = this.businessDetails ? this.businessDetails.id : null
       // payload.for_user_id=this.userId ? this.userId : this.default
@@ -786,7 +888,7 @@ export class AddressPreviewComponent {
                } else {
                   this.bill_status = '0'
                }
-               console.log('i', this.loading_button)
+
                let ApiResponse: any = data;
                // this.clearLocal()
                // this.addNotification()
@@ -854,7 +956,9 @@ export class AddressPreviewComponent {
       payload.parcel_weight = this.listofInvoice
       payload.invoice_id = this.invoice_id ? this.invoice_id : 0
       payload.bill_status = this.bill_status;
-      payload.pay_on = this.selectedPayment ? this.selectedPayment : this.selectedPaymentType
+      // payload.pay_on = this.selectedPaymentType
+
+      payload.pay_on = this.selectedPayment ? this.selectedPayment : 'Wallet'
       payload.time_slot_id = Number(this.selectedSlot)
       // payload.user_id=
       try {
@@ -916,13 +1020,14 @@ export class AddressPreviewComponent {
       payload.parcel_weight = this.listofInvoice
       payload.invoice_id = this.invoice_id ? this.invoice_id : 0
       payload.time_slot_id = Number(this.selectedSlot)
-      payload.pay_on = this.selectedPayment ? this.selectedPayment : this.selectedPaymentType
+      // payload.pay_on = this.selectedPayment ? 'Wallet' : this.selectedPaymentType
+      payload.pay_on = this.selectedPayment ? this.selectedPayment : 'Wallet'
       // payload.user_id=
       try {
          this.apiService.edit_order_delivery_details(payload).subscribe({
             next: (data: any) => {
                let ApiResponse: any = data;
-               // this.addNotification()
+
                // this.loading_button = true;
                // this.listofDelivery = ApiResponse.data;
                // this.clearLocal()
@@ -949,24 +1054,32 @@ export class AddressPreviewComponent {
       } else {
          console.log("f", this.invoice_id)
       }
-      let payload = {
+      let payload: any = {
          // "user_id": environment.riderId,
          // "super_admin_id": environment.superAdminId,
-         "authToken": localStorage.getItem('authToken'),
+         // "authToken": localStorage.getItem('authToken'),
          "delivery_id": this.deliveryId,
          "invoice_id": String(this.invoice_id),
+         'delivery_type_id': this.selectedDeliveryType,
+         "vehicle_type_id": this.newOrder?.vehicle_type_id,
+
+         'notification_timing': '',
          "details": {
-            "distance": this.newOrder.distance,
-            'pickup_address': this.pickupLocation.address_details,
+            'delivery_type': this.selectedDeliveryType,
+            "distance": this.newOrder?.distance,
+            'pickup_address': this.pickupLocation?.address_details,
             'order_status': this.order_status,
-            'delivery_type': this.selectedDeliveryType
+
          },
          "pickup_location": {
             "longitude": Number(this.pickupLocation.long_val),
             "latitude": Number(this.pickupLocation.lat_val)
          }
       }
-
+      // if (this.selectedDeliveryType == '46') {
+      if (this.timeslot == 1) {
+         payload.notification_timing = this.notificationTime + "," + this.formattedDate
+      }
       console.log(typeof (payload.pickup_location.latitude))
       try {
 
@@ -979,7 +1092,8 @@ export class AddressPreviewComponent {
 
                   // this.loading_button = true;
                   this.riderloader = true;
-                  if (this.selectedDeliveryType == '43' || this.selectedDeliveryType == '40') {
+                  if (this.autoaccept == 0) {
+                     // if (this.selectedDeliveryType == '43' || this.selectedDeliveryType == '40') {
                      console.log("api call2")
                      // this.getDeliveryDetail()
                      this.startDeliveryCheck()
@@ -993,37 +1107,43 @@ export class AddressPreviewComponent {
 
                   }
 
-                  else if (this.selectedDeliveryType == '45') {
-
+                  // else if (this.selectedDeliveryType == '45') {
+                  else if (this.autoaccept == 1) {
                      this.confirmationService.confirm({
-                        message: 'Thank Your Order Placed Successfully and will be delivered soon under Standard Delivery!',
+                        message: `Thank Your Order Placed Successfully and will be delivered soon under ${this.delivery_name} Delivery !`,
                         header: 'Thank You!',
                         icon: 'pi pi-check-circle',
                         acceptLabel: 'OK',
                         rejectVisible: false, // Hides the "No" button
                         accept: () => {
                            console.log('Thank you message displayed');
+                           localStorage.setItem('orderComplete', 'true');
+                           this.orderComplete = true
+                           this.confirmationService.close();
                         }
 
                      });
                      this.clearLocal()
 
                   }
-                  else if (this.selectedDeliveryType == '42') {
+                  // else if (this.selectedDeliveryType == '42') {
 
-                     this.confirmationService.confirm({
-                        message: 'Thank Your Order Placed Successfully and will be delivered soon as per Schedule!',
-                        header: 'Thank You!',
-                        icon: 'pi pi-check-circle',
-                        acceptLabel: 'OK',
-                        rejectVisible: false, // Hides the "No" button
-                        accept: () => {
-                           console.log('Thank you message displayed');
-                        }
+                  //    this.confirmationService.confirm({
+                  //       message: 'Thank Your Order Placed Successfully and will be delivered soon as per Schedule!',
+                  //       header: 'Thank You!',
+                  //       icon: 'pi pi-check-circle',
+                  //       acceptLabel: 'OK',
+                  //       rejectVisible: false, // Hides the "No" button
+                  //       accept: () => {
+                  //          console.log('Thank you message displayed');
+                  //          localStorage.setItem('orderComplete', 'true');
+                  //          this.orderComplete = true
+                  //          this.confirmationService.close();
+                  //       }
 
-                     });
-                     this.clearLocal()
-                  }
+                  //    });
+                  //    this.clearLocal()
+                  // }
                   else {
                      // this.ngZone.runOutsideAngular(() => {
                      //    this.interval = setInterval(() => {
@@ -1040,13 +1160,15 @@ export class AddressPreviewComponent {
                      // setTimeout(() => {
 
                      this.confirmationService.confirm({
-                        message: 'Thank Your Order Placed Successfully and will be delivered soon !',
+                        message: `Thank Your Order Placed Successfully and will be delivered soon under ${this.delivery_name} Delivery !`,
                         header: 'Thank You!',
                         icon: 'pi pi-check-circle',
                         acceptLabel: 'OK',
                         rejectVisible: false, // Hides the "No" button
                         accept: () => {
                            console.log('Thank you message displayed');
+                           localStorage.setItem('orderComplete', 'true');
+                           this.orderComplete = true
                         }
 
                      });
@@ -1056,79 +1178,126 @@ export class AddressPreviewComponent {
                }
                else {
                   this.riderloader = true;
-                  // this.ngZone.runOutsideAngular(() => {
-                  //    this.interval = setInterval(() => {
-                  //       this.ngZone.run(() => {
-                  //          this.value = this.value + Math.floor(Math.random() * 10) + 1;
-                  //          if (this.value >= 100) {
-                  //             this.value = 100;
-                  //             // this.messageService.add({ severity: 'info', summary: 'Success', detail: 'Process Completed' });
-                  //             clearInterval(this.interval);
-                  //          }
-                  //       });
-                  //    }, 200);
-                  // });
+
 
                   console.log(this.selectedDeliveryType, "rider")
 
-                  if (this.selectedDeliveryType == '43' || this.selectedDeliveryType == '40') {
-                     this.startDeliveryCheck()
+                  // if (this.selectedDeliveryType == '43' || this.selectedDeliveryType == '40') {
+                  if (this.autoaccept == 0) {
+                     // this.startDeliveryCheck()
                      setTimeout(() => {
-                        this.router.navigate(['/dashboard']);
-                     }, 3000);
-                     this.order_status = 35,
-                        this.confirmationService.confirm({
-                           message: 'No Rider is Available at your Location please try Standard or Schedule Delivery!',
-                           header: 'Sorry!',
-                           icon: 'pi pi-times-circle',
-                           acceptLabel: 'OK',
-                           rejectVisible: false, // Hides the "No" button
-                           // styleClass: 'custom-confirm-dialog', // Custom class for styling
 
-                           accept: () => {
-                              console.log('Thank you message displayed Express');
+
+                        this.order_status = 35,
+                           this.confirmationService.confirm({
+                              message: 'No Rider is Available at your Locations please try Standard or Schedule Delivery!',
+                              header: 'Sorry!',
+                              icon: 'pi pi-times-circle',
+                              acceptLabel: 'OK',
+                              rejectVisible: false, // Hides the "No" button
+
+                              accept: () => {
+                                 console.log('Thank you message displayed Express');
+                                 this.confirmationService.close();
+                                 if (this.selectedPaymentType == '138') {
+                                    this.add_wallet_amount()
+                                 }
+                                 this.creaditTransaction(this.invoice_id)
+
+                                 console.log("cancel", this.wallet)
+                                 this.getWalletAmount()
+                                 // this.order_status = 25
+                                 this.editDeliveries(this.deliveryId)
+                                 this.orderComplete = true
+                                 localStorage.removeItem('selectedPickup');
+                                 localStorage.removeItem('selectedDrop');
+                                 localStorage.removeItem('new-order');
+                                 localStorage.setItem('dashboardLoaded', 'false');
+                                 this.riderloaders = false;
+                                 // setTimeout(() => {
+                                 this.router.navigate(['/dashboard']);
+                                 localStorage.setItem('orderComplete', 'true');
+                                 // }, 3000);
+                                 return;
+
+                                 // this.cancel()
+                                 // this.noorder()
+                                 this.loading_button = false;
+                                 // this.router.navigate(['/dashboard']);
+                              }
+
                            }
 
-                        });
+                           );
+                     }, 60000);
+
+                     // I have added this temproray code to check the rider is available or not in standarad as because we were getting status false for temporary server.
+                  }
+
+                  else if (this.autoaccept == 1) {
+                     this.confirmationService.confirm({
+                        message: `Thank Your Order Placed Successfully and will be delivered soon under ${this.delivery_name} Delivery!`,
+                        header: 'Thank You!',
+                        icon: 'pi pi-check-circle',
+                        acceptLabel: 'OK',
+                        rejectVisible: false, // Hides the "No" button
+                        accept: () => {
+                           this.orderComplete = true
+                           localStorage.setItem('orderComplete', 'true');
+                           console.log('Thank you message displayed');
+                           this.confirmationService.close();
+                        }
+
+                     });
+                     this.clearLocal()
+
+                  } else {
+                     this.loading_button = false;
+
+                     this.confirmationService.confirm({
+                        message: 'No Rider is Available at your Locations please try Standard or Schedule Delivery',
+                        header: 'Sorry!',
+                        icon: 'pi pi-times-circle',
+                        // styleClass: 'custom-confirm-dialog', // Custom class for styling
+
+                        acceptLabel: 'OK',
+                        rejectVisible: false, // Hides the "No" button
+                        accept: () => {
+                           this.orderComplete = true
+
+                           console.log('Thank you message displayed');
+                           this.confirmationService.close();
+                        }
+
+                     });
+                     this.cancel()
                      if (this.selectedPaymentType == '138') {
                         this.add_wallet_amount()
                      }
                      this.creaditTransaction(this.invoice_id)
-                     this.cancel()
-                     // this.noorder()
+                     this.editInvoice()
+                     // this.clearLocal()
                      this.loading_button = false;
-                     // I have added this temproray code to check the rider is available or not in standarad as because we were getting status false for temporary server.
+                     localStorage.setItem('orderComplete', 'true');
                   }
+                  // else if (this.selectedDeliveryType == '42') {
+                  //    this.confirmationService.confirm({
+                  //       message: 'Thank Your Order Placed Successfully and will be delivered soon as per Schedule!',
+                  //       header: 'Thank You!',
+                  //       icon: 'pi pi-check-circle',
+                  //       acceptLabel: 'OK',
+                  //       rejectVisible: false,
+                  //       accept: () => {
+                  //          this.orderComplete = true
+                  //          localStorage.setItem('orderComplete', 'true');
+                  //          console.log('Thank you message displayed');
+                  //          this.orderComplete = true
+                  //          this.confirmationService.close();
+                  //       }
 
-                  else if (this.selectedDeliveryType == '45') {
-                     this.confirmationService.confirm({
-                        message: 'Thank Your Order Placed Successfully and will be delivered soon under Standard Delivery!',
-                        header: 'Thank You!',
-                        icon: 'pi pi-check-circle',
-                        acceptLabel: 'OK',
-                        rejectVisible: false, // Hides the "No" button
-                        accept: () => {
-                           console.log('Thank you message displayed');
-                        }
-
-                     });
-                     this.clearLocal()
-
-                  }
-                  else if (this.selectedDeliveryType == '42') {
-                     this.confirmationService.confirm({
-                        message: 'Thank Your Order Placed Successfully and will be delivered soon as per Schedule!',
-                        header: 'Thank You!',
-                        icon: 'pi pi-check-circle',
-                        acceptLabel: 'OK',
-                        rejectVisible: false, // Hides the "No" button
-                        accept: () => {
-                           console.log('Thank you message displayed');
-                        }
-
-                     });
-                     this.clearLocal()
-                  }
+                  //    });
+                  //    this.clearLocal()
+                  // }
                }
                this.loading_button = false;
             },
@@ -1137,7 +1306,7 @@ export class AddressPreviewComponent {
                this.loading_button = false;
 
                this.confirmationService.confirm({
-                  message: 'No Rider is Available at your Location please try Standard or Schedule Delivery',
+                  message: 'No Rider is Available at your Locations please try Standard or Schedule Delivery',
                   header: 'Sorry!',
                   icon: 'pi pi-times-circle',
                   // styleClass: 'custom-confirm-dialog', // Custom class for styling
@@ -1145,7 +1314,10 @@ export class AddressPreviewComponent {
                   acceptLabel: 'OK',
                   rejectVisible: false, // Hides the "No" button
                   accept: () => {
+                     this.orderComplete = true
+
                      console.log('Thank you message displayed');
+                     this.confirmationService.close();
                   }
 
                });
@@ -1157,7 +1329,7 @@ export class AddressPreviewComponent {
                this.editInvoice()
                // this.clearLocal()
                this.loading_button = false;
-
+               localStorage.setItem('orderComplete', 'true');
             }
 
          });
@@ -1182,7 +1354,7 @@ export class AddressPreviewComponent {
             console.log('API calls stopped after 1 minute');
 
             this.confirmationService.confirm({
-               message: 'No Rider is Available at your Location please try Standard or Schedule Delivery',
+               message: 'No Rider is Available at your Locations please try Standard or Schedule Delivery',
                header: 'Sorry!',
                icon: 'pi pi-times-circle',
                acceptLabel: 'OK',
@@ -1190,7 +1362,9 @@ export class AddressPreviewComponent {
 
                rejectVisible: false, // Hides the "No" button
                accept: () => {
+
                   console.log('Thank you message displayed Else');
+                  this.confirmationService.close();
                }
 
             });
@@ -1205,6 +1379,8 @@ export class AddressPreviewComponent {
             this.loading_button = false;
 
             this.editInvoice()
+            this.orderComplete = true
+            localStorage.setItem('orderComplete', 'true');
             return;
          }
 
@@ -1236,8 +1412,8 @@ export class AddressPreviewComponent {
                //    });
                //    // this.animationState = this.animationState === 'start' ? 'end' : 'start';
                // }, 500);
-               if (this.selectedDeliveryType == '43' || this.selectedDeliveryType == '40') {
-
+               // if (this.selectedDeliveryType == '43' || this.selectedDeliveryType == '40') {
+               if (this.autoaccept == '0') {
                   if (this.order_status != '33') {
                      console.log("order")
                      this.confirmationService.confirm({
@@ -1247,7 +1423,10 @@ export class AddressPreviewComponent {
                         acceptLabel: 'OK',
                         rejectVisible: false, // Hides the "No" button
                         accept: () => {
+                           this.orderComplete = true
                            console.log('Thank you message displayed');
+                           this.orderComplete = true
+                           localStorage.setItem('orderComplete', 'true');
                         }
 
                      });
@@ -1294,7 +1473,7 @@ export class AddressPreviewComponent {
    cancels() {
       // this.riderloader = false;
       this.bill_status = '0'
-      this.order_status = 25
+      this.order_status = 35
       if (this.selectedPaymentType == '138') {
          this.add_wallet_amount()
       }
@@ -1307,6 +1486,7 @@ export class AddressPreviewComponent {
 
    }
    cancel() {
+      console.log("cancel", this.wallet)
       this.getWalletAmount()
       // this.order_status = 25
       this.editDeliveries(this.deliveryId)
@@ -1314,11 +1494,11 @@ export class AddressPreviewComponent {
       localStorage.removeItem('selectedPickup');
       localStorage.removeItem('selectedDrop');
       localStorage.removeItem('new-order');
-      sessionStorage.setItem('dashboardLoaded', 'false');
+      localStorage.setItem('dashboardLoaded', 'false');
       this.riderloaders = false;
-      setTimeout(() => {
-         this.router.navigate(['/dashboard']);
-      }, 3000);
+      // setTimeout(() => {
+      this.router.navigate(['/dashboard']);
+      // }, 3000);
       return;
 
    }
@@ -1372,4 +1552,9 @@ export class AddressPreviewComponent {
          },
       });
    }
+   coupan() {
+      this.router.navigate(['/list-of-coupan']);
+
+   }
+
 }

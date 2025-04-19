@@ -19,7 +19,7 @@
       </button>
 
    </div>
-
+   <p-confirmdialog />
    <div #mapContainer [ngClass]="{'map-container': true, 'shrink': isFormVisible}"></div>
 
    <div class="centered" *ngIf="!isFormVisible">
@@ -36,6 +36,9 @@
             class="error-text">
             Address Detail is required
          </small>
+         <small *ngIf=" projectForm.get('address_details')?.hasError('pattern')" class="error-text">
+            Invalid address format. Please enter a valid address.
+         </small>
       </div>
 
       <div class="form-group">
@@ -47,7 +50,10 @@
       <small
          *ngIf="submitted &&  projectForm.get('person_name')?.hasError('required') && projectForm.get('person_name')?.invalid"
          class="error-text">
-         Address Detail is required
+         Name is required
+      </small>
+      <small *ngIf="projectForm.get('person_name')?.hasError('pattern')" class="error-text">
+         Name should contain only alphabets.
       </small>
       <div class="form-group">
          <div class="address_details">Phone <span class="mandatory">*</span></div>
@@ -58,6 +64,16 @@
          *ngIf="submitted &&  projectForm.get('person_phone_no')?.hasError('required') && projectForm.get('person_phone_no')?.invalid"
          class="error-text">
          Phone is required
+      </small>
+      <small *ngIf="projectForm.get('person_phone_no')?.hasError('pattern')" class="error-text">
+         Phone should contain only number.
+      </small>
+      <small *ngIf="projectForm.get('person_phone_no')?.hasError('minlength')" class="error-text">
+         Phone number must be at least 10 digits long.
+      </small>
+
+      <small *ngIf="projectForm.get('person_phone_no')?.hasError('maxlength')" class="error-text">
+         Phone number cannot exceed 10 digits.
       </small>
       <div class="form-group">
          <div class="address_details">Address Title <span class="mandatory">*</span></div>
@@ -90,6 +106,6 @@
    </form>
 
    <div class="form-group" *ngIf="isFormVisible">
-      <button pButton label="Save" class="save-btn" (click)="addAddress()"></button>
+      <button pButton label="Save" class="save-btn" [disabled]="isSaving" (click)="addAddress()"></button>
    </div>
 </div>

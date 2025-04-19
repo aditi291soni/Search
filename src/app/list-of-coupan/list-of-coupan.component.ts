@@ -21,6 +21,7 @@ export class ListOfCoupanComponent {
    userData: any;
    loading: boolean = false;
    coupanList: any = [];
+   delivery_id: any;
    constructor(
       private apiService: ApiService,
       private activatedRoute: ActivatedRoute,
@@ -31,7 +32,7 @@ export class ListOfCoupanComponent {
 
       this.businessDetails = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
       this.userData = this.apiService.getLocalValueInJSON(localStorage.getItem('userData'));
-
+      this.delivery_id = this.apiService.getLocalValueInJSON(localStorage.getItem('delivery_id'));
    }
    ngOnInit() {
       this.fetchcoupanList()
@@ -47,7 +48,7 @@ export class ListOfCoupanComponent {
       // }
       let payload: any = {}
 
-      payload.business_id = 161;
+      payload.business_id = this.businessDetails.id;
 
       this.apiService.list_of_coupan(payload).subscribe({
          next: (response) => {
@@ -71,5 +72,8 @@ export class ListOfCoupanComponent {
          },
       });
    }
-   applyCoupan(coupan: any): void { }
+   applyCoupan(coupan: any): void {
+      localStorage.setItem('coupan', JSON.stringify(coupan));
+      this.router.navigate([`orders/new-order/order-preview/${this.delivery_id}`]);
+   }
 }

@@ -11,12 +11,14 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { ApiService } from '../services/api.service';
 import { ToastNotificationService } from '../services/toast-notification.service';
 import { MatIconModule } from '@angular/material/icon';
+import { ConfirmDialog } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 
 
 @Component({
    selector: 'app-add-address',
    standalone: true,
-   imports: [ButtonModule, CardModule, CommonModule, InputTextModule, CommonModule, SkeletonModule, FormsModule,
+   imports: [ButtonModule, CardModule, CommonModule, InputTextModule, CommonModule, SkeletonModule, FormsModule, ConfirmDialog,
       ReactiveFormsModule, MatIconModule],
    templateUrl: './add-address.component.html',
    styleUrls: ['./add-address.component.css']
@@ -33,7 +35,7 @@ export class AddAddressComponent implements AfterViewInit {
    listofState: any;
    userData: any;
 
-   constructor(private route: ActivatedRoute, private router: Router, private fb: FormBuilder, private apiService: ApiService, private toastService: ToastNotificationService) {
+   constructor(private route: ActivatedRoute, private confirmationService: ConfirmationService, private router: Router, private fb: FormBuilder, private apiService: ApiService, private toastService: ToastNotificationService) {
 
 
       this.route.params.subscribe((params) => {
@@ -80,6 +82,8 @@ export class AddAddressComponent implements AfterViewInit {
    geocoder = new google.maps.Geocoder();
 
    isFormVisible = false;
+   isSaving: boolean = false;
+
    formData: any = {
       address_name: '',
       address_details: '',
@@ -95,7 +99,7 @@ export class AddAddressComponent implements AfterViewInit {
 
    // Geofencing parameters
    cityCoordinates = { lat: 23.2369247, lng: 77.4341457 }; // MP Nagar, Bhopal
-   // cityCoordinates = { lat: 22.7196, lng: 75.8577 };
+   // cityCoordinates = { lat: 22.719568, lng: 75.857727 };// Indore
    geofenceRadius = 11000; // 10 km radius (in meters)
 
    ngAfterViewInit(): void {
@@ -125,7 +129,25 @@ export class AddAddressComponent implements AfterViewInit {
          console.log("g", place.geometry.location)
 
          if (!this.isWithinGeofence(selectedLocation)) {
-            alert("The selected address is outside the allowed city boundary.");
+            this.searchBox.nativeElement.value = '';
+            this.confirmationService.confirm({
+               message: 'This area is currently not served by us!',
+               header: ' ',
+               icon: 'pi pi-info-circle',
+               closable: false, // Prevent closing without clicking OK
+               acceptLabel: 'OK', // Change label to OK
+               rejectVisible: false,
+               acceptButtonProps: {
+                  severity: 'primary', // Primary color for OK button
+                  outlined: true
+               },
+               accept: () => {
+                  this.confirmationService.close(); // Close dialog on OK
+                  return;
+               }
+            });
+
+            // alert("This area is currently not served by us!.");
             return;
          }
 
@@ -195,19 +217,30 @@ export class AddAddressComponent implements AfterViewInit {
 
    }
    currentLocation() {
-      this.isLoadingLocation = true; // Start loading
 
-      const defaultLocation = this.cityCoordinates; // Bhopal's default location
+      this.isLoadingLocation = true; // Start loading
+      const allowedBounds = {
+         latMin: 23.1500,  // Minimum latitude
+         latMax: 23.3500,  // Maximum latitude
+         lngMin: 77.3500,  // Minimum longitude
+         lngMax: 77.5500   // Maximum longitude
+      }
+      // const defaultLocations = { lat: 23.2369247, lng: 77.4341457 }; // Bhopal coordinates
+      var defaultLocation = this.cityCoordinates; // Bhopal's default location
       // this.setMapLocation(defaultLocation);
       navigator.geolocation.getCurrentPosition(
          (position) => {
-            console.log("position", position)
+            // console.log("position", position)
             const currentLocation = {
                lat: position.coords.latitude,
                lng: position.coords.longitude
             };
 
             this.setMapLocation(currentLocation);
+
+
+
+
          },
          (error) => {
             console.error("Geolocation error: ", error);
@@ -216,6 +249,11 @@ export class AddAddressComponent implements AfterViewInit {
    }
    addAddress() {
       this.submitted = true;
+      if (this.isSaving) {
+         return; // Avoid further calls while request is in progress
+      }
+
+      this.isSaving = true;
       if (!this.projectForm.valid) {
          // this.toastService.showError('Please fill in all required fields correctly.');
          // Show an error message for invalid form
@@ -358,43 +396,92 @@ export class AddAddressComponent implements AfterViewInit {
          map: this.map,
 
       });
+      if (!this.isWithinGeofence(this.marker.getPosition()!)) {
+         this.searchBox.nativeElement.value = '';
+         this.confirmationService.confirm({
+            message: 'This area is currently not served by us!',
+            header: ' ',
+            rejectVisible: false,
+            icon: 'pi pi-info-circle',
+            closable: false, // Prevent closing without clicking OK
+            acceptLabel: 'OK', // Change label to OK
+            acceptButtonProps: {
+               severity: 'primary', // Primary color for OK button
+               outlined: true
+            },
+            accept: () => {
+
+               this.confirmationService.close(); // Close dialog on 
+               return;
+            }
+         });
+
+
+         // alert("This area is currently not served by us!.");
+         return;
+      }
+
+      else {
+         this.geocoder.geocode({ location: location }, (results, status) => {
+            if (status === 'OK' && results && results[0]) {
+               console.log("lo", location)
+               const address = results[0].formatted_address;
+               const addressComponents = results[0].address_components;
+
+               // this.searchBox.nativeElement.value = address;
+               const getAddressComponent = (type: string) => {
+                  const component = addressComponents.find(c => c.types.includes(type));
+                  return component ? component.long_name : null;
+               };
+
+
+               this.formData = {
+                  address_details: address,
+                  city: getAddressComponent('locality'),
+                  state: getAddressComponent('administrative_area_level_1'),
+                  country: getAddressComponent('country'),
+                  postal_code: getAddressComponent('postal_code'),
+                  lat_val: location.lat,
+                  long_val: location.lng,
+               };
+
+               this.searchBox.nativeElement.value = address;
+
+            } else {
+               console.error("Geocoder failed due to: " + status);
+            }
+         });
+      }
 
       this.isLoadingLocation = false; // Stop loading
-
-      this.geocoder.geocode({ location: location }, (results, status) => {
-         if (status === 'OK' && results && results[0]) {
-            console.log("lo", location)
-            const address = results[0].formatted_address;
-            const addressComponents = results[0].address_components;
-
-            // this.searchBox.nativeElement.value = address;
-            const getAddressComponent = (type: string) => {
-               const component = addressComponents.find(c => c.types.includes(type));
-               return component ? component.long_name : null;
-            };
-
-
-            this.formData = {
-               address_details: address,
-               city: getAddressComponent('locality'),
-               state: getAddressComponent('administrative_area_level_1'),
-               country: getAddressComponent('country'),
-               postal_code: getAddressComponent('postal_code'),
-               lat_val: location.lat,
-               long_val: location.lng,
-            };
-
-            this.searchBox.nativeElement.value = address;
-
-         } else {
-            console.error("Geocoder failed due to: " + status);
-         }
-      });
-
       this.map.addListener('position_changed', (event: google.maps.MapMouseEvent) => {
          if (event.latLng) {
             const position = event.latLng;
             console.log("posit", event.latLng)
+            if (!this.isWithinGeofence(position)) {
+               this.confirmationService.confirm({
+                  message: 'This area is currently not served by us!',
+                  header: ' ',
+                  rejectVisible: false,
+                  icon: 'pi pi-info-circle',
+                  closable: false, // Prevent closing without clicking OK
+                  acceptLabel: 'OK', // Change label to OK
+                  acceptButtonProps: {
+                     severity: 'primary', // Primary color for OK button
+                     outlined: true
+                  },
+                  accept: () => {
+                     this.confirmationService.close(); // Close dialog on OK
+                     return;
+                  }
+               });
+
+
+
+               // alert("This area is currently not served by us!.");
+               this.searchBox.nativeElement.value = '';
+               return;
+            }
             if (this.marker) {
                this.marker.setMap(null);
             }
@@ -405,10 +492,7 @@ export class AddAddressComponent implements AfterViewInit {
 
             console.log(this.map, "map")
             // Check if the clicked address is within the geofence
-            if (!this.isWithinGeofence(position)) {
-               alert("The selected address is outside the allowed city boundary.");
-               return;
-            }
+
 
             this.geocoder.geocode({ location: position }, (results, status) => {
                if (status === 'OK' && results && results[0]) {
@@ -432,7 +516,6 @@ export class AddAddressComponent implements AfterViewInit {
                   };
 
                   this.searchBox.nativeElement.value = address;
-                  console.log(address, "e")
                } else {
                   console.error("Geocoder failed due to: " + status);
                }
@@ -456,7 +539,25 @@ export class AddAddressComponent implements AfterViewInit {
             console.log(this.map, "map")
             // Check if the clicked address is within the geofence
             if (!this.isWithinGeofence(position)) {
-               alert("The selected address is outside the allowed city boundary.");
+               this.searchBox.nativeElement.value = '';
+               this.confirmationService.confirm({
+                  message: 'This area is currently not served by us!',
+                  header: ' ',
+                  rejectVisible: false,
+                  icon: 'pi pi-info-circle',
+                  closable: false, // Prevent closing without clicking OK
+                  acceptLabel: 'OK', // Change label to OK
+                  acceptButtonProps: {
+                     severity: 'primary', // Primary color for OK button
+                     outlined: true
+                  },
+                  accept: () => {
+                     this.confirmationService.close(); // Close dialog on OK
+                     return;
+                  }
+               });
+
+               // alert("This area is currently not served by us!.");
                return;
             }
 

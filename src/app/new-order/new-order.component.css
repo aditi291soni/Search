@@ -10,6 +10,25 @@
    padding: 10px;
    border: 1px solid #ccc;
    border-radius: 8px;
+   display: inline-flex;
+   /* Changed from flex to inline-flex */
+   align-items: center;
+   justify-content: center;
+   gap: 10px;
+   cursor: pointer;
+   transition: transform 0.3s, box-shadow 0.3s;
+   max-width: fit-content;
+   /* Dynamically adjust width based on content */
+   min-width: 120px;
+   /* Optional: Minimum width for consistency */
+   text-align: center;
+}
+
+/* 
+.vehicle-card {
+   padding: 10px;
+   border: 1px solid #ccc;
+   border-radius: 8px;
    display: flex;
    align-items: center;
    gap: 10px;
@@ -17,6 +36,20 @@
    transition: transform 0.3s, box-shadow 0.3s;
    max-width: 150px;
    text-align: center;
+} */
+.vehicle-name {
+   font-size: 14px;
+   white-space: nowrap;
+   /* Prevents wrapping */
+   text-overflow: ellipsis;
+   overflow: hidden;
+   max-width: 100%;
+}
+
+.vehicle-image {
+   width: 40px;
+   height: 40px;
+   margin-right: 5px;
 }
 
 .categories {
