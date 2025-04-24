@@ -5,6 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { ApiService } from '../services/api.service';
 import { SkeletonModule } from 'primeng/skeleton';
 import { NoDataFoundComponent } from '../no-data-found/no-data-found.component';
+import { environment } from '../../environments/environment';
 
 @Component({
    selector: 'app-orders',
@@ -81,7 +82,7 @@ export class OrdersComponent {
    fetchOrderList(): void {
       // this.loading = true;
       let payload: any = {};
-      payload.business_id = 983;
+      payload.business_id =  environment.business_id;
       if (this.businessDetails && this.businessDetails.id) {
          payload.for_business_id = this.businessDetails.id
       } else {

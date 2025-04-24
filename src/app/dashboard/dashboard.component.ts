@@ -86,7 +86,7 @@ export class DashboardComponent implements OnInit {
    getlistofBanner() {
       this.loading = true
       try {
-         this.apiService.list_of_banner({ business_id: 983 }).subscribe({
+         this.apiService.list_of_banner({ business_id:  environment.business_id }).subscribe({
             next: (data: any) => {
                if (data.status) {
                   let ApiResponse: any = data;
@@ -154,7 +154,7 @@ export class DashboardComponent implements OnInit {
 
       this.loading = true;
       let payload: any = {};
-      payload.business_id = 983;
+      payload.business_id =  environment.business_id;
       if (this.businessDetails && this.businessDetails.id) {
          payload.for_business_id = this.businessDetails.id
       } else {

@@ -380,7 +380,7 @@ export class AddressPreviewComponent {
    }
    getledger() {
       try {
-         this.apiService.getLedger({ business_id: 983 }).subscribe({
+         this.apiService.getLedger({ business_id:  environment.business_id }).subscribe({
             next: (data: any) => {
                let ApiResponse: any = data;
                this.ledger = ApiResponse.data;
@@ -553,7 +553,7 @@ export class AddressPreviewComponent {
       });
       try {
          this.riderloader = true;
-         this.apiService.last_invoice({ business_id: 983 }).subscribe({
+         this.apiService.last_invoice({ business_id:  environment.business_id }).subscribe({
             next: (data: any) => {
                // this.loading_button = true;
                let ApiResponse: any = data;
@@ -658,7 +658,7 @@ export class AddressPreviewComponent {
       const formattedTime = currentDate.getHours().toString().padStart(2, '0') + ":" +
          currentDate.getMinutes().toString().padStart(2, '0');
       let payload: any = {}
-      payload.business_id = 983
+      payload.business_id =  environment.business_id
       // payload.business_id = this.businessDetails ? this.businessDetails.id : null
       // payload.for_business_id = this.businessDetails ? this.businessDetails.id : this.userData.id
       if (this.businessDetails && this.businessDetails.id) {
@@ -753,7 +753,7 @@ export class AddressPreviewComponent {
       const formattedDate = currentDate.toISOString().split('T')[0];
       let payload: any = {}
 
-      payload.business_id = 983
+      payload.business_id =  environment.business_id
       // payload.business_id = this.businessDetails ? this.businessDetails.id : null
       if (this.businessDetails && this.businessDetails.id) {
          payload.for_business_id = this.businessDetails ? this.businessDetails.id : null
@@ -807,7 +807,8 @@ export class AddressPreviewComponent {
       const currentDate = new Date();
       const formattedDate = currentDate.toISOString().split('T')[0];
       let payload: any = {}
-      payload.business_id = 983
+      payload.business_id = environment.business_id
+      // payload.user_id = this.userData.id;
       // payload.business_id = this.businessDetails ? this.businessDetails.id : 983
       payload.pay_to_uid = this.userData.id
       payload.invoice_id = id
@@ -869,7 +870,7 @@ export class AddressPreviewComponent {
       const formattedDate = currentDate.toISOString().split('T')[0];
       let payload: any = {}
       payload.pay_to_uid = this.userData.id
-      payload.business_id = 983
+      payload.business_id = environment.business_id
       // payload.business_id = this.businessDetails ? this.businessDetails.id : null
       // payload.for_user_id=this.userId ? this.userId : this.default
       payload.invoice_id = id
@@ -928,7 +929,7 @@ export class AddressPreviewComponent {
       const formattedTime = currentDate.getHours().toString().padStart(2, '0') + ":" +
          currentDate.getMinutes().toString().padStart(2, '0');
       let payload: any = {}
-      payload.business_id = 983
+      payload.business_id =  environment.business_id
       if (this.businessDetails && this.businessDetails.id) {
          payload.for_business_id = this.businessDetails ? this.businessDetails.id : null
       } else {
@@ -988,7 +989,7 @@ export class AddressPreviewComponent {
    editDeliveries(id: any) {
       let payload: any = {}
 
-      payload.business_id = 983
+      payload.business_id = environment.business_id
 
 
       if (this.businessDetails && this.businessDetails.id) {
