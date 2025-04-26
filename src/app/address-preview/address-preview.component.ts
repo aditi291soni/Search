@@ -79,6 +79,7 @@ export class AddressPreviewComponent {
    notificationTime: any;
    autoaccept: any;
    delivery_name: any;
+   superAdminId: any;
    constructor(private locationStrategy: LocationStrategy, private platform: Platform, private location: Location, private messageService: MessageService, private cdr: ChangeDetectorRef, private apiService: ApiService, private router: Router, private confirmationService: ConfirmationService, private fb: FormBuilder, private route: ActivatedRoute, private toastService: ToastNotificationService, private ngZone: NgZone,) {
       this.pickupLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedPickup'));
       this.dropLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedDrop'));
@@ -86,6 +87,8 @@ export class AddressPreviewComponent {
       this.newOrder = this.apiService.getLocalValueInJSON(localStorage.getItem('new-order'));
       this.userData = this.apiService.getLocalValueInJSON(localStorage.getItem('userData'));
       localStorage.setItem('orderComplete', 'false');
+      this.superAdminId = this.apiService.getLocalValueInJSON(localStorage.getItem('super_admin'));
+
       this.route.params.subscribe((params) => {
 
          this.deliveryId = params['delivery_id'];
@@ -105,7 +108,7 @@ export class AddressPreviewComponent {
       this.formattedDate = this.formatDateToDDMMYYYY(this.selectedDate);
       this.minDate = currentDate;
 
-      // console.log(this.formattedDate)
+      console.log(this.formattedDate)
    }
    pickup = {
       name: 'Aditi Mp',
@@ -145,6 +148,7 @@ export class AddressPreviewComponent {
    ngOnInit(): void {
       this.loading_button = false;
       this.cdr.detectChanges();
+      
       console.log('s', this.loading_button)
       this.fetchDeliveryTypeList();
       this.getfinancialYear()
@@ -191,7 +195,7 @@ export class AddressPreviewComponent {
    // }
    fetchDeliveryTypeList(): void {
       let payload: any = {};
-      payload.super_admin_id = environment.superAdminId;
+      payload.super_admin_id = this.superAdminId ;
       // payload.business_id = this.businessDetails.id;
       payload.vehicle_type_id = this.newOrder.vehicle_type_id;
       this.apiService.getDeliveryType(payload).subscribe({
@@ -217,10 +221,10 @@ export class AddressPreviewComponent {
                })
                const firstPickupDelivery = this.deliveryList.find(delivery => delivery.pickup === true);
                // ✅ Set `selectedDeliveryType` accordingly
-               this.selectedDeliveryType = firstPickupDelivery ? firstPickupDelivery.id : this.deliveryList[0]?.id;
-               this.sub_total = firstPickupDelivery ? firstPickupDelivery.price : this.deliveryList[0]?.price;
+               // this.selectedDeliveryType = firstPickupDelivery ? firstPickupDelivery.id : this.deliveryList[0]?.id;
+               // this.sub_total = firstPickupDelivery ? firstPickupDelivery.price : this.deliveryList[0]?.price;
                // this.selectedDeliveryType = this.deliveryList[0].id;
-               this.sub_total = this.deliveryList[0].price
+               // this.sub_total = this.deliveryList[0].price
                console.log(this.deliveryList)
 
             } else {
@@ -237,7 +241,7 @@ export class AddressPreviewComponent {
    }
    TimeSlot(): void {
       let payload: any = {};
-      payload.super_admin_id = environment.superAdminId;
+      payload.super_admin_id = this.superAdminId ;
       // payload.business_id = this.businessDetails.id;
       // payload.vehicle_type_id = this.newOrder.vehicleType;
       this.apiService.getTimeSlot(payload).subscribe({
@@ -292,7 +296,7 @@ export class AddressPreviewComponent {
    }
    getWalletAmount(): void {
       let payload: any = {};
-      payload.super_admin_id = environment.superAdminId;
+      payload.super_admin_id = this.superAdminId ;
       payload.user_id = this.userData.id;
       // payload.vehicle_type_id = this.newOrder.vehicleType;
       this.apiService.get_wallet_amount(payload).subscribe({
@@ -411,7 +415,7 @@ export class AddressPreviewComponent {
       if (value.auto_accepted_id == 1) {
          console.log(value.id, 'selectedPaymentType')
          this.paymentTypesSelection('138')
-         console.log(value.id, 'selectedPaymentType')
+      
       }
 
 
@@ -423,6 +427,11 @@ export class AddressPreviewComponent {
       } else if (value.value == '138') {
 
       }
+      const currentDate = new Date();
+
+
+      this.selectedDate = currentDate.toISOString().split('T')[0];
+      this.formattedDate = this.formatDateToDDMMYYYY(this.selectedDate);
       this.selectedPaymentType = value;
 
 
@@ -431,7 +440,7 @@ export class AddressPreviewComponent {
    }
    deduct_wallet_amount(): void {
       let payload: any = {};
-      payload.super_admin_id = environment.superAdminId;
+      payload.super_admin_id = this.superAdminId ;
       payload.user_id = this.userData.id;
       payload.amount = this.sub_total;
       // payload.vehicle_type_id = this.newOrder.vehicleType;
@@ -456,7 +465,7 @@ export class AddressPreviewComponent {
    }
    add_wallet_amount(): void {
       let payload: any = {};
-      payload.super_admin_id = environment.superAdminId;
+      payload.super_admin_id = this.superAdminId ;
       payload.user_id = this.userData.id;
       payload.amount = this.sub_total;
       // payload.vehicle_type_id = this.newOrder.vehicleType;
@@ -814,7 +823,7 @@ export class AddressPreviewComponent {
       payload.invoice_id = id
       payload.dr_amount = this.sub_total
       payload.amount = this.sub_total
-      payload.super_admin_id = environment.superAdminId
+      payload.super_admin_id = this.superAdminId 
       payload.created_on_date = formattedDate
       payload.payment_date = formattedDate
       payload.pay_for_ledger = this.selectedPaymentType
@@ -876,7 +885,7 @@ export class AddressPreviewComponent {
       payload.invoice_id = id
       payload.cr_amont = this.sub_total
       payload.amount = this.sub_total
-      payload.super_admin_id = environment.superAdminId
+      payload.super_admin_id = this.superAdminId 
       payload.created_on_date = formattedDate
       payload.payment_date = formattedDate
       payload.pay_for_ledger = this.selectedPaymentType
@@ -951,7 +960,7 @@ export class AddressPreviewComponent {
       payload.drop_phone_no = this.dropLocation.person_phone_no
       payload.pickup_person_name = this.pickupLocation.person_name
       payload.pickup_phone_no = this.pickupLocation.person_phone_no
-      payload.super_admin_id = environment.superAdminId
+      payload.super_admin_id = this.superAdminId 
       payload.drop_address = this.dropLocation.address_details
       payload.pickup_address = this.pickupLocation.address_details
       payload.parcel_weight = this.listofInvoice
@@ -1015,7 +1024,7 @@ export class AddressPreviewComponent {
       payload.drop_phone_no = this.dropLocation.person_phone_no
       payload.pickup_person_name = this.pickupLocation.person_name
       payload.pickup_phone_no = this.pickupLocation.person_phone_no
-      payload.super_admin_id = environment.superAdminId
+      payload.super_admin_id = this.superAdminId 
       payload.drop_address = this.dropLocation.address_details
       payload.pickup_address = this.pickupLocation.address_details
       payload.parcel_weight = this.listofInvoice
@@ -1057,7 +1066,7 @@ export class AddressPreviewComponent {
       }
       let payload: any = {
          // "user_id": environment.riderId,
-         // "super_admin_id": environment.superAdminId,
+         // "super_admin_id": this.superAdminId ,
          // "authToken": localStorage.getItem('authToken'),
          "delivery_id": this.deliveryId,
          "invoice_id": String(this.invoice_id),
@@ -1391,7 +1400,7 @@ export class AddressPreviewComponent {
    }
    getDeliveryDetail() {
       this.cdr.detectChanges();
-      let payload = { order_delivery_details_id: this.deliveryId, super_admin_id: environment.superAdminId }
+      let payload = { order_delivery_details_id: this.deliveryId, super_admin_id: this.superAdminId  }
       try {
          this.apiService.getOrderDeliveryDetail(payload).subscribe({
             next: (data: any) => {

@@ -34,6 +34,7 @@ export class AddAddressComponent implements AfterViewInit {
    isLoadingLocation = true; // Loader flag
    listofState: any;
    userData: any;
+   superAdminId: any;
 
    constructor(private route: ActivatedRoute, private confirmationService: ConfirmationService, private router: Router, private fb: FormBuilder, private apiService: ApiService, private toastService: ToastNotificationService) {
 
@@ -42,6 +43,8 @@ export class AddAddressComponent implements AfterViewInit {
 
          this.addressType = params['type'];
       });
+      this.superAdminId = this.apiService.getLocalValueInJSON(localStorage.getItem('super_admin'));
+
       this.businessDetail = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
       this.userData = this.apiService.getLocalValueInJSON(localStorage.getItem('userData'));
       //    this.pickupLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedPickup'));
@@ -71,7 +74,7 @@ export class AddAddressComponent implements AfterViewInit {
          house_no: [''],
          person_phone_no: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.maxLength(10), Validators.minLength(10)]],
          person_name: ['', [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)]],
-         super_admin_id: [environment.superAdminId],
+         super_admin_id: [this.superAdminId],
       });
 
       this.currentLocation()

@@ -20,12 +20,15 @@ export class CorouselComponent {
    loading: boolean = true;
    listofBanner: any[] = [];
    responsiveOptions: any[] | undefined;
+   superAdminId: any;
    constructor(private router: Router, private route: ActivatedRoute, private apiService: ApiService, private formBuilder: FormBuilder) {
       // this.route.params.subscribe((params) => {
       //   this.userId = params['user_id'];
 
       // });
       //  this.userInfo = this.apiService.getLocalValueInJSON(localStorage.getItem('userInfo'));
+      this.superAdminId = this.apiService.getLocalValueInJSON(localStorage.getItem('super_admin'));
+
       this.businessDetail = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
    }
    ngOnInit() {
@@ -35,7 +38,7 @@ export class CorouselComponent {
    getlistofBanner() {
       this.loading = true
       try {
-         this.apiService.list_of_banner({ super_admin_id: environment.superAdminId, plat_from: "vendor-app" }).subscribe({
+         this.apiService.list_of_banner({ super_admin_id: this.superAdminId , plat_from: "vendor-app" }).subscribe({
             next: (data: any) => {
                if (data.status) {
                   let ApiResponse: any = data;
@@ -43,7 +46,7 @@ export class CorouselComponent {
                   console.log(this.listofBanner)
                   this.listofBanner = ApiResponse.data.filter((banner: any) =>
 
-                     banner.super_admin_id == environment.superAdminId && banner.plat_from == 'vendor-app'
+                     banner.super_admin_id == this.superAdminId  && banner.plat_from == 'vendor-app'
                   );
 
 

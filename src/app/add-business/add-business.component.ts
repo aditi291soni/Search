@@ -31,11 +31,14 @@ export class AddBusinessComponent {
    blob: Blob | undefined;
    listofState: any[] = [];
    business_id: any;
+   superAdminId: any;
    constructor(private fb: FormBuilder, private apiService: ApiService, private route: ActivatedRoute, private router: Router,) {
       this.route.params.subscribe((params) => {
 
          this.business_id = params['id'];
       });
+      this.superAdminId = this.apiService.getLocalValueInJSON(localStorage.getItem('super_admin'));
+
    }
 
    ngOnInit(): void {
@@ -51,7 +54,7 @@ export class AddBusinessComponent {
          state_id: ['', Validators.required],
          gst_registration: ['0'],
          gst_number: ['',],
-         super_admin: [environment.superAdminId],
+         super_admin: [this.superAdminId],
          logo_image: [''],
          country_id: ['101'],
          own_business: ['1'],

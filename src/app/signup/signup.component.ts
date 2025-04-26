@@ -10,12 +10,13 @@ import { CommonModule } from '@angular/common';
 import { SkeletonModule } from 'primeng/skeleton';
 import { environment } from '../../environments/environment';
 import { PasswordModule } from 'primeng/password';
-
+import { Select } from 'primeng/select';
+import { DropdownModule } from 'primeng/dropdown';
 @Component({
    selector: 'app-signup',
    standalone: true,
    imports: [ButtonModule, CardModule, CommonModule, InputTextModule, ButtonModule, CommonModule, SkeletonModule, FormsModule, PasswordModule,
-      ReactiveFormsModule,],
+      ReactiveFormsModule,DropdownModule,Select],
    templateUrl: './signup.component.html',
    styleUrl: './signup.component.css'
 })
@@ -27,6 +28,17 @@ export class SignupComponent {
    business: any[] = [];
    signInForm: any;
    showPassword: boolean = false;
+//   super_admin_list:any = [
+//       { name: 'Bhopal', id: '8' },  
+//       // { name: 'Indore', id: '9' },
+//       { name: 'Vidisha', id: '6' },
+  
+   
+//   ];
+  super_admin_list = [
+   { name: 'Bhopal', id: '8' },
+   { name: 'Indore', id: '6' },
+ ];
    constructor(
       private apiService: ApiService,
       private router: Router,
@@ -39,10 +51,11 @@ export class SignupComponent {
          phone: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
          password: ['', [Validators.required, Validators.minLength(6)]],
          password_confirmation: ['', [Validators.required]],
-         super_admin: [environment.superAdminId, [Validators.required]],
+         super_admin: ['8', [Validators.required]],
          role_id: ['4']
       })
    }
+
    redirectToSignUp() {
       this.router.navigate(['/auth/sign-in']); // Navigates to the route
    }
@@ -55,6 +68,7 @@ export class SignupComponent {
          next: (response) => {
             // Handle successful sign-in
             if (response.status === true) {
+               localStorage.setItem('super_admin',  this.signInForm.value.super_admin);
                // Store token and user data in localStorage
                // localStorage.setItem('authToken', response.data.token);
                // localStorage.setItem('userData', JSON.stringify(response.data));

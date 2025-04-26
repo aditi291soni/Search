@@ -44,12 +44,15 @@ export class NewOrderComponent {
    distance: any;
    distanceResult: string = '';
    categories: string[] = ['Food', 'Book', 'Medicines', 'Documents', 'Grocery', 'Cake', 'Other'];
+   superAdminId: any;
 
    constructor(private apiService: ApiService, private router: Router, private fb: FormBuilder, private toastService: ToastNotificationService) {
       this.distanceMatrixService = new google.maps.DistanceMatrixService();
       this.pickupLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedPickup'));
       this.dropLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedDrop'));
       this.businessDetails = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
+      this.superAdminId = this.apiService.getLocalValueInJSON(localStorage.getItem('super_admin'));
+
       this.newOrder = this.apiService.getLocalValueInJSON(localStorage.getItem('new-order'));
       this.form = this.fb.group({
          vehicle_type_id: ['', Validators.required],
@@ -103,7 +106,9 @@ export class NewOrderComponent {
    }
 
    fetchVehicleTypeList(): void {
-      const superAdminId = environment.superAdminId;
+      const superAdminId = this.superAdminId ;
+      console.log('Super admin id', superAdminId);
+      
       this.apiService.getVehicleTypeList(superAdminId).subscribe({
          next: (response) => {
             if (response.status === true) {

@@ -47,6 +47,7 @@ export class OrderViewComponent {
    userData: any;
    intervalId: any;
    vehicle_name: any;
+   superAdminId: any;
 
    constructor(
       private apiService: ApiService,
@@ -60,6 +61,7 @@ export class OrderViewComponent {
       this.businessDetails = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
       this.orderstatus = this.apiService.getLocalValueInJSON(localStorage.getItem('order-status'));
       this.userData = this.apiService.getLocalValueInJSON(localStorage.getItem('userData'));
+      this.superAdminId = this.apiService.getLocalValueInJSON(localStorage.getItem('super_admin'));
 
       this.route.params.subscribe((params) => {
          this.invoiceId = params['invoice_id'];
@@ -90,7 +92,7 @@ export class OrderViewComponent {
    getInvoice(): void {
       this.loading = true
       let payload = {
-         super_admin_id: environment.superAdminId,
+         super_admin_id: this.superAdminId ,
          invoice_id: this.invoiceId,
          invoice_type: 'order',
       };
@@ -114,7 +116,7 @@ export class OrderViewComponent {
    getOrderDelivery(id: any): void {
       this.loading = true
       let payload = {
-         super_admin_id: environment.superAdminId,
+         super_admin_id: this.superAdminId ,
          order_delivery_details_id: id,
       };
 
@@ -184,7 +186,7 @@ export class OrderViewComponent {
    getOrderStatus(): void {
       this.loading = true
       let payload = {
-         super_admin_id: environment.superAdminId,
+         super_admin_id: this.superAdminId ,
       };
 
       this.apiService.getOrderStatus(payload).subscribe({
@@ -213,7 +215,7 @@ export class OrderViewComponent {
    getDelivery(id: any): void {
       this.loading = true;
       let payload = {
-         super_admin_id: environment.superAdminId,
+         super_admin_id: this.superAdminId ,
          delivery_type_id: id,
       };
 
@@ -236,7 +238,7 @@ export class OrderViewComponent {
    getVehicle(id: any): void {
       this.loading = true;
       let payload = {
-         super_admin_id: environment.superAdminId,
+         super_admin_id: this.superAdminId ,
          vehicle_type_id: id,
       };
 
@@ -257,7 +259,7 @@ export class OrderViewComponent {
    }
    getTimeSlot(id: any): void {
       let payload = {
-         super_admin_id: environment.superAdminId,
+         super_admin_id: this.superAdminId ,
          time_slot_id: id,
       };
 
@@ -276,7 +278,7 @@ export class OrderViewComponent {
 
    getUser(id: any): void {
       let payload = {
-         super_admin_id: environment.superAdminId,
+         super_admin_id: this.superAdminId ,
          user_id: id,
       };
 
@@ -355,7 +357,7 @@ export class OrderViewComponent {
 
    add_wallet_amount(): void {
       let payload: any = {};
-      payload.super_admin_id = environment.superAdminId;
+      payload.super_admin_id = this.superAdminId ;
       payload.user_id = this.userData.id;
       payload.amount = this.invoice?.subtotal - this.cancellation;
       console.log("c4", this.invoice?.subtotal, this.cancellation, payload.amount)
@@ -481,7 +483,7 @@ export class OrderViewComponent {
       payload.pay_to_uid = this.userData.id
       payload.cr_amont = this.invoice.subtotal - Number(this.cancellation)
       payload.amount = this.invoice.subtotal - Number(this.cancellation)
-      payload.super_admin_id = environment.superAdminId
+      payload.super_admin_id = this.superAdminId 
       payload.created_on_date = formattedDate
       payload.payment_date = formattedDate
       payload.pay_for_ledger = this.order.pay_on == '138' ? '138' : '139'

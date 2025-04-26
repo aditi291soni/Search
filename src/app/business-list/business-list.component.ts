@@ -17,16 +17,20 @@ export class BusinessListComponent {
    businessList: any[] = []; // List of vehicle types
    loading: boolean = true;
    selectedBusiness: any;
+   superAdminId: any;
    //  @param {ApiService} apiService
 
-   constructor(private apiService: ApiService, private route: ActivatedRoute, private router: Router,) { }
+   constructor(private apiService: ApiService, private route: ActivatedRoute, private router: Router,) {
+      this.superAdminId = this.apiService.getLocalValueInJSON(localStorage.getItem('super_admin'));
+
+    }
 
    ngOnInit(): void {
       this.fetchBusinessList();
    }
 
    fetchBusinessList(): void {
-      const superAdminId = environment.superAdminId;
+      const superAdminId = this.superAdminId ;
 
       this.apiService.getBusinessList(superAdminId.toString()).subscribe({
          next: (response) => {

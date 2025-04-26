@@ -24,12 +24,14 @@ export class CustomersComponent {
    businessDetail: any;
    activatedRoute: any;
    searchQuery: any;
+   superAdminId: any;
    //  @param {ApiService} apiService
 
    constructor(private apiService: ApiService, private route: ActivatedRoute, private customerService: CustomerService,
       private router: Router) {
       this.userInfo = this.apiService.getLocalValueInJSON(localStorage.getItem('userInfo'));
       this.businessDetail = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
+      this.superAdminId = this.apiService.getLocalValueInJSON(localStorage.getItem('super_admin'));
 
    }
 
@@ -59,7 +61,7 @@ export class CustomersComponent {
    }
 
    fetchCustomerList(): void {
-      const superAdminId = environment.superAdminId;
+      const superAdminId = this.superAdminId ;
 
       this.customerService.getCustomerList({ business_id: this.businessDetail.id }).subscribe({
          next: (response) => {

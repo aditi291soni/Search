@@ -31,6 +31,24 @@
                   (click)="togglePasswordVisibility()"></i>
             </div>
          </div>
+         <div class="p-field">
+            <div class="thin">City <span class="mandatory">*</span></div>
+            <div class="password-container">
+               <p-select 
+              [options]="super_admin_list"
+               formControlName="super_admin"
+               optionValue="id"
+               optionLabel="name"
+               class="w-full md:w-100">
+             </p-select>
+             </div>
+          
+        
+    
+           
+
+     
+         </div>
          <div class="form-actions flex">
             <button type="submit" pButton label="Sign Up" class="p-button-primary" [disabled]="loading"
                [loading]="loading">

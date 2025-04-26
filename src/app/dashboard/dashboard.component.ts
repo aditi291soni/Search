@@ -50,6 +50,7 @@ export class DashboardComponent implements OnInit {
    orderstatus: any[] = [];
    orderComplete: any;
    listofBanner: any;
+   superAdminId: any;
 
    /**
     * Creates an instance of DashboardComponent.
@@ -58,6 +59,8 @@ export class DashboardComponent implements OnInit {
    constructor(private apiService: ApiService, private router: Router, private cdr: ChangeDetectorRef,) {
       this.userInfo = this.apiService.getLocalValueInJSON(localStorage.getItem('userData'));
       this.businessDetails = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
+      this.superAdminId = this.apiService.getLocalValueInJSON(localStorage.getItem('super_admin'));
+
       this.orderstatus = this.apiService.getLocalValueInJSON(localStorage.getItem('order-status'));
       this.orderComplete = this.apiService.getLocalValueInJSON(localStorage.getItem('orderComplete'));
    }
@@ -95,7 +98,7 @@ export class DashboardComponent implements OnInit {
                   this.listofBanner = ApiResponse.data
                      // .filter((banner: any) =>
 
-                     //    banner.super_admin_id == environment.superAdminId && banner.plat_from == 'vendor-app'
+                     //    banner.super_admin_id == this.superAdminId  && banner.plat_from == 'vendor-app'
                      // )
                      .map((banner: any) => banner.image + '?tr=w-300,h-120');
 
@@ -213,7 +216,7 @@ export class DashboardComponent implements OnInit {
 
    getOrderStatus(): void {
       let payload = {
-         super_admin_id: environment.superAdminId,
+         super_admin_id: this.superAdminId ,
       };
 
       this.apiService.getOrderStatus(payload).subscribe({

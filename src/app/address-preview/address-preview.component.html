@@ -132,11 +132,11 @@
          <br *ngIf="timeslot === '1'">
 
          <!-- Payment Modes -->
-         <h4>Payment Modes <span class="mandatory">*</span></h4>
+         <h4 *ngIf="selectedDeliveryType">Payment Modes <span class="mandatory">*</span></h4>
 
 
 
-         <div class="container">
+         <div class="container" *ngIf="selectedDeliveryType">
             <div class="recent-order-items" (click)="paymentTypesSelection('138')"
                [class.selected]="selectedPaymentType == '138'">
                <i class="pi pi-wallet"></i> Wallet
