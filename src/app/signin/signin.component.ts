@@ -83,7 +83,8 @@ export class SigninComponent {
                // Store token and user data in localStorage
                localStorage.setItem('authToken', response.data.token);
                localStorage.setItem('userData', JSON.stringify(response.data));
-               localStorage.setItem('super_admin', response.data.super_admin || 8);
+               localStorage.setItem('super_business', response.data.super_business_id[0] || 1113);
+               localStorage.setItem('super_admin', response.data.super_admin_id || 8);
                if (response.data.role_id != '9') {
                   // Show success notification
                   this.toastService.showSuccess('Login successful!');

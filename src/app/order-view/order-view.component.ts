@@ -48,6 +48,7 @@ export class OrderViewComponent {
    intervalId: any;
    vehicle_name: any;
    superAdminId: any;
+   super_business: any;
 
    constructor(
       private apiService: ApiService,
@@ -62,6 +63,7 @@ export class OrderViewComponent {
       this.orderstatus = this.apiService.getLocalValueInJSON(localStorage.getItem('order-status'));
       this.userData = this.apiService.getLocalValueInJSON(localStorage.getItem('userData'));
       this.superAdminId = this.apiService.getLocalValueInJSON(localStorage.getItem('super_admin'));
+      this.super_business= this.apiService.getLocalValueInJSON(localStorage.getItem('super_business'));
 
       this.route.params.subscribe((params) => {
          this.invoiceId = params['invoice_id'];
@@ -476,7 +478,7 @@ export class OrderViewComponent {
       const currentDate = new Date();
       const formattedDate = currentDate.toISOString().split('T')[0];
       let payload: any = {}
-      payload.business_id =  environment.business_id
+      payload.business_id =  this.super_business
       // payload.business_id = this.businessDetails ? this.businessDetails.id : null
       // payload.for_user_id=this.userId ? this.userId : this.default
       payload.invoice_id = id

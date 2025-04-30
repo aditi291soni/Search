@@ -45,6 +45,7 @@ export class NewOrderComponent {
    distanceResult: string = '';
    categories: string[] = ['Food', 'Book', 'Medicines', 'Documents', 'Grocery', 'Cake', 'Other'];
    superAdminId: any;
+   super_business: any;
 
    constructor(private apiService: ApiService, private router: Router, private fb: FormBuilder, private toastService: ToastNotificationService) {
       this.distanceMatrixService = new google.maps.DistanceMatrixService();
@@ -52,6 +53,7 @@ export class NewOrderComponent {
       this.dropLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedDrop'));
       this.businessDetails = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
       this.superAdminId = this.apiService.getLocalValueInJSON(localStorage.getItem('super_admin'));
+      this.super_business= this.apiService.getLocalValueInJSON(localStorage.getItem('super_business'));
 
       this.newOrder = this.apiService.getLocalValueInJSON(localStorage.getItem('new-order'));
       this.form = this.fb.group({
@@ -161,7 +163,7 @@ export class NewOrderComponent {
       // if (this.businessDetails) {
       //    payload.business_id = this.businessDetails ? this.businessDetails.id : 488;
       // }
-      payload.business_id =  environment.business_id;
+      payload.business_id =  this.super_business;
 
       payload.pickup_person_name = this.pickupLocation.person_name;
       payload.drop_person_name = this.dropLocation.person_name;

@@ -22,6 +22,7 @@ export class OrdersComponent {
    searchQuery: any;
    order_status: any;
    orders: any[] = [];
+   super_business: any;
 
    /**
     * Creates an instance of DashboardComponent.
@@ -30,6 +31,8 @@ export class OrdersComponent {
    constructor(private apiService: ApiService, private router: Router, private activatedRoute: ActivatedRoute, private cdRef: ChangeDetectorRef
 
    ) {
+      this.super_business= this.apiService.getLocalValueInJSON(localStorage.getItem('super_business'));
+
       this.userInfo = this.apiService.getLocalValueInJSON(localStorage.getItem('userData'));
       this.businessDetails = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
       this.order_status = this.apiService.getLocalValueInJSON(localStorage.getItem('order-status'));
@@ -82,7 +85,7 @@ export class OrdersComponent {
    fetchOrderList(): void {
       // this.loading = true;
       let payload: any = {};
-      payload.business_id =  environment.business_id;
+      payload.business_id =  this.super_business;
       if (this.businessDetails && this.businessDetails.id) {
          payload.for_business_id = this.businessDetails.id
       } else {

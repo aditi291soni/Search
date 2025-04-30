@@ -38,9 +38,12 @@ export class LayoutComponent {
    loading: boolean = false;
    businessDetail: any;
    showProfileBar: boolean = false;
+   superAdminId: any;
    constructor(private cdr: ChangeDetectorRef, private router: Router, private toastService: ToastNotificationService, private confirmationService: ConfirmationService,
       private searchService: SearchBarService, private activatedRoute: ActivatedRoute, private apiService: ApiService,
    ) {
+      this.superAdminId = this.apiService.getLocalValueInJSON(localStorage.getItem('super_admin'));
+
       this.userData = this.apiService.getLocalValueInJSON(localStorage.getItem('userData'));
       this.businessDetail = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
       this.wallet = this.apiService.getLocalValueInJSON(localStorage.getItem('wallet'));
@@ -184,7 +187,7 @@ export class LayoutComponent {
    }
    getWalletAmount(): void {
       let payload: any = {};
-      payload.super_admin_id = environment.superAdminId;
+      payload.super_admin_id =  this.superAdminId;
       payload.user_id = this.userData ? this.userData.id : 0;
       // payload.vehicle_type_id = this.newOrder.vehicleType;
       this.apiService.get_wallet_amount(payload).subscribe({
@@ -211,7 +214,7 @@ export class LayoutComponent {
    }
    createWallet(): void {
       let payload: any = {};
-      payload.super_admin_id = environment.superAdminId;
+      payload.super_admin_id =  this.superAdminId;
       payload.user_id = this.userData ? this.userData.id : 0;
       // payload.vehicle_type_id = this.newOrder.vehicleType;
       this.apiService.create_wallet_amount(payload).subscribe({

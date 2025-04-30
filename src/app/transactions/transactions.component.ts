@@ -23,12 +23,14 @@ export class TransactionsComponent {
      loading: boolean = true; 
    userInfo: any;
    businessDetail: any;
+   superAdminId: any;
    //  @param {ApiService} apiService
       
       constructor(private apiService: ApiService,private route: ActivatedRoute,private customerService:CustomerService) {
          this.userInfo = this.apiService.getLocalValueInJSON(localStorage.getItem('userInfo'));
          this.businessDetail = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
-     
+         this.superAdminId = this.apiService.getLocalValueInJSON(localStorage.getItem('super_admin'));
+
        }
    
       ngOnInit(): void {
@@ -36,7 +38,7 @@ export class TransactionsComponent {
       }
    
         fetchCustomerList(): void {
-           const superAdminId = environment.superAdminId;
+           const superAdminId = this.superAdminId ;
      
            this.apiService.getTransactionList({business_id:this.businessDetail.id}).subscribe({
               next: (response) => {

@@ -51,6 +51,7 @@ export class DashboardComponent implements OnInit {
    orderComplete: any;
    listofBanner: any;
    superAdminId: any;
+   super_business: any;
 
    /**
     * Creates an instance of DashboardComponent.
@@ -60,6 +61,7 @@ export class DashboardComponent implements OnInit {
       this.userInfo = this.apiService.getLocalValueInJSON(localStorage.getItem('userData'));
       this.businessDetails = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
       this.superAdminId = this.apiService.getLocalValueInJSON(localStorage.getItem('super_admin'));
+      this.super_business= this.apiService.getLocalValueInJSON(localStorage.getItem('super_business'));
 
       this.orderstatus = this.apiService.getLocalValueInJSON(localStorage.getItem('order-status'));
       this.orderComplete = this.apiService.getLocalValueInJSON(localStorage.getItem('orderComplete'));
@@ -89,7 +91,7 @@ export class DashboardComponent implements OnInit {
    getlistofBanner() {
       this.loading = true
       try {
-         this.apiService.list_of_banner({ business_id:  environment.business_id }).subscribe({
+         this.apiService.list_of_banner({ business_id:  this.super_business }).subscribe({
             next: (data: any) => {
                if (data.status) {
                   let ApiResponse: any = data;
@@ -157,7 +159,7 @@ export class DashboardComponent implements OnInit {
 
       this.loading = true;
       let payload: any = {};
-      payload.business_id =  environment.business_id;
+      payload.business_id =  this.super_business;
       if (this.businessDetails && this.businessDetails.id) {
          payload.for_business_id = this.businessDetails.id
       } else {
