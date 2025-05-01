@@ -61,7 +61,7 @@ export class AddressPreviewComponent {
    order_status: any;
    selectedDate: string = '';
    formattedDate: string = ''
-   
+   formattedDates: Date | undefined;
    minDate: Date | undefined;
    distance_value: any;
    distance_unit: any;
@@ -108,10 +108,11 @@ export class AddressPreviewComponent {
 
 
       this.selectedDate = currentDate.toISOString().split('T')[0];
+
       this.formattedDate = this.formatDateToDDMMYYYY(this.selectedDate);
       this.minDate = currentDate;
 
-      console.log(this.formattedDate)
+      console.log( this.selectedDate)
    }
    pickup = {
       name: 'Aditi Mp',
@@ -172,7 +173,7 @@ export class AddressPreviewComponent {
       // console.log("Default Selected Date:", this.selectedDate);
    }
    onDateSelect(event: Date) {
-      
+  
       // const currentDate = new Date();
 
       // this.minDate = currentDate;
@@ -180,9 +181,10 @@ export class AddressPreviewComponent {
       const istOffset = 5.5 * 60 * 60 * 1000; // IST offset in milliseconds
       const localDate = new Date(event.getTime() + istOffset); // Convert UTC to IST
       // this.minDa  te = localDate;
+    
       this.selectedDate = localDate.toISOString().split('T')[0]; // Format as "yyyy-mm-dd"
       this.formattedDate = this.formatDateToDDMMYYYY(this.selectedDate);
-      console.log("Selected Date (IST):", this.formattedDate);
+      console.log("Selected Date (IST):", this.formattedDates);
 
       this.TimeSlot()
    }
@@ -434,11 +436,11 @@ console.log("ad",adjustedTime)
          // this.minDa  te = localDate;
          this.selectedDate = localDate.toISOString().split('T')[0]; // Format as "yyyy-mm-dd"
          this.formattedDate = this.formatDateToDDMMYYYY(this.selectedDate);
-     
+         this.formattedDates = localDate
 
          
 
-         console.log("Selected Date (IST):", this.formattedDate);
+         console.log("Selected Date (IST):", localDate);
       }
 
 

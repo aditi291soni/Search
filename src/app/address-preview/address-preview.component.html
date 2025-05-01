@@ -116,9 +116,9 @@
 
 
          <p-calendar *ngIf="timeslot === '1'" [minDate]="minDate" id="dob" dateFormat="dd-mm-yy" appendTo="body"
-            [showIcon]="true" [(ngModel)]="formattedDate" (onSelect)="onDateSelect($event)"
+            [showIcon]="true" [(ngModel)]="formattedDates" (onSelect)="onDateSelect($event)"
             [style]="{'width': '100%'}"></p-calendar>
-         <small *ngIf="submitted && !this.formattedDate && timeslot === '1'" class="error-text">
+         <small *ngIf="submitted && !this.formattedDates && timeslot === '1'" class="error-text">
             Please select a Slot Date
          </small>
          <h4 *ngIf="timeslot === '1'">Select Time Slot <span class="mandatory">*</span></h4>
