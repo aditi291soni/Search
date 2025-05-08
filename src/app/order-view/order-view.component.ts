@@ -153,27 +153,34 @@ export class OrderViewComponent {
       // if (!this.order?.order_status_id) return;
 
       const excludeMap: { [key: number]: number[] } = {
-         45: [34, 26, 25, 35],
-         42: [33, 26, 25, 35],
-         43: [34, 26, 25, 35],
-         40: [34, 26, 25, 35]
+         // 45: [20, 11, 10, 21],
+         // 42: [19, 11, 10, 21],
+         // 43: [20, 11, 10, 21],
+         // 40: [20, 11, 10, 21]
+         1: [20, 11, 10, 21],
+         2: [19, 11, 10, 21],
+         3: [20, 11, 10, 21],
+         4: [20, 11, 10, 21]
       };
-
       this.filteredOrderStatus = this.orderstatus.filter(status =>
-         !excludeMap[this.order?.delivery_type_id]?.includes(status.id)
+         !excludeMap[ this.delivery_name?.master_delivery_type_id]?.includes(status.id)
       );
+console.log("f", this.filteredOrderStatus)
+      // this.filteredOrderStatus = this.orderstatus.filter(status =>
+      //    !excludeMap[this.order?.delivery_type_id]?.includes(status.id)
+      // );
 
-      // Assign the filtered result to orderStatusFilter
+    
       this.orderstatus = [...this.filteredOrderStatus];
       this.updateTimeline();
       this.cdr.detectChanges();
 
-      // if (this.order?.order_status_id === 33) {
-      //    this.filteredOrderStatus = this.orderstatus.filter(status => ![34, 26, 25].includes(status.id));
-      // } else if (this.order?.order_status_id === 34) {
-      //    this.filteredOrderStatus = this.orderstatus.filter(status => ![33, 26, 25].includes(status.id));
+      // if (this.order?.order_status_id === 19) {
+      //    this.filteredOrderStatus = this.orderstatus.filter(status => ![20, 11, 10].includes(status.id));
+      // } else if (this.order?.order_status_id === 20) {
+      //    this.filteredOrderStatus = this.orderstatus.filter(status => ![19, 11, 10].includes(status.id));
       // } else if (this.order?.order_status_id === 32) {
-      //    this.filteredOrderStatus = this.orderstatus.filter(status => ![34, 26, 25].includes(status.id));
+      //    this.filteredOrderStatus = this.orderstatus.filter(status => ![20, 11, 10].includes(status.id));
       // }
    }
    makePhoneCall(phoneNumber: string): void {
@@ -307,9 +314,9 @@ export class OrderViewComponent {
       const currentIndex = this.orderstatus.findIndex(status => status.id == this.status_id);
       console.log(currentIndex, this.status_id)
       this.events = this.orderstatus.map((status, index) => ({
-         status: status.name_for_user,
+         status: status.order_status_name,
          date: '', // Add date field if needed
-         description: `Order is ${status.name_for_user}`,
+         description: `Order is ${status.order_status_name}`,
          icon: index <= currentIndex ? 'pi pi-check-circle' : 'pi pi-circle-off',
          color: index <= currentIndex ? 'green' : 'gray',
          lineColor: index <= currentIndex ? 'green' : 'gray',
@@ -323,14 +330,14 @@ export class OrderViewComponent {
 
       this.status = this.orderstatus.find(s => s.id === statusId);
       this.loading = false;
-      this.status ? this.status.name_for_user : "N/A"; // Return status name if found, else 'Unknown'
+      this.status ? this.status.order_status_name : "N/A"; // Return status name if found, else 'Unknown'
    }
    cancels() {
       console.log("c", this.status, this.cancellation)
 
       if (this.status.id
-         == 30 || this.status.id
-         == 29) {
+         == 16|| this.status.id
+         == 14) {
          this.cancellation = Number(this.delivery_name.cancelation_charges)
       }
 
@@ -340,7 +347,7 @@ export class OrderViewComponent {
          this.add_wallet_amount()
          this.creaditTransaction(this.invoiceId)
       }
-      this.status_id = 25
+      this.status_id = 10
       this.editDeliveries()
       this.editInvoice()
 
@@ -388,7 +395,7 @@ export class OrderViewComponent {
       payload.business_id = this.businessDetails ? this.businessDetails.id : null
       payload.order_delivery_details_id = this.deliveryId
       payload.status = 1
-      payload.order_status_id = 25
+      payload.order_status_id = 10
 
       payload.invoice_id = this.invoiceId ? this.invoiceId : 0
       // payload.user_id=

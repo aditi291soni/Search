@@ -98,7 +98,8 @@ export class ListOfAddressComponent {
       } else {
          payload.user_id = this.userData ? this.userData.id : 0;
       }
-
+payload.page=1
+payload.per_page=5000
 
       this.apiService.getAddressList(payload).subscribe({
          next: (response) => {

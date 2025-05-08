@@ -80,7 +80,7 @@ export class OrdersComponent {
    getDynamicStatusName(statusId: number): string {
       const status = this.order_status.find((s: { id: number; }) => s.id === statusId);
       console.log(statusId)
-      return status ? status.name_for_user : "N/A"; // Return status name if found, else 'Unknown'
+      return status ? status.order_status_name : "N/A"; // Return status name if found, else 'Unknown'
    }
    fetchOrderList(): void {
       // this.loading = true;

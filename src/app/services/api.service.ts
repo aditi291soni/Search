@@ -228,7 +228,7 @@ export class ApiService {
 
    getOrderStatus(params: object): Observable<any> {
 
-      return this.http.post(`${this.baseUrl}/get-order-status-list`, params, this.getHttpOptions()).pipe(
+      return this.http.post(`${this.baseUrl}/get-master-order-status-list`, this.getHttpOptions()).pipe(
          catchError((error) => {
             console.error('Error fetching the list of addresses:', error); // Log error for debugging
             return throwError(() => new Error('Failed to fetch the list of addresses')); // Return a user-friendly error message
@@ -450,6 +450,15 @@ export class ApiService {
     */
    private getHttpOptions(): { headers: HttpHeaders } {
       const token = localStorage.getItem('authToken'); // Replace with a secure method if needed
+      return {
+         headers: new HttpHeaders({
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token || ''}`,
+         }),
+      };
+   }
+   private getHttpOptionMaster(): { headers: HttpHeaders } {
+      const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvYXBpLm1hZ2ljcXIuaW5cL3B1YmxpY1wvYXBpXC9zdXBlci1hZG1pbi1zaWduLWluIiwiaWF0IjoxNzQ2NDI0NjM3LCJleHAiOjE3NDcwMjk0MzcsIm5iZiI6MTc0NjQyNDYzNywianRpIjoibGlsTnRTMXVaSXBhOThRWCIsInN1YiI6OCwicHJ2IjoiOTcxMDBmOGFjNDQyY2FiMWNkY2RlZmNkNjZkMDZmYzE4YzE0MGZmZCIsImVtYWlsIjoiZHJvcHpvbmVAZ21haWwuY29tIiwicGhvbmUiOiIxMjU0NjMyNTYxIiwiaWQiOjgsInVzZXIiOnsiZW1haWwiOm51bGwsInBob25lIjpudWxsLCJpZCI6bnVsbH19.p2N6hijIinP5UG8wjXFloCnTOfO24kYMp-4_Ca3wY9k"; // Replace with a secure method if needed
       return {
          headers: new HttpHeaders({
             'Content-Type': 'application/json',

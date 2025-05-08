@@ -19,7 +19,7 @@
       <!-- <p-progressSpinner *ngIf="loadings" styleClass="custom-spinner"></p-progressSpinner> -->
 
       <button pButton type="button" type="button" style="margin-left: 5px;" icon="pi pi-times"
-         *ngIf="![ 29,28, 27, 26,25].includes(this.status_id)" (click)="confirm2($event)"
+         *ngIf="![ 14,13, 12, 11,10].includes(this.status_id)" (click)="confirm2($event)"
          class="p-button-outlined p-button-danger">
       </button>
    </div>
@@ -32,10 +32,10 @@
 
       <div class="right">
          <h2 [ngClass]="{
-         'text-success': status?.name_for_user == 'Delivered',
-         'text-danger ': status?.name_for_user == 'Cancelled',
-         'text-dark': status?.name_for_user !== 'Delivered' && status?.name_for_user !== 'Cancelled'
-      }">{{this.status ? this.status.name_for_user : 'N?A'}}</h2>
+         'text-success': status?.order_status_name == 'Delivered',
+         'text-danger ': status?.order_status_name == 'Cancelled',
+         'text-dark': status?.order_status_name !== 'Delivered' && status?.order_status_name !== 'Cancelled'
+      }">{{this.status ? this.status.order_status_name : 'N?A'}}</h2>
 
       </div>
 
@@ -155,7 +155,7 @@
                   this.order.rider_name.slice(1)) : "No rider assigned" }}
                </div>
             </div>
-            <div class="right-icons" *ngIf="this.order.rider_phone && this.status_id !='25'">
+            <div class="right-icons" *ngIf="this.order.rider_phone && this.status_id !='10'">
                <!-- Phone Button -->
                <div class="first">
                   <button pButton type="button" class="custom-button" (click)="makePhoneCall(this.order.rider_phone)">
@@ -204,7 +204,7 @@
       </div>
    </div>
 
-   <div class="flexed" *ngIf="this.status_id !='25'">
+   <div class="flexed" *ngIf="this.status_id !='10'">
       <div>
          <h4>Track Order</h4>
          <!-- <h4 class="add">Describes your order current position</h4> -->
@@ -212,7 +212,7 @@
       <!-- <button (click)="showTimeline()" pButton [label]="timelineshow ? 'Hide' : 'Show'"></button> -->
    </div>
    <div>
-      <div class="time-con" *ngIf="timelineshow && this.status_id !='25'  ">
+      <div class="time-con" *ngIf="timelineshow && this.status_id !='10'  ">
          <p-timeline *ngIf="isMobile" [value]="events" [layout]="isMobile ? 'vertical' : 'horizontal'"
             align="alternate">
             <ng-template let-event pTemplate="content">

@@ -102,8 +102,11 @@ export class DashboardComponent implements OnInit {
 
                      //    banner.super_admin_id == this.superAdminId  && banner.plat_from == 'vendor-app'
                      // )
-                     .map((banner: any) => banner.image + '?tr=w-300,h-120');
-
+                     // .map((banner: any) => banner.image + '?tr=w-300,h-120');
+                     .map((banner: any) => ({
+                        image: banner.image + '?tr=w-300,h-120',
+                        link: banner.link_url  // Make sure `banner.link` exists in the response
+                      }));
                   console.log("banner", this.listofBanner)
 
 
@@ -131,7 +134,7 @@ export class DashboardComponent implements OnInit {
          business_id: data.business_id,
          status: data.status,
          order_delivery_details_id: data.id,
-         order_status_id: 25, // Update only order_status_id
+         order_status_id: 10, // Update only order_status_id
       };
       try {
          this.apiService.edit_order_delivery_details(payload).subscribe({
@@ -180,7 +183,7 @@ export class DashboardComponent implements OnInit {
                // Ensure orders have order_status.id matched correctly
                this.order = response.data
 
-                  .filter((order: any) => order.order_no && order.order_status_id !== 35)
+                  .filter((order: any) => order.order_no && order.order_status_id !== 21)
                   .slice(0, 3)
                   .map((order: any) => ({
                      ...order,
@@ -235,10 +238,17 @@ export class DashboardComponent implements OnInit {
          complete: () => (this.loading = false),
       });
    }
+   navigateTo(link: string): void {
+      if (link && link.startsWith('http')) {
+         window.open(link, '_blank'); // Open external URL in new tab
+       } else {
+         console.warn('Invalid or missing URL:', link);
+       }
+    }
    getDynamicStatusName(statusId: number): string {
       const status = this.orderstatus.find(s => s.id == statusId);
       console.log("kk", statusId, status)
       this.cdr.detectChanges();
-      return status ? status.name_for_user : "N/A"; // Return status name if found, else 'Unknown'
+      return status ? status.order_status_name : "N/A"; // Return status name if found, else 'Unknown'
    }
 }

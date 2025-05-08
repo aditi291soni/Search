@@ -1223,7 +1223,7 @@ console.log("ad",adjustedTime)
                      setTimeout(() => {
 
 
-                        this.order_status = 35,
+                        this.order_status = 21,
                            this.confirmationService.confirm({
                               message: 'No Rider is Available at your Locations please try Standard or Schedule Delivery!',
                               header: 'Sorry!',
@@ -1378,7 +1378,7 @@ console.log("ad",adjustedTime)
       let elapsedTime = 0; // Track time elapsed
       const intervalId = setInterval(() => {
          elapsedTime += 7; // Increase elapsed time by 7 sec
-         if (this.order_status != '33') {
+         if (this.order_status != '19') {
 
             return;
          }
@@ -1403,7 +1403,7 @@ console.log("ad",adjustedTime)
                }
 
             });
-            this.order_status = 35
+            this.order_status = 21
             this.cancel()
             if (this.selectedPaymentType == '138') {
                this.add_wallet_amount()
@@ -1449,7 +1449,7 @@ console.log("ad",adjustedTime)
                // }, 500);
                // if (this.selectedDeliveryType == '43' || this.selectedDeliveryType == '40') {
                if (this.autoaccept == '0') {
-                  if (this.order_status != '33') {
+                  if (this.order_status != '19') {
                      console.log("order")
                      this.confirmationService.confirm({
                         message: 'Thank Your Order Placed Successfully!',
@@ -1508,7 +1508,7 @@ console.log("ad",adjustedTime)
    cancels() {
       // this.riderloader = false;
       this.bill_status = '0'
-      this.order_status = 35
+      this.order_status = 21
       if (this.selectedPaymentType == '138') {
          this.add_wallet_amount()
       }

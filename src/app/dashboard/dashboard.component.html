@@ -17,7 +17,7 @@
    [autoplayInterval]="4000" [showIndicators]="true">
 
    <ng-template pTemplate="item" let-listofBanner>
-      <img [src]="listofBanner" alt="banner" style="width: 100%; " />
+      <img [src]="listofBanner.image" alt="banner" style="width: 100%; " (click)="navigateTo(listofBanner.link)" />
    </ng-template>
 
 </p-carousel>

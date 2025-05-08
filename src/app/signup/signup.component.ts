@@ -36,6 +36,7 @@ export class SignupComponent {
    
 //   ];
   super_admin_list = [
+   { name: 'Super10', id: '10' },
    { name: 'Bhopal', id: '8' },
    { name: 'Indore', id: '6' },
  ];

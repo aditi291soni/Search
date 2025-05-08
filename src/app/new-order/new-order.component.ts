@@ -116,16 +116,16 @@ export class NewOrderComponent {
             if (response.status === true) {
                this.vehicleTypeList = response.data || [];
 
-               if (!this.newOrder) {
-                  this.selectedVehicle = response.data[0].id;
+               // if (!this.newOrder) {
+               //    this.selectedVehicle = response.data[0].id;
 
-                  this.form.get('vehicle_type_id')?.setValue(response.data[0].id);
+               //    this.form.get('vehicle_type_id')?.setValue(response.data[0].id);
 
-               } else {
+               // } else {
                   this.selectedVehicle = this.newOrder.vehicle_type_id;
 
                   this.form.get('vehicle_type_id')?.setValue(this.newOrder.vehicle_type_id);
-               }
+               // }
 
             } else {
                console.error('Error fetching vehicle types:', response.message);
