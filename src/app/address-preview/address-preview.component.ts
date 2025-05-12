@@ -82,6 +82,7 @@ export class AddressPreviewComponent {
    delivery_name: any;
    superAdminId: any;
    super_business: any;
+   master_delivery: any;
    constructor(private locationStrategy: LocationStrategy, private platform: Platform, private location: Location, private messageService: MessageService, private cdr: ChangeDetectorRef, private apiService: ApiService, private router: Router, private confirmationService: ConfirmationService, private fb: FormBuilder, private route: ActivatedRoute, private toastService: ToastNotificationService, private ngZone: NgZone,) {
       this.pickupLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedPickup'));
       this.dropLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedDrop'));
@@ -209,7 +210,7 @@ export class AddressPreviewComponent {
             this.deliveryList = response.data
             if (response.status === true) {
 
-               this.order_status = response.data[0].order_status_id
+               this.order_status = response.data[0].master_order_status_id
                // this.deliveryList = response.data || [];
                this.deliveryList = response.data.map((deliveryType: any) => {
 
@@ -414,10 +415,11 @@ console.log("ad",adjustedTime)
    }
    onDeliveryTypeSelect(value: any) {
       this.sub_total = value.price
-      this.order_status = value.order_status_id
+      this.order_status = value.master_order_status_id
       this.timeslot = value.time_slot
       this.autoaccept = value.auto_accepted_id
       this.delivery_name = value.delivery_name
+      this.master_delivery=value.master_delivery_type_id
       // this.base_price=value.price.base_price
       console.log(value.id, 'order-status')
       this.selectedDeliveryType = value.id;
@@ -701,7 +703,7 @@ console.log("ad",adjustedTime)
          payload.for_user_id = this.userData.id
       }
       payload.for_user_id = this.userData.id,
-         payload.order_status_id = this.order_status
+         payload.master_order_status_id = this.order_status
       payload.pay_on_pickup = this.pay_on_pickup,
          payload.pay_on_delivery = this.pay_on_delivery,
          payload.for_booking_slot_id = Number(this.selectedSlot)
@@ -797,7 +799,7 @@ console.log("ad",adjustedTime)
       // payload.for_business_id = this.businessDetails ? this.businessDetails.id : this.userData.id
 
       payload.for_user_id = this.userData.id,
-         payload.order_status_id = this.order_status
+         payload.master_order_status_id = this.order_status
       // payload.pay_on_pickup = this.pay_on_pickup,
       // payload.pay_on_delivery = this.pay_on_delivery,
       // payload.for_booking_slot_id = Number(this.selectedSlot)
@@ -971,7 +973,7 @@ console.log("ad",adjustedTime)
       }      // payload.business_id = this.businessDetails ? this.businessDetails.id : null
       payload.order_delivery_details_id = id
       payload.status = 1
-      payload.order_status_id = this.order_status
+      payload.master_order_status_id = this.order_status
       payload.delivery_type_id = this.selectedDeliveryType
       payload.order_value = this.sub_total
       payload.delivery_charges = this.sub_total
@@ -1035,7 +1037,7 @@ console.log("ad",adjustedTime)
       payload.order_delivery_details_id = id
       payload.status = 1
       payload.for_booking_slot_id = Number(this.selectedSlot)
-      payload.order_status_id = this.order_status
+      payload.master_order_status_id = this.order_status
       payload.delivery_type_id = this.selectedDeliveryType
       payload.order_value = this.sub_total
       payload.delivery_charges = this.sub_total
@@ -1097,7 +1099,7 @@ console.log("ad",adjustedTime)
          "invoice_id": String(this.invoice_id),
          'delivery_type_id': this.selectedDeliveryType,
          "vehicle_type_id": this.newOrder?.vehicle_type_id,
-
+"master_delivery_type_id":this.master_delivery,
          'notification_timing': '',
          "details": {
             'delivery_type': this.selectedDeliveryType,
@@ -1430,7 +1432,7 @@ console.log("ad",adjustedTime)
          this.apiService.getOrderDeliveryDetail(payload).subscribe({
             next: (data: any) => {
                let ApiResponse: any = data;
-               this.order_status = data.data.order_status_id
+               this.order_status = data.data.master_order_status_id
                this.riderloader = true;
                this.animationState = 'end'
                // setInterval(() => {

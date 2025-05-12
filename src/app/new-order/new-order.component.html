@@ -84,9 +84,11 @@
                <div class="vehicle-name">{{ vehicle?.vehicle_type }}</div>
             </div>
          </ng-container>
-
+         
       </div>
-
+      <small *ngIf="submitted && !selectedVehicle" class="error-text">
+         Please select Vehicle Type
+      </small>
       <h3>Select Pickup Location<span class="mandatory">*</span></h3>
       <div *ngIf="!pickupLocation" class="card-container">
          <!-- <input class="mb" pInputText type="text" placeholder="Pickup Address" (click)="navigateToPickupSelect()" /> -->

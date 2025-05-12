@@ -36,9 +36,10 @@ export class SignupComponent {
    
 //   ];
   super_admin_list = [
+    { name: 'Bhopal', id: '11' },
    { name: 'Super10', id: '10' },
-   { name: 'Bhopal', id: '8' },
-   { name: 'Indore', id: '6' },
+   { name: 'Super8', id: '8' },
+   { name: 'Super6', id: '6' },
  ];
    constructor(
       private apiService: ApiService,
@@ -52,7 +53,7 @@ export class SignupComponent {
          phone: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
          password: ['', [Validators.required, Validators.minLength(6)]],
          password_confirmation: ['', [Validators.required]],
-         super_admin: ['8', [Validators.required]],
+         super_admin: ['11', [Validators.required]],
          role_id: ['4']
       })
    }

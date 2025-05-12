@@ -110,7 +110,9 @@
 
          <span *ngIf="deliveryList.length < 1" class="mandatory">No Delivery Type {{deliveryList}}</span>
          <!-- Payment Modes -->
-
+         <small *ngIf="submitted && !selectedDeliveryType" class="error-text">
+            Please select Delivery Type
+         </small>
          <h4 *ngIf="timeslot === '1'">Select Date Slot <span class="mandatory">*</span></h4>
 
 
@@ -147,7 +149,13 @@
             </div>
 
          </div>
+  <!-- <div class="text-center mt-3 ">
+            <div class="space mt-4">
+               <button pButton class="p-button-outlined p-button-secondary ml-5 mt-5" label="Apply Coupan"
+                  (click)="coupan()"></button>
 
+            </div>
+         </div> -->
          <h4>Payment at <span class="mandatory">*</span></h4>
          <p-select *ngIf="selectedPaymentType== '139'" (click)="paymentType($event)" [options]="CashTypes"
             optionValue="value" optionLabel="name" placeholder="Payment At" class="w-full">
@@ -167,13 +175,7 @@
       </small>
 
       <div>
-         <!-- <div class="text-center ">
-            <div class="space">
-               <button pButton class="p-button-outlined p-button-secondary ml-5" label="Apply Coupan"
-                  (click)="coupan()"></button>
-
-            </div>
-         </div> -->
+       
 
 
 

@@ -98,10 +98,10 @@ export class OrdersComponent {
             if (response.status === true) {
                // this.order = response.data;
                this.order = response.data
-                  .filter((order: any) => order.order_no && order.order_status_id !== 35)
+                  .filter((order: any) => order.order_no && order.master_order_status_id !== 21)
                   .map((order: any) => ({
                      ...order,
-                     status_name: this.getDynamicStatusName(order.order_status_id)
+                     status_name: this.getDynamicStatusName(order.master_order_status_id)
                   }));
                this.orders = this.order
                console.log(this.orders)

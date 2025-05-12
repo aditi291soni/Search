@@ -126,7 +126,7 @@ export class OrderViewComponent {
          next: (response) => {
             if (response.status === true) {
                this.order = response.data || {};
-               this.status_id = this.order?.order_status_id
+               this.status_id = this.order?.master_order_status_id
 
                console.log(this.status_id)
                console.log(this.order)
@@ -138,7 +138,7 @@ export class OrderViewComponent {
                this.getDelivery(this.order?.delivery_type_id);
                this.getVehicle(this.order?.vehicle_type_id)
                this.getOrderStatus();
-               this.getDynamicStatusName(this.order.order_status_id)
+               this.getDynamicStatusName(this.order.master_order_status_id)
 
             } else {
                console.error('Error fetching order delivery:', response.message);
@@ -151,15 +151,15 @@ export class OrderViewComponent {
 
    filterOrderStatus(): void {
       // if (!this.order?.order_status_id) return;
-
+console.log("ll",this.delivery_name?.master_delivery_type_id)
       const excludeMap: { [key: number]: number[] } = {
          // 45: [20, 11, 10, 21],
          // 42: [19, 11, 10, 21],
          // 43: [20, 11, 10, 21],
          // 40: [20, 11, 10, 21]
          1: [20, 11, 10, 21],
-         2: [19, 11, 10, 21],
-         3: [20, 11, 10, 21],
+         3: [19, 11, 10, 21],
+         2: [20, 11, 10, 21],
          4: [20, 11, 10, 21]
       };
       this.filteredOrderStatus = this.orderstatus.filter(status =>
@@ -203,8 +203,7 @@ console.log("f", this.filteredOrderStatus)
             if (response.status === true) {
                this.orderstatus = response.data || [];
 
-               this.filterOrderStatus()
-               this.cdr.detectChanges();
+            
                // ✅ Update timeline dynamically
             } else {
                console.error('Error fetching order status:', response.message);
@@ -233,12 +232,14 @@ console.log("f", this.filteredOrderStatus)
             if (response.status === true) {
                this.delivery_name = response.data || [];
                this.colorcode = response.data.color_code
-               console.log("cancel", this.delivery_name.cancelation_charges)
+               console.log("cancel", this.delivery_name)
 
 
             } else {
                console.error('Error fetching delivery:', response.message);
             }
+            this.filterOrderStatus()
+            this.cdr.detectChanges();
          },
          error: (err) => console.error('Error fetching delivery:', err),
 
@@ -395,7 +396,7 @@ console.log("f", this.filteredOrderStatus)
       payload.business_id = this.businessDetails ? this.businessDetails.id : null
       payload.order_delivery_details_id = this.deliveryId
       payload.status = 1
-      payload.order_status_id = 10
+      payload.master_order_status_id = 10
 
       payload.invoice_id = this.invoiceId ? this.invoiceId : 0
       // payload.user_id=

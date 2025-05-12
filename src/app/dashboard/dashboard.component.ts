@@ -134,7 +134,7 @@ export class DashboardComponent implements OnInit {
          business_id: data.business_id,
          status: data.status,
          order_delivery_details_id: data.id,
-         order_status_id: 10, // Update only order_status_id
+         master_order_status_id: 10, // Update only order_status_id
       };
       try {
          this.apiService.edit_order_delivery_details(payload).subscribe({
@@ -183,11 +183,11 @@ export class DashboardComponent implements OnInit {
                // Ensure orders have order_status.id matched correctly
                this.order = response.data
 
-                  .filter((order: any) => order.order_no && order.order_status_id !== 21)
+                  .filter((order: any) => order.order_no && order.master_order_status_id !== 21)
                   .slice(0, 3)
                   .map((order: any) => ({
                      ...order,
-                     status_name: this.getDynamicStatusName(order?.order_status_id)
+                     status_name: this.getDynamicStatusName(order?.master_order_status_id)
                   }));
                // if (!this.orderComplete) {
                //    this.editDeliveries(this.order[0]
