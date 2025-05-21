@@ -116,7 +116,8 @@ export class ApiService {
    }
 
    list_of_coupan(payload: any): Observable<any> {
-      return this.http.post(`${this.baseUrl}/get-product-scheme-coupon-list`, payload, this.getHttpOptions()).pipe(
+      const devURL = "http://192.168.1.10:6543"
+      return this.http.get(`${devURL}/coupon/get-coupons-list?super_admin_id=${payload.super_admin_id}`, this.getHttpOptions()).pipe(
          catchError((error) => {
             console.error('Error fetching the list of businesses:', error); // Log error for debugging
             return throwError(() => new Error('Failed to fetch the list of businesses')); // Return a user-friendly error message
@@ -124,7 +125,8 @@ export class ApiService {
       );
    }
     redeem_coupan(payload: any): Observable<any> {
-      return this.http.post(`${this.baseUrl}/get-product-scheme-coupon-list`, payload, this.getHttpOptions()).pipe(
+      const devURL = "http://192.168.1.10:6543"
+      return this.http.post(`${devURL}/coupon/redeem/verify-redeem-coupon`, payload, this.getHttpOptions()).pipe(
          catchError((error) => {
             console.error('Error fetching the redeem coupan:', error); // Log error for debugging
             return throwError(() => new Error('Failed to fetch the redeem coupan')); // Return a user-friendly error message

@@ -22,6 +22,7 @@ export class ListOfCoupanComponent {
    loading: boolean = false;
    coupanList: any = [];
    delivery_id: any;
+   super_admin_id: number;
    vehicle_id: any;
    orderdetail: any;
    super_business: any;
@@ -36,6 +37,7 @@ export class ListOfCoupanComponent {
 
       this.businessDetails = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
       this.super_business = this.apiService.getLocalValueInJSON(localStorage.getItem('super_business'));
+      this.super_admin_id = this.apiService.getLocalValueInJSON(localStorage.getItem('super_admin'));
       this.userData = this.apiService.getLocalValueInJSON(localStorage.getItem('userData'));
       this.delivery_id = this.apiService.getLocalValueInJSON(localStorage.getItem('delivery_id'));
       this.orderdetail = this.apiService.getLocalValueInJSON(localStorage.getItem('new-order'));
@@ -57,6 +59,7 @@ export class ListOfCoupanComponent {
 
       payload.business_id = this.businessDetails?.id;
       payload.vehicle_id = this.orderdetail?.vehicle_type_id
+      payload.super_admin_id = this.super_admin_id;
       this.apiService.list_of_coupan(payload).subscribe({
          next: (response) => {
             if (response.status === true) {
@@ -80,18 +83,21 @@ export class ListOfCoupanComponent {
       });
    }
    applyCoupan(coupan: any): void {
+      // NOTE: This function will call the API to verify the coupon
+      // If the coupon is verified (also means valid) then procceed further ---
       let payload: any = {}
       payload.coupon_id = coupan.id
-      payload.coupon_code = coupan.code
+      // payload.coupon_code = coupan.code
       payload.user_id = this.userData.id
-      payload.mode_of_payment = this.address_preview.mode_of_payment
+      // payload.mode_of_payment = this.address_preview.mode_of_payment
+      payload.mode_of_payment = 'cash'
       payload.amount = this.address_preview.amount
       payload.platform = 'vendor-app'
       payload.delivery_type_id = this.address_preview.delivery_type_id
       payload.super_admin_id = this.userData.super_admin_id
-      // payload.business_id = this.businessDetails?.id;
-      payload.business_id = this.super_business
-      payload.vehicle_id = this.orderdetail?.vehicle_type_id
+      // payload.business_id = this.businessDetails?.id; 
+      // payload.business_id = this.super_business
+      payload.vehicle_type_id = this.orderdetail?.vehicle_type_id
       this.apiService.redeem_coupan(payload).subscribe({
          next: (response) => {
             if (response.status === true) {

@@ -232,3 +232,19 @@ img {
 .p-confirmdialog-icon {
    color: red !important;
 }
+
+.d-flex {
+   display: flex;
+}
+
+.justify-content-between{
+   justify-content: space-between;
+}
+
+.mt-2{
+   margin-top: 16px;
+}
+
+.font-weight-bold{
+   font-weight: bold;
+}

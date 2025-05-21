@@ -42,8 +42,10 @@ export class AddressPreviewComponent {
    loading: boolean = true;
    loading_button: any;
    deliveryList: any[] = [];
+   delivery_type_id: number | null; // Useful for create order procedure after copoun selection
    times: any;
    sub_total: any;
+   grand_total: any;
    price: any;
    listofInvoice: number = 0;
    financial: any;
@@ -82,6 +84,7 @@ export class AddressPreviewComponent {
    delivery_name: any;
    superAdminId: any;
    super_business: any;
+   selectedCoupon: any;
    master_delivery: any;
    cash: any;
    wallets: any;
@@ -94,6 +97,16 @@ export class AddressPreviewComponent {
       localStorage.setItem('orderComplete', 'false');
       this.super_business = this.apiService.getLocalValueInJSON(localStorage.getItem('super_business'));
       this.superAdminId = this.apiService.getLocalValueInJSON(localStorage.getItem('super_admin'));
+
+      // NOTE: added delivery_type_id from localstorage - will be used after coupon selection -- 
+      this.delivery_type_id = 0;
+      const addressPreview = this.apiService.getLocalValueInJSON(localStorage.getItem('address-preview'));
+      if (addressPreview) {
+         this.delivery_type_id = addressPreview.delivery_type_id;
+      }
+
+      // NOTE: If coupon found - 
+      this.selectedCoupon = this.apiService.getLocalValueInJSON(localStorage.getItem('coupan'));
 
       this.route.params.subscribe((params) => {
 
@@ -162,7 +175,8 @@ export class AddressPreviewComponent {
       this.getWalletAmount()
       this.TimeSlot()
       this.getledger()
-
+      console.log('lkajsdfas58q364', this.selectedCoupon, this.sub_total)
+      this.grand_total = this.selectedCoupon ? this.sub_total - this.selectedCoupon?.discount_value : 0;
    }
 
 
@@ -235,6 +249,20 @@ export class AddressPreviewComponent {
                // this.selectedDeliveryType = this.deliveryList[0].id;
                // this.sub_total = this.deliveryList[0].price
                console.log(this.deliveryList)
+
+
+
+               // NOTE: this will used to check if the delivery_type_id already exists in localStorage
+               // Then use that id (becuase that id was saved to continue the coupon process) ->
+               console.log('delviery ', this.delivery_type_id, this.deliveryList);
+               if (this.delivery_type_id) {
+                  const foundDelivery = this.deliveryList.find((item) => Number(item.id) === Number(this.delivery_type_id));
+
+                  if (foundDelivery) {
+                     console.log('found d', foundDelivery)
+                     this.onDeliveryTypeSelect(foundDelivery);
+                  }
+               }
 
             } else {
                console.error('Error fetching vehicle types:', response.message);
@@ -425,6 +453,7 @@ export class AddressPreviewComponent {
       }
    }
    onDeliveryTypeSelect(value: any) {
+      console.log('selected value', value)
       this.sub_total = value.price
       this.order_status = value.master_order_status_id
       this.timeslot = value.time_slot
@@ -480,7 +509,7 @@ export class AddressPreviewComponent {
       let payload: any = {};
       payload.super_admin_id = this.superAdminId;
       payload.user_id = this.userData.id;
-      payload.amount = this.sub_total;
+      payload.amount = this.grand_total ?? this.sub_total;
       // payload.vehicle_type_id = this.newOrder.vehicleType;
       this.apiService.deduct_wallet_amount(payload).subscribe({
          next: (response) => {
@@ -505,7 +534,7 @@ export class AddressPreviewComponent {
       let payload: any = {};
       payload.super_admin_id = this.superAdminId;
       payload.user_id = this.userData.id;
-      payload.amount = this.sub_total;
+      payload.amount = this.grand_total ?? this.sub_total;
       // payload.vehicle_type_id = this.newOrder.vehicleType;
       this.apiService.add_wallet_amount(payload).subscribe({
          next: (response) => {
@@ -546,7 +575,7 @@ export class AddressPreviewComponent {
       if (this.loading_button) return; // Prevent multiple clicks while loading
 
       this.loading_button = true; // Disable button immediately
-      if (this.wallet < this.sub_total && this.selectedPaymentType == this.wallets) {
+      if (this.wallet < (this.grand_total ?? this.sub_total) && this.selectedPaymentType == this.wallets) {
          // this.toastService.showError("Insufficient balance")
          this.loading_button = false;
          this.cdr.detectChanges();
@@ -731,7 +760,7 @@ export class AddressPreviewComponent {
       payload.order_no = order_id
       payload.total_tax = 0
       payload.adjustment_value = 0
-      payload.grand_total = this.sub_total
+      payload.grand_total = this.grand_total ?? this.sub_total
       payload.for_date = formattedDate
       payload.delivery_id = this.deliveryId
       payload.created_on_date = formattedDate
@@ -829,7 +858,7 @@ export class AddressPreviewComponent {
       payload.total_tax = 0
       payload.bill_status = this.bill_status;
       payload.adjustment_value = 0
-      payload.grand_total = this.sub_total
+      payload.grand_total = this.grand_total ?? this.sub_total
       payload.for_date = formattedDate
       payload.delivery_id = this.deliveryId
       payload.created_on_date = formattedDate
@@ -859,8 +888,8 @@ export class AddressPreviewComponent {
       // payload.business_id = this.businessDetails ? this.businessDetails.id : 983
       payload.pay_to_uid = this.userData.id
       payload.invoice_id = id
-      payload.dr_amount = this.sub_total
-      payload.amount = this.sub_total
+      payload.dr_amount = this.grand_total ?? this.sub_total
+      payload.amount = this.grand_total ?? this.sub_total
       payload.super_admin_id = this.superAdminId
       payload.created_on_date = formattedDate
       payload.payment_date = formattedDate
@@ -921,8 +950,8 @@ export class AddressPreviewComponent {
       // payload.business_id = this.businessDetails ? this.businessDetails.id : null
       // payload.for_user_id=this.userId ? this.userId : this.default
       payload.invoice_id = id
-      payload.cr_amont = this.sub_total
-      payload.amount = this.sub_total
+      payload.cr_amont = this.grand_total ?? this.sub_total
+      payload.amount = this.grand_total ?? this.sub_total
       payload.super_admin_id = this.superAdminId
       payload.created_on_date = formattedDate
       payload.payment_date = formattedDate
@@ -986,8 +1015,8 @@ export class AddressPreviewComponent {
       payload.status = 1
       payload.master_order_status_id = this.order_status
       payload.delivery_type_id = this.selectedDeliveryType
-      payload.order_value = this.sub_total
-      payload.delivery_charges = this.sub_total
+      payload.order_value = this.grand_total ?? this.sub_total
+      payload.delivery_charges = this.grand_total ?? this.sub_total
       payload.time_slot = this.timeslot
       payload.for_booking_time = formattedTime
       payload.pickup_address_id = this.pickupLocation.id
@@ -1050,8 +1079,8 @@ export class AddressPreviewComponent {
       payload.for_booking_slot_id = Number(this.selectedSlot)
       payload.master_order_status_id = this.order_status
       payload.delivery_type_id = this.selectedDeliveryType
-      payload.order_value = this.sub_total
-      payload.delivery_charges = this.sub_total
+      payload.order_value = this.grand_total ?? this.sub_total
+      payload.delivery_charges = this.grand_total ?? this.sub_total
       payload.time_slot = this.timeslot
       payload.bill_status = this.bill_status;
       payload.pickup_address_id = this.pickupLocation.id
@@ -1600,6 +1629,7 @@ export class AddressPreviewComponent {
          },
       });
    }
+   // TODO: Fix the spelling of coupon here --
    coupan() {
       let payload: any = {
          amount: this.sub_total,
