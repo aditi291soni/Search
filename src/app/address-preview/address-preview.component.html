@@ -139,38 +139,38 @@
 
 
          <div class="container" *ngIf="selectedDeliveryType">
-            <div class="recent-order-items" (click)="paymentTypesSelection('138')"
-               [class.selected]="selectedPaymentType == '138'">
+            <div class="recent-order-items" (click)="paymentTypesSelection(this.wallets)"
+               [class.selected]="selectedPaymentType == this.wallets">
                <i class="pi pi-wallet"></i> Wallet
             </div>
-            <div class="recent-order-items" *ngIf="autoaccept == 1" (click)="paymentTypesSelection('139')"
-               [class.selected]="selectedPaymentType == '139'">
+            <div class="recent-order-items" *ngIf="autoaccept == 1" (click)="paymentTypesSelection(this.cash)"
+               [class.selected]="selectedPaymentType == this.cash">
                <i class="pi pi-money-bill"></i> Cash
             </div>
 
          </div>
-  <!-- <div class="text-center mt-3 ">
+  <div class="text-center mt-3 ">
             <div class="space mt-4">
                <button pButton class="p-button-outlined p-button-secondary ml-5 mt-5" label="Apply Coupan"
                   (click)="coupan()"></button>
 
             </div>
-         </div> -->
+         </div>
          <h4>Payment at <span class="mandatory">*</span></h4>
-         <p-select *ngIf="selectedPaymentType== '139'" (click)="paymentType($event)" [options]="CashTypes"
+         <p-select *ngIf="selectedPaymentType==  this.cash" (click)="paymentType($event)" [options]="CashTypes"
             optionValue="value" optionLabel="name" placeholder="Payment At" class="w-full">
          </p-select>
       </div>
-      <small *ngIf="submitted && !this.pay_on_pickup && selectedPaymentType== '139'" class="error-text">
+      <small *ngIf="submitted && !this.pay_on_pickup && selectedPaymentType==  this.cash" class="error-text">
          Please select a Payment Location
       </small>
 
-      <div *ngIf="selectedPaymentType== '138' &&  !this.riderloader">
+      <div *ngIf="selectedPaymentType== this.wallets &&  !this.riderloader">
          Available Wallet Balance: {{this.businessDetails ? this.businessDetails.currency_symbol : '₹'}}{{wallet ?
          wallet : 0 }}
 
       </div>
-      <small *ngIf="submitted && wallet< this.sub_total  && selectedPaymentType== '138'" class="error-text">
+      <small *ngIf="submitted && wallet< this.sub_total  && selectedPaymentType== this.wallets" class="error-text">
          Insufficient Balance
       </small>
 

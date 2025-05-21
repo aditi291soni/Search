@@ -47,7 +47,7 @@
 
    <!-- Address List -->
    <div *ngIf="!loading && coupanList.length > 0">
-      <div class="recent-order-item" *ngFor="let coupan  of coupanList" (click)="applyCoupan(coupan)">
+      <div class="recent-order-item" *ngFor="let coupan  of coupanList" >
          <div class="recent-order-flex">
             <div>
                <div class="maintext">{{ coupan.code | titlecase }}</div>
@@ -74,7 +74,7 @@
                   {{ coupan.schme_code_type }}
                </div>
             </div>
-            <button type="button" pButton label="Apply"></button>
+            <button type="button" pButton label="Apply" (click)="applyCoupan(coupan)"></button>
          </div>
       </div>
    </div>

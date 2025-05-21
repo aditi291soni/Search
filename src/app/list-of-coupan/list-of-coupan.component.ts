@@ -22,6 +22,10 @@ export class ListOfCoupanComponent {
    loading: boolean = false;
    coupanList: any = [];
    delivery_id: any;
+   vehicle_id: any;
+   orderdetail: any;
+   super_business: any;
+   address_preview: any;
    constructor(
       private apiService: ApiService,
       private activatedRoute: ActivatedRoute,
@@ -31,8 +35,11 @@ export class ListOfCoupanComponent {
    ) {
 
       this.businessDetails = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
+      this.super_business = this.apiService.getLocalValueInJSON(localStorage.getItem('super_business'));
       this.userData = this.apiService.getLocalValueInJSON(localStorage.getItem('userData'));
       this.delivery_id = this.apiService.getLocalValueInJSON(localStorage.getItem('delivery_id'));
+      this.orderdetail = this.apiService.getLocalValueInJSON(localStorage.getItem('new-order'));
+      this.address_preview = this.apiService.getLocalValueInJSON(localStorage.getItem('address-preview'));
    }
    ngOnInit() {
       this.fetchcoupanList()
@@ -48,8 +55,8 @@ export class ListOfCoupanComponent {
       // }
       let payload: any = {}
 
-      payload.business_id = this.businessDetails.id;
-
+      payload.business_id = this.businessDetails?.id;
+      payload.vehicle_id = this.orderdetail?.vehicle_type_id
       this.apiService.list_of_coupan(payload).subscribe({
          next: (response) => {
             if (response.status === true) {
@@ -73,7 +80,37 @@ export class ListOfCoupanComponent {
       });
    }
    applyCoupan(coupan: any): void {
-      localStorage.setItem('coupan', JSON.stringify(coupan));
-      this.router.navigate([`orders/new-order/order-preview/${this.delivery_id}`]);
+      let payload: any = {}
+      payload.coupon_id = coupan.id
+      payload.coupon_code = coupan.code
+      payload.user_id = this.userData.id
+      payload.mode_of_payment = this.address_preview.mode_of_payment
+      payload.amount = this.address_preview.amount
+      payload.platform = 'vendor-app'
+      payload.delivery_type_id = this.address_preview.delivery_type_id
+      payload.super_admin_id = this.userData.super_admin_id
+      // payload.business_id = this.businessDetails?.id;
+      payload.business_id = this.super_business
+      payload.vehicle_id = this.orderdetail?.vehicle_type_id
+      this.apiService.redeem_coupan(payload).subscribe({
+         next: (response) => {
+            if (response.status === true) {
+               localStorage.setItem('coupan', JSON.stringify(coupan));
+               this.router.navigate([`orders/new-order/order-preview/${this.delivery_id}`]);
+
+               // localStorage.setItem('address', JSON.stringify(this.coupanList));
+            } else {
+               console.error('Error fetching list of business:', response.message);
+            }
+         },
+         error: (err) => {
+            console.error('Error fetching list of business:', err);
+         },
+         complete: () => {
+            this.loading = false;
+         },
+      });
+
    }
+
 }

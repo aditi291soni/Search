@@ -51,7 +51,7 @@ export class AddressPreviewComponent {
    listofDelivery: any;
    timeslot: any;
    selectedDeliveryType: any;
-   selectedPaymentType: any = '138';
+   selectedPaymentType: any;
    deliveryId: any;
    timeSlot: any;
    selectedPayment: any;
@@ -83,6 +83,8 @@ export class AddressPreviewComponent {
    superAdminId: any;
    super_business: any;
    master_delivery: any;
+   cash: any;
+   wallets: any;
    constructor(private locationStrategy: LocationStrategy, private platform: Platform, private location: Location, private messageService: MessageService, private cdr: ChangeDetectorRef, private apiService: ApiService, private router: Router, private confirmationService: ConfirmationService, private fb: FormBuilder, private route: ActivatedRoute, private toastService: ToastNotificationService, private ngZone: NgZone,) {
       this.pickupLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedPickup'));
       this.dropLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedDrop'));
@@ -90,7 +92,7 @@ export class AddressPreviewComponent {
       this.newOrder = this.apiService.getLocalValueInJSON(localStorage.getItem('new-order'));
       this.userData = this.apiService.getLocalValueInJSON(localStorage.getItem('userData'));
       localStorage.setItem('orderComplete', 'false');
-      this.super_business= this.apiService.getLocalValueInJSON(localStorage.getItem('super_business'));
+      this.super_business = this.apiService.getLocalValueInJSON(localStorage.getItem('super_business'));
       this.superAdminId = this.apiService.getLocalValueInJSON(localStorage.getItem('super_admin'));
 
       this.route.params.subscribe((params) => {
@@ -113,7 +115,7 @@ export class AddressPreviewComponent {
       this.formattedDate = this.formatDateToDDMMYYYY(this.selectedDate);
       this.minDate = currentDate;
 
-      console.log( this.selectedDate)
+      console.log(this.selectedDate)
    }
    pickup = {
       name: 'Aditi Mp',
@@ -153,7 +155,7 @@ export class AddressPreviewComponent {
    ngOnInit(): void {
       this.loading_button = false;
       this.cdr.detectChanges();
-      
+
       console.log('s', this.loading_button)
       this.fetchDeliveryTypeList();
       this.getfinancialYear()
@@ -174,7 +176,7 @@ export class AddressPreviewComponent {
       // console.log("Default Selected Date:", this.selectedDate);
    }
    onDateSelect(event: Date) {
-  
+
       // const currentDate = new Date();
 
       // this.minDate = currentDate;
@@ -182,7 +184,7 @@ export class AddressPreviewComponent {
       const istOffset = 5.5 * 60 * 60 * 1000; // IST offset in milliseconds
       const localDate = new Date(event.getTime() + istOffset); // Convert UTC to IST
       // this.minDa  te = localDate;
-    
+
       this.selectedDate = localDate.toISOString().split('T')[0]; // Format as "yyyy-mm-dd"
       this.formattedDate = this.formatDateToDDMMYYYY(this.selectedDate);
       console.log("Selected Date (IST):", this.formattedDates);
@@ -202,7 +204,7 @@ export class AddressPreviewComponent {
    // }
    fetchDeliveryTypeList(): void {
       let payload: any = {};
-      payload.super_admin_id = this.superAdminId ;
+      payload.super_admin_id = this.superAdminId;
       // payload.business_id = this.businessDetails.id;
       payload.vehicle_type_id = this.newOrder.vehicle_type_id;
       this.apiService.getDeliveryType(payload).subscribe({
@@ -248,7 +250,7 @@ export class AddressPreviewComponent {
    }
    TimeSlot(): void {
       let payload: any = {};
-      payload.super_admin_id = this.superAdminId ;
+      payload.super_admin_id = this.superAdminId;
       // payload.business_id = this.businessDetails.id;
       // payload.vehicle_type_id = this.newOrder.vehicleType;
       this.apiService.getTimeSlot(payload).subscribe({
@@ -266,13 +268,13 @@ export class AddressPreviewComponent {
 
                if (scheduleDate == today) {
                   const adjustedTime = new Date(currentTime.getTime() + (1.5 * 60 * 60 * 1000));
-    const adjustedHour = adjustedTime.getHours();
-    const adjustedMinute = adjustedTime.getMinutes();
-console.log("ad",adjustedTime)
-    timeSlots = timeSlots.filter((slot: { start_time: string }) => {
-        const [slotHour, slotMinute] = slot.start_time.split(':').map(Number);
-        return slotHour > adjustedHour || (slotHour === adjustedHour && slotMinute > adjustedMinute);
-    });
+                  const adjustedHour = adjustedTime.getHours();
+                  const adjustedMinute = adjustedTime.getMinutes();
+                  console.log("ad", adjustedTime)
+                  timeSlots = timeSlots.filter((slot: { start_time: string }) => {
+                     const [slotHour, slotMinute] = slot.start_time.split(':').map(Number);
+                     return slotHour > adjustedHour || (slotHour === adjustedHour && slotMinute > adjustedMinute);
+                  });
                   // const currentHour = currentTime.getHours();
                   // const currentMinute = currentTime.getMinutes();
 
@@ -311,7 +313,7 @@ console.log("ad",adjustedTime)
    }
    getWalletAmount(): void {
       let payload: any = {};
-      payload.super_admin_id = this.superAdminId ;
+      payload.super_admin_id = this.superAdminId;
       payload.user_id = this.userData.id;
       // payload.vehicle_type_id = this.newOrder.vehicleType;
       this.apiService.get_wallet_amount(payload).subscribe({
@@ -399,10 +401,19 @@ console.log("ad",adjustedTime)
    }
    getledger() {
       try {
-         this.apiService.getLedger({ business_id:  this.super_business }).subscribe({
+         this.apiService.getLedger({ business_id: this.super_business }).subscribe({
             next: (data: any) => {
                let ApiResponse: any = data;
                this.ledger = ApiResponse.data;
+               this.ledger.map((e: any) => {
+                  if (e.ledger_type_id == 8) {
+                     this.cash = e.id
+                  } else if (e.ledger_type_id == 25) {
+                     this.wallets = e.id
+                  } else {
+
+                  }
+               })
 
             },
             error: (error: any) => {
@@ -419,28 +430,28 @@ console.log("ad",adjustedTime)
       this.timeslot = value.time_slot
       this.autoaccept = value.auto_accepted_id
       this.delivery_name = value.delivery_name
-      this.master_delivery=value.master_delivery_type_id
+      this.master_delivery = value.master_delivery_type_id
       // this.base_price=value.price.base_price
       console.log(value.id, 'order-status')
       this.selectedDeliveryType = value.id;
       // if (value.id == 43 || value.id == '40') {
       //    console.log(value.id, 'selectedPaymentType')
-      //    this.paymentTypesSelection('138')
+      //    this.paymentTypesSelection(this.wallets)
       //    console.log(value.id, 'selectedPaymentType')
       // }
       if (value.auto_accepted_id == 1) {
          console.log(value.id, 'selectedPaymentType')
-         this.paymentTypesSelection('138')
-      
-      
-       
+         this.paymentTypesSelection(this.wallets)
+
+
+
          const localDate = new Date(); // Convert UTC to IST
          // this.minDa  te = localDate;
          this.selectedDate = localDate.toISOString().split('T')[0]; // Format as "yyyy-mm-dd"
          this.formattedDate = this.formatDateToDDMMYYYY(this.selectedDate);
          this.formattedDates = localDate
 
-         
+
 
          console.log("Selected Date (IST):", localDate);
       }
@@ -451,7 +462,7 @@ console.log("ad",adjustedTime)
       console.log(value)
       if (value.value == 'online') {
          this.toastService.showError("This service is not working yet")
-      } else if (value.value == '138') {
+      } else if (value.value == this.wallets) {
 
       }
       const currentDate = new Date();
@@ -467,7 +478,7 @@ console.log("ad",adjustedTime)
    }
    deduct_wallet_amount(): void {
       let payload: any = {};
-      payload.super_admin_id = this.superAdminId ;
+      payload.super_admin_id = this.superAdminId;
       payload.user_id = this.userData.id;
       payload.amount = this.sub_total;
       // payload.vehicle_type_id = this.newOrder.vehicleType;
@@ -492,7 +503,7 @@ console.log("ad",adjustedTime)
    }
    add_wallet_amount(): void {
       let payload: any = {};
-      payload.super_admin_id = this.superAdminId ;
+      payload.super_admin_id = this.superAdminId;
       payload.user_id = this.userData.id;
       payload.amount = this.sub_total;
       // payload.vehicle_type_id = this.newOrder.vehicleType;
@@ -535,7 +546,7 @@ console.log("ad",adjustedTime)
       if (this.loading_button) return; // Prevent multiple clicks while loading
 
       this.loading_button = true; // Disable button immediately
-      if (this.wallet < this.sub_total && this.selectedPaymentType == '138') {
+      if (this.wallet < this.sub_total && this.selectedPaymentType == this.wallets) {
          // this.toastService.showError("Insufficient balance")
          this.loading_button = false;
          this.cdr.detectChanges();
@@ -561,7 +572,7 @@ console.log("ad",adjustedTime)
          this.cdr.detectChanges();
          return;
       }
-      if (this.selectedPaymentType == '139' && !this.selectedPayment) {
+      if (this.selectedPaymentType == this.cash && !this.selectedPayment) {
 
          // this.toastService.showError("Please select payment location")
          this.loading_button = false;
@@ -589,7 +600,7 @@ console.log("ad",adjustedTime)
       });
       try {
          this.riderloader = true;
-         this.apiService.last_invoice({ business_id:  this.super_business }).subscribe({
+         this.apiService.last_invoice({ business_id: this.super_business }).subscribe({
             next: (data: any) => {
                // this.loading_button = true;
                let ApiResponse: any = data;
@@ -740,10 +751,10 @@ console.log("ad",adjustedTime)
                   // this.listofInvoice = ApiResponse.data;
                   this.invoice_id = ApiResponse?.data?.id
 
-                  if (this.selectedPaymentType == '138') {
+                  if (this.selectedPaymentType == this.wallets) {
                      this.deduct_wallet_amount()
                   }
-                  if (this.selectedPaymentType == '138') {
+                  if (this.selectedPaymentType == this.wallets) {
                      this.bill_status = '1'
                   } else {
                      this.bill_status = '0'
@@ -843,14 +854,14 @@ console.log("ad",adjustedTime)
       const currentDate = new Date();
       const formattedDate = currentDate.toISOString().split('T')[0];
       let payload: any = {}
-      payload.business_id =this.super_business
+      payload.business_id = this.super_business
       // payload.user_id = this.userData.id;
       // payload.business_id = this.businessDetails ? this.businessDetails.id : 983
       payload.pay_to_uid = this.userData.id
       payload.invoice_id = id
       payload.dr_amount = this.sub_total
       payload.amount = this.sub_total
-      payload.super_admin_id = this.superAdminId 
+      payload.super_admin_id = this.superAdminId
       payload.created_on_date = formattedDate
       payload.payment_date = formattedDate
       payload.pay_for_ledger = this.selectedPaymentType
@@ -864,7 +875,7 @@ console.log("ad",adjustedTime)
                // this.clearLocal()
                // this.addNotification()
                if (data.status) {
-                  if (this.selectedPaymentType == '138') {
+                  if (this.selectedPaymentType == this.wallets) {
                      this.bill_status = '1'
                   } else {
                      this.bill_status = '0'
@@ -906,13 +917,13 @@ console.log("ad",adjustedTime)
       const formattedDate = currentDate.toISOString().split('T')[0];
       let payload: any = {}
       payload.pay_to_uid = this.userData.id
-      payload.business_id =this.super_business
+      payload.business_id = this.super_business
       // payload.business_id = this.businessDetails ? this.businessDetails.id : null
       // payload.for_user_id=this.userId ? this.userId : this.default
       payload.invoice_id = id
       payload.cr_amont = this.sub_total
       payload.amount = this.sub_total
-      payload.super_admin_id = this.superAdminId 
+      payload.super_admin_id = this.superAdminId
       payload.created_on_date = formattedDate
       payload.payment_date = formattedDate
       payload.pay_for_ledger = this.selectedPaymentType
@@ -920,7 +931,7 @@ console.log("ad",adjustedTime)
          this.apiService.addTransaction(payload).subscribe({
             next: (data: any) => {
                // this.loading_button = true;
-               if (this.selectedPaymentType == '138') {
+               if (this.selectedPaymentType == this.wallets) {
                   this.bill_status = '1'
                } else {
                   this.bill_status = '0'
@@ -987,7 +998,7 @@ console.log("ad",adjustedTime)
       payload.drop_phone_no = this.dropLocation.person_phone_no
       payload.pickup_person_name = this.pickupLocation.person_name
       payload.pickup_phone_no = this.pickupLocation.person_phone_no
-      payload.super_admin_id = this.superAdminId 
+      payload.super_admin_id = this.superAdminId
       payload.drop_address = this.dropLocation.address_details
       payload.pickup_address = this.pickupLocation.address_details
       payload.parcel_weight = this.listofInvoice
@@ -1025,7 +1036,7 @@ console.log("ad",adjustedTime)
    editDeliveries(id: any) {
       let payload: any = {}
 
-      payload.business_id =this.super_business
+      payload.business_id = this.super_business
 
 
       if (this.businessDetails && this.businessDetails.id) {
@@ -1051,7 +1062,7 @@ console.log("ad",adjustedTime)
       payload.drop_phone_no = this.dropLocation.person_phone_no
       payload.pickup_person_name = this.pickupLocation.person_name
       payload.pickup_phone_no = this.pickupLocation.person_phone_no
-      payload.super_admin_id = this.superAdminId 
+      payload.super_admin_id = this.superAdminId
       payload.drop_address = this.dropLocation.address_details
       payload.pickup_address = this.pickupLocation.address_details
       payload.parcel_weight = this.listofInvoice
@@ -1099,7 +1110,7 @@ console.log("ad",adjustedTime)
          "invoice_id": String(this.invoice_id),
          'delivery_type_id': this.selectedDeliveryType,
          "vehicle_type_id": this.newOrder?.vehicle_type_id,
-"master_delivery_type_id":this.master_delivery,
+         "master_delivery_type_id": this.master_delivery,
          'notification_timing': '',
          "details": {
             'delivery_type': this.selectedDeliveryType,
@@ -1236,7 +1247,7 @@ console.log("ad",adjustedTime)
                               accept: () => {
                                  console.log('Thank you message displayed Express');
                                  this.confirmationService.close();
-                                 if (this.selectedPaymentType == '138') {
+                                 if (this.selectedPaymentType == this.wallets) {
                                     this.add_wallet_amount()
                                  }
                                  this.creaditTransaction(this.invoice_id)
@@ -1308,7 +1319,7 @@ console.log("ad",adjustedTime)
 
                      });
                      this.cancel()
-                     if (this.selectedPaymentType == '138') {
+                     if (this.selectedPaymentType == this.wallets) {
                         this.add_wallet_amount()
                      }
                      this.creaditTransaction(this.invoice_id)
@@ -1359,7 +1370,7 @@ console.log("ad",adjustedTime)
 
                });
                this.cancel()
-               if (this.selectedPaymentType == '138') {
+               if (this.selectedPaymentType == this.wallets) {
                   this.add_wallet_amount()
                }
                this.creaditTransaction(this.invoice_id)
@@ -1407,7 +1418,7 @@ console.log("ad",adjustedTime)
             });
             this.order_status = 21
             this.cancel()
-            if (this.selectedPaymentType == '138') {
+            if (this.selectedPaymentType == this.wallets) {
                this.add_wallet_amount()
             }
 
@@ -1427,7 +1438,7 @@ console.log("ad",adjustedTime)
    }
    getDeliveryDetail() {
       this.cdr.detectChanges();
-      let payload = { order_delivery_details_id: this.deliveryId, super_admin_id: this.superAdminId  }
+      let payload = { order_delivery_details_id: this.deliveryId, super_admin_id: this.superAdminId }
       try {
          this.apiService.getOrderDeliveryDetail(payload).subscribe({
             next: (data: any) => {
@@ -1511,7 +1522,7 @@ console.log("ad",adjustedTime)
       // this.riderloader = false;
       this.bill_status = '0'
       this.order_status = 21
-      if (this.selectedPaymentType == '138') {
+      if (this.selectedPaymentType == this.wallets) {
          this.add_wallet_amount()
       }
       this.creaditTransaction(this.invoice_id)
@@ -1590,6 +1601,13 @@ console.log("ad",adjustedTime)
       });
    }
    coupan() {
+      let payload: any = {
+         amount: this.sub_total,
+         delivery_type_id: this.selectedDeliveryType,
+         mode_of_payment: this.wallets > 0 ? this.wallets : this.cash
+      };
+
+      localStorage.setItem('address-preview', JSON.stringify(payload));
       this.router.navigate(['/list-of-coupan']);
 
    }

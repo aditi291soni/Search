@@ -123,6 +123,14 @@ export class ApiService {
          })
       );
    }
+    redeem_coupan(payload: any): Observable<any> {
+      return this.http.post(`${this.baseUrl}/get-product-scheme-coupon-list`, payload, this.getHttpOptions()).pipe(
+         catchError((error) => {
+            console.error('Error fetching the redeem coupan:', error); // Log error for debugging
+            return throwError(() => new Error('Failed to fetch the redeem coupan')); // Return a user-friendly error message
+         })
+      );
+   }
    last_invoice(params: object): Observable<any> {
 
       return this.http.post(`${this.baseUrl}/get-last-invoice`, params, this.getHttpOptions()).pipe(
