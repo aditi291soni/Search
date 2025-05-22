@@ -57,18 +57,18 @@ export class ListOfCoupanComponent {
       // }
       let payload: any = {}
 
-      payload.business_id = this.businessDetails?.id;
-      payload.vehicle_id = this.orderdetail?.vehicle_type_id
+      // payload.business_id = this.businessDetails?.id;
+      payload.vehicle_type_id = this.orderdetail?.vehicle_type_id
       payload.super_admin_id = this.super_admin_id;
+      payload.enable_for = 'vendor-app';
+      payload.date = new Date().toISOString().slice(0, 10); // "YYYY-MM-DD"
+      payload.delivery_type_id = this.address_preview.delivery_type_id;
       this.apiService.list_of_coupan(payload).subscribe({
          next: (response) => {
             if (response.status === true) {
                this.coupanList = response.data || [];
-
-
                console.log(this.coupanList);
                this.coupanList = [...this.coupanList];
-
                // localStorage.setItem('address', JSON.stringify(this.coupanList));
             } else {
                console.error('Error fetching list of business:', response.message);
@@ -95,7 +95,7 @@ export class ListOfCoupanComponent {
       payload.platform = 'vendor-app'
       payload.delivery_type_id = this.address_preview.delivery_type_id
       payload.super_admin_id = this.userData.super_admin_id
-      // payload.business_id = this.businessDetails?.id; 
+      // payload.business_id = this.businessDetails?.id;
       // payload.business_id = this.super_business
       payload.vehicle_type_id = this.orderdetail?.vehicle_type_id
       this.apiService.redeem_coupan(payload).subscribe({

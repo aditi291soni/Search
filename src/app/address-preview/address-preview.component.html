@@ -1,64 +1,110 @@
 <div class="">
    <!-- Skeleton Loader -->
-   <ng-container *ngIf=" !this.riderloaders">
+   <ng-container *ngIf="!this.riderloaders">
       <div *ngIf="loading">
-
          <div class="recent-order-item">
             <div class="recent-order-flex">
                <div>
-                  <p-skeleton [style]="{ 'height': '20px', 'width': '150px', 'margin-bottom': '5px' }"></p-skeleton>
-                  <p-skeleton [style]="{ 'height': '15px', 'width': '120px' ,'margin-bottom': '5px', }"></p-skeleton>
+                  <p-skeleton
+                     [style]="{
+                        height: '20px',
+                        width: '150px',
+                        'margin-bottom': '5px'
+                     }"
+                  ></p-skeleton>
+                  <p-skeleton
+                     [style]="{ 'height': '15px', 'width': '120px' ,'margin-bottom': '5px', }"
+                  ></p-skeleton>
                </div>
                <div>
                   <p-skeleton
-                     [style]="{ 'height': '20px', 'width': '100px','margin-bottom': '5px','margin-top': '10px' }"></p-skeleton>
+                     [style]="{
+                        height: '20px',
+                        width: '100px',
+                        'margin-bottom': '5px',
+                        'margin-top': '10px'
+                     }"
+                  ></p-skeleton>
                </div>
-
-
             </div>
 
             <div>
                <p-skeleton
-                  [style]="{ 'height': '14   0px', 'width': '100%', 'margin-bottom': '5px','margin-top': '10px' }"></p-skeleton>
+                  [style]="{
+                     height: '14   0px',
+                     width: '100%',
+                     'margin-bottom': '5px',
+                     'margin-top': '10px'
+                  }"
+               ></p-skeleton>
                <!-- <p-skeleton [style]="{ 'height': '15px', 'width': '120px' }"></p-skeleton> -->
             </div>
             <div class="" *ngFor="let item of [1, 2, 3]">
                <p-skeleton
-                  [style]="{ 'height': '50px', 'width': '100%','margin-bottom': '5px','margin-top': '10px' }"></p-skeleton>
+                  [style]="{
+                     height: '50px',
+                     width: '100%',
+                     'margin-bottom': '5px',
+                     'margin-top': '10px'
+                  }"
+               ></p-skeleton>
                <!-- <p-skeleton [style]="{ 'height': '50px', 'width': '80%' }"></p-skeleton> -->
             </div>
             <div>
                <p-skeleton
-                  [style]="{ 'height': '20px', 'width': '150px', 'margin-bottom': '5px','margin-top': '10px' }"></p-skeleton>
+                  [style]="{
+                     height: '20px',
+                     width: '150px',
+                     'margin-bottom': '5px',
+                     'margin-top': '10px'
+                  }"
+               ></p-skeleton>
                <!-- <p-skeleton [style]="{ 'height': '15px', 'width': '120px' }"></p-skeleton> -->
             </div>
             <div class="option-container">
                <ng-container *ngIf="loading">
-                  <p-skeleton class="option-item" *ngFor="let item of [1, 2, 3]" width="90%" height="70px"></p-skeleton>
+                  <p-skeleton
+                     class="option-item"
+                     *ngFor="let item of [1, 2, 3]"
+                     width="90%"
+                     height="70px"
+                  ></p-skeleton>
                </ng-container>
-
             </div>
             <div>
                <p-skeleton
-                  [style]="{ 'height': '20px', 'width': '150px', 'margin-bottom': '5px','margin-top': '10px' }"></p-skeleton>
+                  [style]="{
+                     height: '20px',
+                     width: '150px',
+                     'margin-bottom': '5px',
+                     'margin-top': '10px'
+                  }"
+               ></p-skeleton>
                <!-- <p-skeleton [style]="{ 'height': '15px', 'width': '120px' }"></p-skeleton> -->
             </div>
             <div>
                <p-skeleton
-                  [style]="{ 'height': '20px', 'width': '100%', 'margin-bottom': '5px','margin-top': '10px' }"></p-skeleton>
+                  [style]="{
+                     height: '20px',
+                     width: '100%',
+                     'margin-bottom': '5px',
+                     'margin-top': '10px'
+                  }"
+               ></p-skeleton>
                <!-- <p-skeleton [style]="{ 'height': '15px', 'width': '120px' }"></p-skeleton> -->
             </div>
          </div>
 
          <!-- Address List -->
-
       </div>
-      <br>
+      <br />
       <div *ngIf="!loading && !this.riderloader">
          <h2>Order Preview</h2>
          <div class="header">
             <h4>Pickup and Drop Location<span class="mandatory">*</span></h4>
-            <h4 class="add">Distance {{ this.distance_value }} {{this.distance_unit}}</h4>
+            <h4 class="add">
+               Distance {{ this.distance_value }} {{ this.distance_unit }}
+            </h4>
          </div>
 
          <div class="recent-order-items">
@@ -66,10 +112,16 @@
             <div class="recent-order-flex">
                <i class="pi pi-map-marker icon"></i>
                <div>
-                  <div class="add">Collect From:- {{ pickupLocation.person_name |
-                     titlecase}}({{pickupLocation.person_phone_no
-                     }})</div>
-                  <div class="address">{{ pickupLocation.house_no }}{{ pickupLocation.address_details }}</div>
+                  <div class="add">
+                     Collect From:-
+                     {{ pickupLocation.person_name | titlecase }}({{
+                        pickupLocation.person_phone_no
+                     }})
+                  </div>
+                  <div class="address">
+                     {{ pickupLocation.house_no
+                     }}{{ pickupLocation.address_details }}
+                  </div>
                </div>
             </div>
 
@@ -79,140 +131,259 @@
             <div class="recent-order-flex">
                <i class="pi pi-map-marker icon"></i>
                <div>
-                  <div class="add">Drop To :- {{ dropLocation.person_name |titlecase}}({{dropLocation.person_phone_no
+                  <div class="add">
+                     Drop To :- {{ dropLocation.person_name | titlecase }}({{
+                        dropLocation.person_phone_no
                      }})
                   </div>
-                  <div class="address">{{dropLocation.house_no}}{{ dropLocation.address_details }}</div>
+                  <div class="address">
+                     {{ dropLocation.house_no
+                     }}{{ dropLocation.address_details }}
+                  </div>
                </div>
             </div>
          </div>
 
-         <br>
+         <br />
 
          <!-- Delivery Types -->
          <h4>Delivery Type <span class="mandatory">*</span></h4>
          <div class="grid-3">
-            <ng-container *ngIf="deliveryList.length >0">
+            <ng-container *ngIf="deliveryList.length > 0">
                <ng-container *ngFor="let delivery of deliveryList">
-                  <div class="recent-order-items hovered" (click)="onDeliveryTypeSelect(delivery)"
-                     *ngIf="delivery?.pickup" [class.selected]="selectedDeliveryType === delivery.id">
+                  <div
+                     class="recent-order-items hovered"
+                     (click)="onDeliveryTypeSelect(delivery)"
+                     *ngIf="delivery?.pickup"
+                     [class.selected]="selectedDeliveryType === delivery.id"
+                  >
                      <div class="header">
-                        <h4>{{delivery.delivery_name}}</h4>
-                        <h4>{{this.businessDetails ? this.businessDetails.currency_symbol : '₹'}} {{delivery.price |
-                           number: '1.2-2'}} </h4>
+                        <h4>{{ delivery.delivery_name }}</h4>
+                        <h4>
+                           {{
+                              this.businessDetails
+                                 ? this.businessDetails.currency_symbol
+                                 : "₹"
+                           }}
+                           {{ delivery.price | number : "1.2-2" }}
+                        </h4>
                      </div>
-                     <div>{{delivery.pickup_label}}.</div>
-
+                     <div>{{ delivery.pickup_label }}.</div>
                   </div>
                </ng-container>
             </ng-container>
          </div>
 
-         <span *ngIf="deliveryList.length < 1" class="mandatory">No Delivery Type {{deliveryList}}</span>
+         <span *ngIf="deliveryList.length < 1" class="mandatory"
+            >No Delivery Type {{ deliveryList }}</span
+         >
          <!-- Payment Modes -->
          <small *ngIf="submitted && !selectedDeliveryType" class="error-text">
             Please select Delivery Type
          </small>
-         <h4 *ngIf="timeslot === '1'">Select Date Slot <span class="mandatory">*</span></h4>
+         <h4 *ngIf="timeslot === '1'">
+            Select Date Slot <span class="mandatory">*</span>
+         </h4>
 
-
-
-         <p-calendar *ngIf="timeslot === '1'" [minDate]="minDate" id="dob" dateFormat="dd-mm-yy" appendTo="body"
-            [showIcon]="true" [(ngModel)]="formattedDates" (onSelect)="onDateSelect($event)"
-            [style]="{'width': '100%'}"></p-calendar>
-         <small *ngIf="submitted && !this.formattedDates && timeslot === '1'" class="error-text">
+         <p-calendar
+            *ngIf="timeslot === '1'"
+            [minDate]="minDate"
+            id="dob"
+            dateFormat="dd-mm-yy"
+            appendTo="body"
+            [showIcon]="true"
+            [(ngModel)]="formattedDates"
+            (onSelect)="onDateSelect($event)"
+            [style]="{ width: '100%' }"
+         ></p-calendar>
+         <small
+            *ngIf="submitted && !this.formattedDates && timeslot === '1'"
+            class="error-text"
+         >
             Please select a Slot Date
          </small>
-         <h4 *ngIf="timeslot === '1'">Select Time Slot <span class="mandatory">*</span></h4>
+         <h4 *ngIf="timeslot === '1'">
+            Select Time Slot <span class="mandatory">*</span>
+         </h4>
 
-         <p-select (onChange)="onSlotChange($event)" *ngIf="timeslot === '1'" [options]="timeSlot" optionValue="id"
-            optionLabel="slot_name" placeholder="Select Time Slot" class="w-full">
+         <p-select
+            (onChange)="onSlotChange($event)"
+            *ngIf="timeslot === '1'"
+            [options]="timeSlot"
+            optionValue="id"
+            optionLabel="slot_name"
+            placeholder="Select Time Slot"
+            class="w-full"
+         >
          </p-select>
-         <small *ngIf="submitted && !this.selectedSlot && timeslot === '1'" class="error-text">
+         <small
+            *ngIf="submitted && !this.selectedSlot && timeslot === '1'"
+            class="error-text"
+         >
             Please select a Slot Time
          </small>
-         <br *ngIf="timeslot === '1'">
-         <br>
+         <br *ngIf="timeslot === '1'" />
+         <br />
          <!-- Payment Modes -->
-         <h4 *ngIf="selectedDeliveryType">Payment Modes <span class="mandatory">*</span></h4>
-
-
+         <h4 *ngIf="selectedDeliveryType">
+            Payment Modes <span class="mandatory">*</span>
+         </h4>
 
          <div class="container" *ngIf="selectedDeliveryType">
-            <div class="recent-order-items" (click)="paymentTypesSelection(this.wallets)"
-               [class.selected]="selectedPaymentType == this.wallets">
+            <div
+               class="recent-order-items"
+               (click)="paymentTypesSelection(this.wallets)"
+               [class.selected]="selectedPaymentType == this.wallets"
+            >
                <i class="pi pi-wallet"></i> Wallet
             </div>
-            <div class="recent-order-items" *ngIf="autoaccept == 1" (click)="paymentTypesSelection(this.cash)"
-               [class.selected]="selectedPaymentType == this.cash">
+            <div
+               class="recent-order-items"
+               *ngIf="autoaccept == 1"
+               (click)="paymentTypesSelection(this.cash)"
+               [class.selected]="selectedPaymentType == this.cash"
+            >
                <i class="pi pi-money-bill"></i> Cash
             </div>
-
          </div>
-         <br>
-         <div class="text-center mt-3" *ngIf="!selectedCoupon">
+         <br />
+         <div class="text-center mt-3" *ngIf="!selectedCoupon && selectedDeliveryType">
             <div class="space mt-4">
-               <button pButton class="p-button-outlined p-button-secondary ml-5 mt-5" label="Apply Coupan"
-                  (click)="coupan()"></button>
+               <button
+                  pButton
+                  class="p-button-outlined p-button-secondary ml-5 mt-5"
+                  label="Apply Coupon"
+                  (click)="coupan()"
+               ></button>
             </div>
          </div>
-         <br>
+         <br />
+         <div *ngIf="selectedCoupon">
+            <h4>Added Coupon Details</h4>
+            <div class="selected-coupon">
+               <div class="d-flex justify-content-between">
+                  <div>
+                     <div class="font-weight-bold">
+                        {{ this?.selectedCoupon?.name }}
+                     </div>
+                     <div>{{ this?.selectedCoupon?.code }}</div>
+                  </div>
+                  <div>
+                     <div>
+                        -
+                        {{
+                           this.businessDetails
+                              ? this.businessDetails.currency_symbol
+                              : "₹"
+                        }}
+                        {{ this.selectedCoupon?.discount_value }}
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <br />
          <div *ngIf="selectedCoupon">
             <h4>Final Charges</h4>
-
             <div class="d-flex justify-content-between mt-2">
                <div>Regular charges:</div>
-               <div> {{this.businessDetails ? this.businessDetails.currency_symbol : '₹'}} {{this.sub_total |
-                  number: '1.2-2'}}</div>
+               <div>
+                  {{
+                     this.businessDetails
+                        ? this.businessDetails.currency_symbol
+                        : "₹"
+                  }}
+                  {{ this.sub_total | number : "1.2-2" }}
+               </div>
             </div>
 
             <div class="d-flex justify-content-between">
                <div>Discount:</div>
-               <div> - {{this.businessDetails ? this.businessDetails.currency_symbol : '₹'}}
-                  {{this.selectedCoupon?.discount_value |
-                  number: '1.2-2'}}</div>
+               <div>
+                  -
+                  {{
+                     this.businessDetails
+                        ? this.businessDetails.currency_symbol
+                        : "₹"
+                  }}
+                  {{ this.selectedCoupon?.discount_value | number : "1.2-2" }}
+               </div>
             </div>
 
             <div class="d-flex justify-content-between font-weight-bold">
                <div>Final Charges:</div>
-               <div>{{this.businessDetails ? this.businessDetails.currency_symbol : '₹'}}
-                  {{this.grand_total|
-                  number: '1.2-2'}}</div>
+               <div>
+                  {{
+                     this.businessDetails
+                        ? this.businessDetails.currency_symbol
+                        : "₹"
+                  }}
+                  {{ this.grand_total | number : "1.2-2" }}
+               </div>
             </div>
          </div>
 
-         <br>
-         <h4>Payment at <span class="mandatory">*</span></h4>
-         <p-select *ngIf="selectedPaymentType==  this.cash" (click)="paymentType($event)" [options]="CashTypes"
-            optionValue="value" optionLabel="name" placeholder="Payment At" class="w-full">
+         <br />
+         <div *ngIf="selectedDeliveryType">
+            <h4>Payment at <span class="mandatory">*</span></h4>
+         </div>
+         <p-select
+            *ngIf="selectedPaymentType == this.cash"
+            (click)="paymentType($event)"
+            [options]="CashTypes"
+            optionValue="value"
+            optionLabel="name"
+            placeholder="Payment At"
+            class="w-full"
+         >
          </p-select>
       </div>
-      <small *ngIf="submitted && !this.pay_on_pickup && selectedPaymentType==  this.cash" class="error-text">
+      <small
+         *ngIf="
+            submitted && !this.pay_on_pickup && selectedPaymentType == this.cash
+         "
+         class="error-text"
+      >
          Please select a Payment Location
       </small>
 
-      <div *ngIf="selectedPaymentType== this.wallets &&  !this.riderloader">
-         Available Wallet Balance: {{this.businessDetails ? this.businessDetails.currency_symbol : '₹'}}{{wallet ?
-         wallet : 0 }}
-
+      <div *ngIf="selectedPaymentType == this.wallets && !this.riderloader">
+         Available Wallet Balance:
+         {{ this.businessDetails ? this.businessDetails.currency_symbol : "₹"
+         }}{{ wallet ? wallet : 0 }}
       </div>
-      <small *ngIf="submitted && wallet< this.sub_total  && selectedPaymentType== this.wallets" class="error-text">
+      <small
+         *ngIf="
+            submitted &&
+            wallet < this.sub_total &&
+            selectedPaymentType == this.wallets
+         "
+         class="error-text"
+      >
          Insufficient Balance
       </small>
 
       <div>
-
-
-
-
-
-
-         <div class="text-center " style="margin-top: 10px; " *ngIf="!this.riderloader">
+         <div
+            class="text-center"
+            style="margin-top: 10px"
+            *ngIf="!this.riderloader"
+         >
             <div class="space">
-               <button pButton class="p-button-outlined p-button-danger ml-5" label="Cancel"
-                  (click)="cancel()"></button>
-               <button [loading]="loading_button" [disabled]="loading_button" pButton type="submit" label="Submit"
-                  (click)="getlastinvoice()"></button>
+               <button
+                  pButton
+                  class="p-button-outlined p-button-danger ml-5"
+                  label="Cancel"
+                  (click)="cancel()"
+               ></button>
+               <button
+                  [loading]="loading_button"
+                  [disabled]="loading_button"
+                  pButton
+                  type="submit"
+                  label="Submit"
+                  (click)="getlastinvoice()"
+               ></button>
             </div>
          </div>
       </div>
@@ -226,28 +397,33 @@
    <div>
       <!-- <p-toast /> -->
       <p-confirmdialog />
-      <div class="searching-rider-container" *ngIf="!loading && this.riderloader">
-
-         <div class="mandatory" style="margin-top: 10px; text-align: end;">
-
+      <div
+         class="searching-rider-container"
+         *ngIf="!loading && this.riderloader"
+      >
+         <div class="mandatory" style="margin-top: 10px; text-align: end">
             <i class="pi pi-trash" (click)="confirm2($event)"></i>
 
             <!-- <button pButton class="p-button-outlined p-button-danger ml-5" label="Cancel" ></button> -->
-
-
          </div>
          <div>
-
-            <p class="search-text"> {{this.selectedDeliveryType == '43' || this.selectedDeliveryType == '40' ?
-               "Searching for a rider" :"Creating your Order"}}<span class="dots"></span></p>
+            <p class="search-text">
+               {{
+                  this.selectedDeliveryType == "43" ||
+                  this.selectedDeliveryType == "40"
+                     ? "Searching for a rider"
+                     : "Creating your Order"
+               }}<span class="dots"></span>
+            </p>
          </div>
 
-         <img src="assets/brand/rider2.gif" alt="" [@searching]="animationState">
-
+         <img
+            src="assets/brand/rider2.gif"
+            alt=""
+            [@searching]="animationState"
+         />
 
          <!-- <i class="pi pi-spin pi-spinner" [@searching]="animationState"></i> -->
-
       </div>
-
-
    </div>
+</div>

@@ -176,7 +176,7 @@ export class AddressPreviewComponent {
       this.TimeSlot()
       this.getledger()
       console.log('lkajsdfas58q364', this.selectedCoupon, this.sub_total)
-      this.grand_total = this.selectedCoupon ? this.sub_total - this.selectedCoupon?.discount_value : 0;
+      this.grand_total = 0;
    }
 
 
@@ -454,6 +454,12 @@ export class AddressPreviewComponent {
    }
    onDeliveryTypeSelect(value: any) {
       console.log('selected value', value)
+      if (this.selectedCoupon && value.id != this.delivery_type_id) {
+         this.toastService.showError("On changing delivery type the coupon will be removed.");
+         return;
+      } else if (this.selectedCoupon && value.id == this.delivery_type_id) {
+         this.grand_total = this.selectedCoupon ? value.price - this.selectedCoupon?.discount_value : 0;
+      }
       this.sub_total = value.price
       this.order_status = value.master_order_status_id
       this.timeslot = value.time_slot
@@ -469,7 +475,8 @@ export class AddressPreviewComponent {
       //    console.log(value.id, 'selectedPaymentType')
       // }
       if (value.auto_accepted_id == 1) {
-         console.log(value.id, 'selectedPaymentType')
+         // NOTE: Here the API call for get ledger loads slow so the wallet won't be auto selected if coupon found.
+         console.log(value.id, 'selectedPaymentType', value, "wallets", this.wallets)
          this.paymentTypesSelection(this.wallets)
 
 
@@ -488,7 +495,7 @@ export class AddressPreviewComponent {
 
    }
    paymentTypesSelection(value: any): void {
-      console.log(value)
+      console.log(value, "po82u350")
       if (value.value == 'online') {
          this.toastService.showError("This service is not working yet")
       } else if (value.value == this.wallets) {
@@ -753,6 +760,7 @@ export class AddressPreviewComponent {
       // payload.end_time = this.deliveryId
       // payload.start_time = this.deliveryId
       payload.for_booking_time = formattedTime
+      payload.disc_rs = this.selectedCoupon ? (this.selectedCoupon?.discount_type === "amount" ? this.selectedCoupon?.discount_value : 0) : null
       payload.prefix_value = 'ORDER'
       payload.invoice_type = 'order'
       payload.financial_year_id = this.financial

@@ -248,3 +248,23 @@ img {
 .font-weight-bold{
    font-weight: bold;
 }
+
+.selected-coupon {
+   border: 1px solid var(--primary-light);
+   margin-bottom: 10px;
+   margin-top: 10px;
+   border-radius: 8px;
+   min-height: 60px;
+   padding: 8px 12px;
+}
+
+.recent-order-item:hover {
+   box-shadow: 0px 0px 0.5px 1px var(--primary-light);
+}
+
+.recent-order-flex {
+   display: flex;
+   justify-content: space-between;
+   align-items: flex-start;
+   /* Aligns skeletons at the top */
+}

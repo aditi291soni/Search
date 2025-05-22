@@ -20,14 +20,14 @@ export class ApiService {
 
    /**
     * Creates an instance of ApiService with the given HttpClient.
-    * 
+    *
     * @param http - The HttpClient used for making HTTP requests.
     */
    constructor(private http: HttpClient) { }
 
    /**
     * Signs in a user by sending the provided email_or_phone and password to the API.
-    * 
+    *
     * @param email_or_phone - The user's email address or phone number.
     * @param password - The user's password.
     * @returns An observable that emits the response from the sign-in API.
@@ -52,7 +52,7 @@ export class ApiService {
    }
    /**f
     * Fetches the list of businesses from the API.
-    * 
+    *
     * @returns An observable that emits the list of businesses.
     * @throws Will throw an error if the API request fails.
     */
@@ -116,16 +116,25 @@ export class ApiService {
    }
 
    list_of_coupan(payload: any): Observable<any> {
-      const devURL = "http://192.168.1.10:6543"
-      return this.http.get(`${devURL}/coupon/get-coupons-list?super_admin_id=${payload.super_admin_id}`, this.getHttpOptions()).pipe(
+      // Convert payload to URL parameters
+      const queryParams = new URLSearchParams();
+      for (const key in payload) {
+         if (payload.hasOwnProperty(key) && payload[key] !== undefined && payload[key] !== null) {
+            queryParams.append(key, payload[key]);
+         }
+      }
+      const devURL = "https://api2.magicqr.in"
+      const url = `${devURL}/coupon/get-coupons-list?${queryParams.toString()}`;
+
+      return this.http.get(url, this.getHttpOptions()).pipe(
          catchError((error) => {
             console.error('Error fetching the list of businesses:', error); // Log error for debugging
             return throwError(() => new Error('Failed to fetch the list of businesses')); // Return a user-friendly error message
          })
       );
    }
-    redeem_coupan(payload: any): Observable<any> {
-      const devURL = "http://192.168.1.10:6543"
+   redeem_coupan(payload: any): Observable<any> {
+      const devURL = "https://api2.magicqr.in"
       return this.http.post(`${devURL}/coupon/redeem/verify-redeem-coupon`, payload, this.getHttpOptions()).pipe(
          catchError((error) => {
             console.error('Error fetching the redeem coupan:', error); // Log error for debugging
@@ -455,7 +464,7 @@ export class ApiService {
    }
    /**
     * Helper method to retrieve HTTP options with the authorization token.
-    * 
+    *
     * @returns The HTTP options including headers with authorization token.
     */
    private getHttpOptions(): { headers: HttpHeaders } {
