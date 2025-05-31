@@ -248,7 +248,13 @@ img {
 .font-weight-bold{
    font-weight: bold;
 }
-
+.close-icon {
+ 
+   cursor: pointer;
+   font-size: 18px;
+   color: red;
+   font-weight: bold;
+}
 .selected-coupon {
    border: 1px solid var(--primary-light);
    margin-bottom: 10px;

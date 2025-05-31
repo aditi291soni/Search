@@ -88,6 +88,7 @@ export class AddressPreviewComponent {
    master_delivery: any;
    cash: any;
    wallets: any;
+   MOP: any;
    constructor(private locationStrategy: LocationStrategy, private platform: Platform, private location: Location, private messageService: MessageService, private cdr: ChangeDetectorRef, private apiService: ApiService, private router: Router, private confirmationService: ConfirmationService, private fb: FormBuilder, private route: ActivatedRoute, private toastService: ToastNotificationService, private ngZone: NgZone,) {
       this.pickupLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedPickup'));
       this.dropLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedDrop'));
@@ -97,7 +98,7 @@ export class AddressPreviewComponent {
       localStorage.setItem('orderComplete', 'false');
       this.super_business = this.apiService.getLocalValueInJSON(localStorage.getItem('super_business'));
       this.superAdminId = this.apiService.getLocalValueInJSON(localStorage.getItem('super_admin'));
-
+      this.selectedPaymentType = this.apiService.getLocalValueInJSON(localStorage.getItem('MOP'));
       // NOTE: added delivery_type_id from localstorage - will be used after coupon selection -- 
       this.delivery_type_id = 0;
       const addressPreview = this.apiService.getLocalValueInJSON(localStorage.getItem('address-preview'));
@@ -452,14 +453,27 @@ export class AddressPreviewComponent {
          console.log('Error in the catch block', error);
       }
    }
-   onDeliveryTypeSelect(value: any) {
+   async  onDeliveryTypeSelect(value: any) {
       console.log('selected value', value)
-      if (this.selectedCoupon && value.id != this.delivery_type_id) {
-         this.toastService.showError("On changing delivery type the coupon will be removed.");
-         return;
-      } else if (this.selectedCoupon && value.id == this.delivery_type_id) {
-         this.grand_total = this.selectedCoupon ? value.price - this.selectedCoupon?.discount_value : 0;
-      }
+        if (this.selectedCoupon && value.id != this.delivery_type_id) {
+    let confirmed =await   this.confirm3(); // wait for user confirmation
+
+    if (!confirmed) {
+      return; // Do nothing if not confirmed
+    }
+  }
+
+  // Proceed if not changing coupon OR user confirmed
+  if (this.selectedCoupon && value.id == this.delivery_type_id) {
+    this.grand_total = this.selectedCoupon ? value.price - this.selectedCoupon?.discount_value : value.price;
+  }
+
+      // if (this.selectedCoupon && value.id != this.delivery_type_id) {
+      //    this.confirm3(value.id)
+
+      // } else if (this.selectedCoupon && value.id == this.delivery_type_id) {
+      //    this.grand_total = this.selectedCoupon ? value.price - this.selectedCoupon?.discount_value : 0;
+      // }
       this.sub_total = value.price
       this.order_status = value.master_order_status_id
       this.timeslot = value.time_slot
@@ -501,14 +515,28 @@ export class AddressPreviewComponent {
       } else if (value.value == this.wallets) {
 
       }
-      const currentDate = new Date();
+      console.log('selected value', value)
+      if (this.selectedCoupon && value.id != this.selectedPaymentType) {
+         // this.toastService.showError("On changing delivery type the coupon will be removed.");
+         this.confirm3()
+
+      } else if (this.selectedCoupon && value.id == this.selectedPaymentType) {
+         const currentDate = new Date();
+         this.selectedDate = currentDate.toISOString().split('T')[0];
+         this.formattedDate = this.formatDateToDDMMYYYY(this.selectedDate);
+         this.selectedPaymentType = value;
+
+      }
+      else {
+         const currentDate = new Date();
+         this.selectedDate = currentDate.toISOString().split('T')[0];
+         this.formattedDate = this.formatDateToDDMMYYYY(this.selectedDate);
+         this.selectedPaymentType = value;
+      }
 
 
-      this.selectedDate = currentDate.toISOString().split('T')[0];
-      this.formattedDate = this.formatDateToDDMMYYYY(this.selectedDate);
-      this.selectedPaymentType = value;
 
-
+      localStorage.setItem('MOP', JSON.stringify(this.selectedPaymentType));
 
 
    }
@@ -516,7 +544,7 @@ export class AddressPreviewComponent {
       let payload: any = {};
       payload.super_admin_id = this.superAdminId;
       payload.user_id = this.userData.id;
-      payload.amount = this.grand_total ?? this.sub_total;
+      payload.amount = this.grand_total ?this.grand_total: this.sub_total
       // payload.vehicle_type_id = this.newOrder.vehicleType;
       this.apiService.deduct_wallet_amount(payload).subscribe({
          next: (response) => {
@@ -541,7 +569,7 @@ export class AddressPreviewComponent {
       let payload: any = {};
       payload.super_admin_id = this.superAdminId;
       payload.user_id = this.userData.id;
-      payload.amount = this.grand_total ?? this.sub_total;
+      payload.amount = this.grand_total ?this.grand_total: this.sub_total
       // payload.vehicle_type_id = this.newOrder.vehicleType;
       this.apiService.add_wallet_amount(payload).subscribe({
          next: (response) => {
@@ -582,7 +610,7 @@ export class AddressPreviewComponent {
       if (this.loading_button) return; // Prevent multiple clicks while loading
 
       this.loading_button = true; // Disable button immediately
-      if (this.wallet < (this.grand_total ?? this.sub_total) && this.selectedPaymentType == this.wallets) {
+      if (this.wallet < (this.grand_total ?this.grand_total: this.sub_total) && this.selectedPaymentType == this.wallets) {
          // this.toastService.showError("Insufficient balance")
          this.loading_button = false;
          this.cdr.detectChanges();
@@ -621,7 +649,21 @@ export class AddressPreviewComponent {
          this.cdr.detectChanges();
          return;
       }
+      // if (this.selectedCoupon) {
+      //    this.applyCoupan()
 
+
+
+      // }
+      if (this.selectedCoupon) {
+  let isCouponApplied = this.applyCoupan(); // Should return boolean
+
+  if (!isCouponApplied) {
+    // Show error and exit early
+   //  this.messageService.showError('Invalid Coupon', 'Error');
+    return;
+  }
+}
       this.ngZone.runOutsideAngular(() => {
          this.interval = setInterval(() => {
             this.ngZone.run(() => {
@@ -749,6 +791,9 @@ export class AddressPreviewComponent {
       } else {
          payload.for_user_id = this.userData.id
       }
+      if (this?.selectedCoupon) {
+         payload.coupon_id = this?.selectedCoupon.id
+      }
       payload.for_user_id = this.userData.id,
          payload.master_order_status_id = this.order_status
       payload.pay_on_pickup = this.pay_on_pickup,
@@ -768,7 +813,7 @@ export class AddressPreviewComponent {
       payload.order_no = order_id
       payload.total_tax = 0
       payload.adjustment_value = 0
-      payload.grand_total = this.grand_total ?? this.sub_total
+      payload.grand_total = this.grand_total ?this.grand_total: this.sub_total
       payload.for_date = formattedDate
       payload.delivery_id = this.deliveryId
       payload.created_on_date = formattedDate
@@ -866,7 +911,7 @@ export class AddressPreviewComponent {
       payload.total_tax = 0
       payload.bill_status = this.bill_status;
       payload.adjustment_value = 0
-      payload.grand_total = this.grand_total ?? this.sub_total
+      payload.grand_total = this.grand_total ?this.grand_total: this.sub_total
       payload.for_date = formattedDate
       payload.delivery_id = this.deliveryId
       payload.created_on_date = formattedDate
@@ -896,8 +941,8 @@ export class AddressPreviewComponent {
       // payload.business_id = this.businessDetails ? this.businessDetails.id : 983
       payload.pay_to_uid = this.userData.id
       payload.invoice_id = id
-      payload.dr_amount = this.grand_total ?? this.sub_total
-      payload.amount = this.grand_total ?? this.sub_total
+      payload.dr_amount = this.grand_total ?this.grand_total: this.sub_total
+      payload.amount = this.grand_total ?this.grand_total: this.sub_total
       payload.super_admin_id = this.superAdminId
       payload.created_on_date = formattedDate
       payload.payment_date = formattedDate
@@ -958,8 +1003,8 @@ export class AddressPreviewComponent {
       // payload.business_id = this.businessDetails ? this.businessDetails.id : null
       // payload.for_user_id=this.userId ? this.userId : this.default
       payload.invoice_id = id
-      payload.cr_amont = this.grand_total ?? this.sub_total
-      payload.amount = this.grand_total ?? this.sub_total
+      payload.cr_amont = this.grand_total ?this.grand_total: this.sub_total
+      payload.amount = this.grand_total ?this.grand_total: this.sub_total
       payload.super_admin_id = this.superAdminId
       payload.created_on_date = formattedDate
       payload.payment_date = formattedDate
@@ -1023,8 +1068,8 @@ export class AddressPreviewComponent {
       payload.status = 1
       payload.master_order_status_id = this.order_status
       payload.delivery_type_id = this.selectedDeliveryType
-      payload.order_value = this.grand_total ?? this.sub_total
-      payload.delivery_charges = this.grand_total ?? this.sub_total
+      payload.order_value = this.grand_total ?this.grand_total: this.sub_total
+      payload.delivery_charges = this.grand_total ?this.grand_total: this.sub_total
       payload.time_slot = this.timeslot
       payload.for_booking_time = formattedTime
       payload.pickup_address_id = this.pickupLocation.id
@@ -1578,6 +1623,7 @@ export class AddressPreviewComponent {
 
       localStorage.removeItem('selectedPickup');
       localStorage.removeItem('selectedDrop');
+      this.removeCoupan()
       localStorage.removeItem('new-order');
       localStorage.setItem('dashboardLoaded', 'false');
       this.riderloaders = false;
@@ -1587,6 +1633,39 @@ export class AddressPreviewComponent {
       return;
 
    }
+  applyCoupan(): Promise<boolean> {
+   return new Promise((resolve, reject) => {
+      let payload: any = {}
+      payload.coupon_id = this?.selectedCoupon.id
+      // payload.coupon_code = coupan.code
+      payload.user_id = this.userData.id
+      // payload.mode_of_payment = this.address_preview.mode_of_payment
+      payload.mode_of_payment = 'cash'
+      payload.amount = this.sub_total
+      payload.platform = 'vendor-app'
+      payload.delivery_type_id = this.delivery_type_id
+      payload.super_admin_id = this.userData.super_admin_id
+
+      payload.vehicle_type_id = this.newOrder?.vehicle_type_id,
+           this.apiService.redeem_coupan(payload).subscribe({
+      next: (response) => {
+        if (response.status === true) {
+          resolve(true);
+        } else {
+          console.error('Coupon validation failed:', response.message);
+          resolve(false);
+        }
+      },
+      error: (err) => {
+        console.error('Error validating coupon:', err);
+        resolve(false);
+      },
+      complete: () => {
+        this.loading = false;
+      },
+    });
+  });
+}
    noorder() {
       this.getWalletAmount()
       // this.order_status = 25
@@ -1594,7 +1673,7 @@ export class AddressPreviewComponent {
       this.riderloaders = false;
    }
    clearLocal() {
-
+      this.removeCoupan()
       localStorage.removeItem('selectedPickup');
       localStorage.removeItem('selectedDrop');
       localStorage.removeItem('new-order');
@@ -1604,6 +1683,44 @@ export class AddressPreviewComponent {
       }, 3000);
       return;
 
+   }
+   confirm3() : Promise<boolean> {
+  return new Promise((resolve) => {
+
+      this.confirmationService.confirm({
+         // target: event.target as EventTarget,
+         message: 'On changing delivery type the coupon will be removed.',
+         header: ' ',
+         icon: 'pi pi-info-circle',
+         rejectLabel: 'Cancel',
+         closable: false,
+         rejectButtonProps: {
+            label: 'Cancel',
+            severity: 'secondary',
+            outlined: true,
+         },
+         acceptButtonProps: {
+            label: 'Confirm',
+            severity: 'danger',
+         },
+
+         accept: () => {
+
+            this.removeCoupan()
+              this.confirmationService.close();
+resolve(true)
+          
+            // this.messageService.add({ severity: 'info', summary: 'Confirmed', detail: 'Record deleted' });
+         },
+         reject: () => {
+         // this.selectedDeliveryType=delivery
+                  this.confirmationService.close();
+      resolve(false);
+   
+         },
+         
+      });
+ });
    }
    confirm2(event: Event) {
 
@@ -1638,7 +1755,7 @@ export class AddressPreviewComponent {
       });
    }
    // TODO: Fix the spelling of coupon here --
-   coupan() {
+   coupon() {
       let payload: any = {
          amount: this.sub_total,
          delivery_type_id: this.selectedDeliveryType,
@@ -1649,5 +1766,12 @@ export class AddressPreviewComponent {
       this.router.navigate(['/list-of-coupan']);
 
    }
-
+   removeCoupan() {
+      localStorage.setItem('coupan', JSON.stringify(''));
+      localStorage.setItem('address-preview', JSON.stringify(''));
+      this.selectedCoupon = ''
+   }
+   coupons() {
+      console.log("change")
+   }
 }

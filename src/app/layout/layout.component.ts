@@ -124,8 +124,11 @@ export class LayoutComponent {
          header: 'Logout Confirmation',
          icon: 'pi pi-exclamation-triangle',
          accept: () => {
-            localStorage.clear();
+            if(localStorage){
+    localStorage.clear();
             sessionStorage.clear();
+            }
+        
             this.router.navigate(['/auth/sign-in']);
          },
          reject: () => {

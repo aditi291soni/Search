@@ -7,6 +7,7 @@ import { ConfirmDialog } from 'primeng/confirmdialog';
 import { SkeletonModule } from 'primeng/skeleton';
 import { ToastModule } from 'primeng/toast';
 import { ApiService } from '../services/api.service';
+import { ToastNotificationService } from '../services/toast-notification.service';
 
 @Component({
    selector: 'app-list-of-coupan',
@@ -32,7 +33,8 @@ export class ListOfCoupanComponent {
       private activatedRoute: ActivatedRoute,
       private router: Router,
       private confirmationService: ConfirmationService,
-      private messageService: MessageService
+      private messageService: MessageService,
+      private toastService: ToastNotificationService
    ) {
 
       this.businessDetails = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
@@ -72,9 +74,12 @@ export class ListOfCoupanComponent {
                // localStorage.setItem('address', JSON.stringify(this.coupanList));
             } else {
                console.error('Error fetching list of business:', response.message);
+              
+        
             }
          },
          error: (err) => {
+      
             console.error('Error fetching list of business:', err);
          },
          complete: () => {
@@ -107,10 +112,12 @@ export class ListOfCoupanComponent {
                // localStorage.setItem('address', JSON.stringify(this.coupanList));
             } else {
                console.error('Error fetching list of business:', response.message);
+            this.toastService.showError(response.message);
             }
          },
          error: (err) => {
             console.error('Error fetching list of business:', err);
+             this.toastService.showError(err.error);
          },
          complete: () => {
             this.loading = false;

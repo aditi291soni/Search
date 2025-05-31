@@ -369,8 +369,8 @@ console.log("f", this.filteredOrderStatus)
       let payload: any = {};
       payload.super_admin_id = this.superAdminId ;
       payload.user_id = this.userData.id;
-      payload.amount = this.invoice?.subtotal - this.cancellation;
-      console.log("c4", this.invoice?.subtotal, this.cancellation, payload.amount)
+      payload.amount = this.invoice?.grand_total - this.cancellation;
+      console.log("c4", this.invoice?.grand_total, this.cancellation, payload.amount)
       // payload.vehicle_type_id = this.newOrder.vehicleType;
       this.apiService.add_wallet_amount(payload).subscribe({
          next: (response) => {
@@ -491,13 +491,13 @@ console.log("f", this.filteredOrderStatus)
       // payload.for_user_id=this.userId ? this.userId : this.default
       payload.invoice_id = id
       payload.pay_to_uid = this.userData.id
-      payload.cr_amont = this.invoice.subtotal - Number(this.cancellation)
-      payload.amount = this.invoice.subtotal - Number(this.cancellation)
+      payload.cr_amont = this.invoice.grand_total - Number(this.cancellation)
+      payload.amount = this.invoice.grand_total - Number(this.cancellation)
       payload.super_admin_id = this.superAdminId 
       payload.created_on_date = formattedDate
       payload.payment_date = formattedDate
       payload.pay_for_ledger = this.order.pay_on == '138' ? '138' : '139'
-      console.log("c5", this.invoice?.subtotal, this.cancellation, payload.amount)
+      console.log("c5", this.invoice?.grand_total, this.cancellation, payload.amount)
       try {
          this.apiService.addTransaction(payload).subscribe({
             next: (data: any) => {
