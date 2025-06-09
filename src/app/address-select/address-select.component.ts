@@ -156,6 +156,8 @@ export class AddressSelectComponent {
       } else {
          payload.user_id = this.userData ? this.userData.id : 0;
       }
+      payload.page=1;
+      payload.per_page=1000
       this.apiService.getAddressList(payload).subscribe({
          next: (response) => {
             if (response.status === true) {
@@ -199,16 +201,18 @@ export class AddressSelectComponent {
       // Check the current route and save the address accordingly
       if (currentRoute.includes('select-pickup')) {
          localStorage.setItem('selectedPickup', JSON.stringify(address));
+         this.router.navigate(['orders/new-order']);
       } else if (currentRoute.includes('select-drop')) {
          localStorage.setItem('selectedDrop', JSON.stringify(address));
+         this.router.navigate(['orders/new-order']);
       } else {
          console.error('Unknown route, no address saved');
       }
-
+   
       // Navigate back to the previous route
-      this.router.navigateByUrl(this.router.url).then(() => {
-         window.history.back();
-      });
+      // this.router.navigateByUrl(this.router.url).then(() => {
+      //    window.history.back();
+      // });
    }
 
    sortAddressList() {

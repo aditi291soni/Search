@@ -82,11 +82,16 @@ export class ListOfAddressComponent {
     * Fetches the address list from the API and populates the addressList array.
     * If a business ID is not found in localStorage, logs an error and stops loading.
     */
+   navigateToEdit(id:any){
+      this.router.navigate(['edit-address/', id]);
+   }
    fetchAddressList(): void {
       const business = localStorage.getItem('bussinessDetails');
       const user = localStorage.getItem('userData');
       const businessId = business ? JSON.parse(business).id : 0;
       const user_id = user ? JSON.parse(user).id : 0;
+      const page=1;
+      const per_page=5000
       if (!businessId) {
          console.error('Business ID not found in localStorage');
          this.loading = false;

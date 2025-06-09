@@ -126,7 +126,15 @@ p-skeleton {
 }
 
 
-
+.close-icon {
+   /* position: absolute !important; */
+   top: 5px;
+   right: 100% !important;
+   cursor: pointer;
+   font-size: 18px;
+   color: red;
+   font-weight: bold;
+}
 
 
 
@@ -248,7 +256,21 @@ img {
 .font-weight-bold{
    font-weight: bold;
 }
-.close-icon {
+@media screen and (max-width: 768px) {
+   .rider-img {
+     width: 150px; /* Smaller on mobile */
+   }
+ }
+ 
+.rider-img {
+   width: 350px; /* Fixed width */
+   height: auto; /* Maintain aspect ratio */
+   display: block;
+   margin: 0 auto; /* Center the image */
+   margin-top: 10px;
+   z-index: 10;
+ }
+ .close-icon {
  
    cursor: pointer;
    font-size: 18px;

@@ -160,8 +160,24 @@ export class ApiService {
          })
       );
    }
+   get_address(params: object): Observable<any> {
 
-
+      return this.http.post(`${this.baseUrl}/getAddress`, params, this.getHttpOptions()).pipe(
+         catchError((error) => {
+            console.error('Error fetching the list of addresses:', error); // Log error for debugging
+            return throwError(() => new Error('Failed to fetch the list of addresses')); // Return a user-friendly error message
+         })
+      );
+   }
+   edit_address(params: object): Observable<any> {
+console.log("payadd",params)
+      return this.http.post(`${this.baseUrl}/editAddress`, params, this.getHttpOptions()).pipe(
+         catchError((error) => {
+            console.error('Error fetching the list of addresses:', error); // Log error for debugging
+            return throwError(() => new Error('Failed to fetch the list of addresses')); // Return a user-friendly error message
+         })
+      );
+   }
    add_user(params: object): Observable<any> {
 
       return this.http.post(`${this.baseUrl}/addUser`, params, this.getHttpOptions()).pipe(

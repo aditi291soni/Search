@@ -97,6 +97,15 @@ p-skeleton {
 }
 
 
+.edit-icon {
+   /* position: absolute !important; */
+   top: -5px;
+   right: 0px !important;
+   cursor: pointer;
+   font-size: 18px;
+   color:  #007bff;
+   font-weight: bold;
+}
 
 
 

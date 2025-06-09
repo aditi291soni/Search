@@ -58,12 +58,14 @@
             <div>
                <!-- <p-toast /> -->
 
-               <div class="subtext">{{ address.address_name | titlecase }} <span class="close-icon"
+               <div class="subtext">{{ address.address_name | titlecase }}
+                  <span class="edit-icon" >    <i class="pi pi-pencil" (click)="navigateToEdit(address.id)"></i> </span>
+                   <span class="close-icon"
                      (click)="confirm2($event,address.id)">
                      <i class="pi pi-times"></i>
                   </span>
+                
                </div>
-
                <!-- <p-dialog header="Confirm Deletion" [(visible)]="displayDialog" [modal]="true" [closable]="false">
                   <p>Are you sure you want to delete this address?</p>
                   <p-footer>

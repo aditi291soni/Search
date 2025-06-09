@@ -67,12 +67,20 @@ export const routes: Routes = [
             loadComponent: () => import('./add-business/add-business.component').then(m => m.AddBusinessComponent),
          },
          {
+            path: 'edit-business',
+            loadComponent: () => import('./edit-address/edit-address.component').then(m => m.EditAddressComponent),
+         },
+         {
             path: 'wallet',
             loadComponent: () => import('./wallet-transaction/wallet-transaction.component').then(m => m.WalletTransactionComponent),
          },
          {
             path: 'edit-business/:id',
             loadComponent: () => import('./add-business/add-business.component').then(m => m.AddBusinessComponent),
+         },
+         {
+            path: 'edit-address/:id',
+            loadComponent: () => import('./edit-address/edit-address.component').then(m => m.EditAddressComponent),
          },
          {
             path: 'list-of-business',

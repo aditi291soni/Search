@@ -78,7 +78,7 @@ export class LayoutComponent {
       const allowedUrls = [
          '/dashboard',
          '/settings',
-         '/orders/new-order',
+         // '/orders/new-order',
          '/orders/new-order/order-preview/779',
          '/orders/new-order/add-address/drops',
       ];
