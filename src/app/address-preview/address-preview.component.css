@@ -4,6 +4,7 @@
    padding: 12px;
    margin-top: 10px;
    position: relative;
+   background-color: white;
 }
 
 .thin {
@@ -126,15 +127,7 @@ p-skeleton {
 }
 
 
-.close-icon {
-   /* position: absolute !important; */
-   top: 5px;
-   right: 100% !important;
-   cursor: pointer;
-   font-size: 18px;
-   color: red;
-   font-weight: bold;
-}
+/*  */
 
 
 
@@ -292,7 +285,7 @@ img {
 
 .recent-order-flex {
    display: flex;
-   justify-content: space-between;
+   /* justify-content: space-betw   een; */
    align-items: flex-start;
    /* Aligns skeletons at the top */
 }

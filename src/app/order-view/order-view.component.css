@@ -5,6 +5,7 @@
    margin-top: 1px;
    position: relative;
    margin-bottom: 10px;
+   background-color: white;
 }
 
 .thin {
@@ -35,6 +36,7 @@
    justify-content: space-between;
    align-items: center;
    margin-bottom: 1px;
+
 }
 
 .left {
@@ -90,6 +92,8 @@
    border-left: 2px dotted gray;
    height: 10px;
    margin: 10px 8px;
+   
+
 }
 
 .small-timeline ::ng-deep .p-timeline .p-timeline-event-connector {
@@ -133,6 +137,8 @@
    display: inline-block;
    /* Ensure the icon stays inline */
    font-size: 2rem;
+   
+/* background-color: white; */
    /* Optional: Adjust size as needed */
 }
 

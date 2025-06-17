@@ -89,6 +89,8 @@ export class AddressPreviewComponent {
    cash: any;
    wallets: any;
    MOP: any;
+   addressPreview: any;
+   available_at_pay: any='wallet';
    constructor(private locationStrategy: LocationStrategy, private platform: Platform, private location: Location, private messageService: MessageService, private cdr: ChangeDetectorRef, private apiService: ApiService, private router: Router, private confirmationService: ConfirmationService, private fb: FormBuilder, private route: ActivatedRoute, private toastService: ToastNotificationService, private ngZone: NgZone,) {
       this.pickupLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedPickup'));
       this.dropLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedDrop'));
@@ -101,9 +103,9 @@ export class AddressPreviewComponent {
       this.selectedPaymentType = this.apiService.getLocalValueInJSON(localStorage.getItem('MOP'));
       // NOTE: added delivery_type_id from localstorage - will be used after coupon selection -- 
       this.delivery_type_id = 0;
-      const addressPreview = this.apiService.getLocalValueInJSON(localStorage.getItem('address-preview'));
-      if (addressPreview) {
-         this.delivery_type_id = addressPreview.delivery_type_id;
+      this.addressPreview = this.apiService.getLocalValueInJSON(localStorage.getItem('address-preview'));
+      if (this.addressPreview) {
+         this.delivery_type_id = this.addressPreview.delivery_type_id;
       }
 
       // NOTE: If coupon found - 
@@ -491,7 +493,7 @@ export class AddressPreviewComponent {
       if (value.auto_accepted_id == 1) {
          // NOTE: Here the API call for get ledger loads slow so the wallet won't be auto selected if coupon found.
          console.log(value.id, 'selectedPaymentType', value, "wallets", this.wallets)
-         this.paymentTypesSelection(this.wallets)
+         this.paymentTypesSelection('wallet',this.wallets)
 
 
 
@@ -508,14 +510,15 @@ export class AddressPreviewComponent {
 
 
    }
-   paymentTypesSelection(value: any): void {
-      console.log(value, "po82u350")
+   paymentTypesSelection(event:any,value: any): void {
+      console.log(value, "po82u350",event.target.innerText)
+      this.available_at_pay=event.target.innerText.trim()
       if (value.value == 'online') {
          this.toastService.showError("This service is not working yet")
       } else if (value.value == this.wallets) {
 
       }
-      console.log('selected value', value)
+      console.log('selected value', this.selectedPaymentType)
       if (this.selectedCoupon && value.id != this.selectedPaymentType) {
          // this.toastService.showError("On changing delivery type the coupon will be removed.");
          this.confirm3()
@@ -604,7 +607,7 @@ export class AddressPreviewComponent {
       }
       console.log(this.pay_on_delivery, this.pay_on_pickup)
    }
-   getlastinvoice() {
+   async getlastinvoice() {
       this.submitted = true
       console.log(this.loading_button)
       if (this.loading_button) return; // Prevent multiple clicks while loading
@@ -656,14 +659,45 @@ export class AddressPreviewComponent {
 
       // }
       if (this.selectedCoupon) {
-  let isCouponApplied = this.applyCoupan(); // Should return boolean
+//   let isCouponApplied = this.applyCoupan(); // Should return boolean
+// console.log("coupan",isCouponApplied)
+try {
+   const isCouponApplied = await this.applyCoupan();  // wait for async operation
+   console.log("coupanss", isCouponApplied);
+   if (!isCouponApplied) {
+     this.loading_button = false;
+     this.cdr.detectChanges();
+     this.toastService.showWarn('Coupans is not valid!');
+     return;
+   }
+ } catch (err) {
+   console.error("Coupon application failed:", err);
+   this.loading_button = false;
+   this.cdr.detectChanges();
+   return;
+ }
 
-  if (!isCouponApplied) {
-    // Show error and exit early
-   //  this.messageService.showError('Invalid Coupon', 'Error');
-    return;
-  }
 }
+if (this.selectedCoupon) {
+   //   let isCouponApplied = this.applyCoupan(); // Should return boolean
+   // console.log("coupan",isCouponApplied)
+   try {
+      const isCouponRedeem= await this.redeemCoupan();  // wait for async operation
+      console.log("coupan", isCouponRedeem);
+      if (!isCouponRedeem) {
+        this.loading_button = false;
+        this.cdr.detectChanges();
+        this.toastService.showWarn('Coupan is not valid!');
+        return;
+      }
+    } catch (err) {
+      console.error("Coupon application failed:", err);
+      this.loading_button = false;
+      this.cdr.detectChanges();
+      return;
+    }
+   
+   }
       this.ngZone.runOutsideAngular(() => {
          this.interval = setInterval(() => {
             this.ngZone.run(() => {
@@ -707,7 +741,7 @@ export class AddressPreviewComponent {
       }
    }
    onSlotChange(event: any): void {
-      console.log(this.timeSlot, 'slot');
+    
       this.selectedSlot = event.value;
       const selectedSlotData = this.timeSlot.find((slot: any) => slot.id === this.selectedSlot);
 
@@ -728,7 +762,7 @@ export class AddressPreviewComponent {
             this.notificationTime = `${hour12}:${formattedMinutes} ${period}`;
             console.log(this.notificationTime, 'notificationTime');
          } else {
-            console.error('Invalid start_time format');
+         
             this.notificationTime = 'Invalid Time';
          }
       } else {
@@ -737,7 +771,7 @@ export class AddressPreviewComponent {
       }
 
       this.formattedDate = this.formatDateToDDMMYYYY(this.selectedDate);
-      console.log('Selected Delivery Type:', this.formattedDate);
+
    }
 
    // onSlotChange(event: any): void {
@@ -826,10 +860,9 @@ export class AddressPreviewComponent {
          this.apiService.addInvoice(payload).subscribe({
             next: (data: any) => {
                let ApiResponse: any = data;
-               console.log(data.status)
+              
                if (data.status) {
                   // this.loading_button = true;
-                  console.log('i', this.loading_button)
                   // this.listofInvoice = ApiResponse.data;
                   this.invoice_id = ApiResponse?.data?.id
 
@@ -951,7 +984,7 @@ export class AddressPreviewComponent {
          this.apiService.addTransaction(payload).subscribe({
             next: (data: any) => {
                // this.loading_button = true;
-               console.log('i', this.loading_button)
+             
                let ApiResponse: any = data;
 
                // this.clearLocal()
@@ -1633,23 +1666,24 @@ export class AddressPreviewComponent {
       return;
 
    }
-  applyCoupan(): Promise<boolean> {
+  applyCoupan (): Promise<boolean> {
    return new Promise((resolve, reject) => {
       let payload: any = {}
       payload.coupon_id = this?.selectedCoupon.id
       // payload.coupon_code = coupan.code
-      payload.user_id = this.userData.id
+      payload.user_id = this.userData?.id
       // payload.mode_of_payment = this.address_preview.mode_of_payment
-      payload.mode_of_payment = 'cash'
+      payload.available_at_pay = this.addressPreview?.mode_of_payment
       payload.amount = this.sub_total
       payload.platform = 'vendor-app'
       payload.delivery_type_id = this.delivery_type_id
-      payload.super_admin_id = this.userData.super_admin_id
+      payload.super_admin_id = this.userData?.super_admin_id
 
       payload.vehicle_type_id = this.newOrder?.vehicle_type_id,
            this.apiService.redeem_coupan(payload).subscribe({
       next: (response) => {
         if (response.status === true) {
+         
           resolve(true);
         } else {
           console.error('Coupon validation failed:', response.message);
@@ -1659,6 +1693,38 @@ export class AddressPreviewComponent {
       error: (err) => {
         console.error('Error validating coupon:', err);
         resolve(false);
+        return false
+      },
+      complete: () => {
+        this.loading = false;
+      },
+    });
+  });
+}
+redeemCoupan (): Promise<boolean> {
+   return new Promise((resolve, reject) => {
+      let payload: any = {}
+      payload.coupon_id = this?.selectedCoupon.id
+      // payload.coupon_code = coupan.code
+      payload.user_id = this.userData?.id
+      // payload.mode_of_payment = this.address_preview.mode_of_payment
+      payload.mode_of_payment = this.addressPreview?.mode_of_payment
+      payload.amount = this.sub_total
+      payload.platform = 'vendor-app'
+      payload.delivery_type_id = this.delivery_type_id
+      payload.super_admin_id = this.userData?.super_admin_id
+
+      payload.vehicle_type_id = this.newOrder?.vehicle_type_id,
+           this.apiService.add_redeem(payload).subscribe({
+      next: (response) => {
+      
+          resolve(true);
+       
+      },
+      error: (err) => {
+        console.error('Error validating coupon:', err);
+        resolve(false);
+        return false
       },
       complete: () => {
         this.loading = false;
@@ -1756,10 +1822,11 @@ resolve(true)
    }
    // TODO: Fix the spelling of coupon here --
    coupon() {
+      console.log("payment",this.available_at_pay)
       let payload: any = {
          amount: this.sub_total,
          delivery_type_id: this.selectedDeliveryType,
-         mode_of_payment: this.wallets > 0 ? this.wallets : this.cash
+         mode_of_payment: this.available_at_pay.toLowerCase()
       };
 
       localStorage.setItem('address-preview', JSON.stringify(payload));

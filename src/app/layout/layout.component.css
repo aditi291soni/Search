@@ -2,7 +2,9 @@
 .layout-wrapper {
    display: flex;
    flex-direction: column;
-   height: 100vh;
+   height: 100%;
+   background-color: rgba(247, 246, 246, 0.84);
+   min-height: 100vh;
 }
 
 /* Topbar styling */
@@ -10,10 +12,10 @@
    display: flex;
    align-items: center;
    justify-content: space-between;
-   background-color: white;
+   background-color: rgba(247, 246, 246, 0.84);
    color: var(--text-primary);
    padding: 5px 20px;
-   height: 60px;
+   height: 50px;
    width: calc(100% - 250px);
    position: fixed;
    top: 0;
@@ -86,12 +88,16 @@
 .search-bar {
    display: flex;
    align-items: center;
-   background-color: var(--neutral-light);
+   background-color: #fff;
+   border: 1px solid rgb(218, 216, 216);
+   /* background-color: var(--neutral-light); */
    padding: 5px 10px;
    border-radius: 25px;
 }
 
 .search-bar-mobile {
+   background-color: white;
+   border: 1px solid rgb(218, 216, 216);
    display: flex;
    align-items: center;
    background-color: var(--neutral-light);
@@ -216,6 +222,7 @@
    padding: 20px;
    /* overflow-y: auto; */
    margin-left: 250px;
+  background-color: rgba(247, 246, 246, 0.84);
    margin-top: 45px;
 }
 

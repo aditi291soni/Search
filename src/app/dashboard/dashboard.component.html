@@ -1,41 +1,30 @@
-<!-- Original content -->
-<h2 *ngIf="!loading">Welcome, {{this.userInfo?.first_name | titlecase }} <br> {{this.businessDetails?.name | titlecase
+<section style="margin-top: -14px;margin-bottom:-14px ;">
+
+
+<h2 style="margin-bottom:-14px ;" *ngIf="!loading">Welcome, {{this.userInfo?.first_name | titlecase }} <br> {{this.businessDetails?.name | titlecase
    }} </h2>
 <p-skeleton *ngIf="loading" height="2rem" width="50%"></p-skeleton>
 <br>
 
-<!-- Banner with Skeleton -->
-<!-- <div *ngIf="loading">
-   <p-skeleton class="banner-img" height="150px"></p-skeleton>
-</div> -->
 
-<!-- <div *ngIf="!loading">
-   <app-corousel></app-corousel>
-</div> -->
-<!-- TODO chnag -->
 <p-carousel *ngIf="!loading" [value]="listofBanner" [numVisible]="1" [numScroll]="1" [circular]="true"
    [autoplayInterval]="4000" [showIndicators]="true">
 
    <ng-template pTemplate="item" let-listofBanner>
-      <img [src]="listofBanner.image" alt="banner" style="width: 100%; " (click)="navigateTo(listofBanner.link)" />
+      <img [src]="listofBanner.image" alt="banner" style="width: 100%;" (click)="navigateTo(listofBanner.link)" />
    </ng-template>
 
 </p-carousel>
-<!-- <img class="banner-img" *ngIf="!loading"
-   src="https://ik.imagekit.io/praveenarbs/api-images/super-announcement/24/17368555934940400.jpg" alt="banner" /> -->
+
 <br><br>
 
-<!-- Options as Actions -->
+
 <div class="option-container">
    <ng-container *ngIf="loading; else optionsContent">
       <p-skeleton class="option-item" *ngFor="let item of [1, 2, 3]" width="90%" height="40px"></p-skeleton>
    </ng-container>
    <ng-template #optionsContent>
-      <!-- <div>
-         <div routerLink="/orders" class="option-item"><i class="pi pi-box"></i> Orders</div>
-         <div routerLink="/customers" class="option-item"><i class="pi pi-users"></i> Customers</div>
-         <div routerLink="/customers" class="option-item"><i class="pi pi-users"></i> Customers</div>
-      </div> -->
+   
       <div class="option-container-item" routerLink="/orders">
          <div class="option-item full-height">
             <i class="pi pi-box"></i>
@@ -57,7 +46,7 @@
    </ng-template>
 </div>
 
-<!-- Recent Orders -->
+
 <br>
 <h3 *ngIf="!loading">Recent Orders</h3>
 <div class="recent-orders-container" *ngIf="loading">
@@ -74,22 +63,19 @@
    <div class="recent-order-item" *ngFor="let order of order" (click)="navigateToOrderDetails(order.invoice_id)">
       <div class="recent-order-flex">
          <div>
-            <!-- <div class="subtext2 mt-2">Sender Detail</div>
-            <div class="maintext">{{order?.pickup_name | titlecase}}</div> -->
+
             <div class="subtext2 mt-2">From: <span class="maintext">{{ order.pickup_person_name | titlecase }}</span>
             </div>
             <div>{{order?.pickup_phone_no}}</div>
             <div class="subtext2 mt-2">To: <span class="maintext">{{ order?.drop_person_name| titlecase }}</span></div>
-            <!-- <div class="subtext2">Receiver Detail</div>
-            <div class="maintext">{{order?.drop_name | titlecase}}</div> -->
+
             <div class="subtext">{{order?.drop_phone_no}}</div>
 
          </div>
          <div class="order-no">
             <div class="subtext2">Order No.</div>
-            <div class="maintext2">#{{order.order_no}}</div>
-            <!-- <div class="subtext2">Order Status.</div> -->
-            <div class="maintext2" [ngClass]="{
+            <div  style="display: flex; justify-content: flex-end;"><span class="maintext2 ">#{{order.order_no}}</span></div>
+            <div class="maintext3" [ngClass]="{
                'text-success': order.status_name == 'Delivered',
                'text-danger ': order.status_name == 'Cancelled',
                'text-dark': order.status_name!== 'Delivered' && order.status_name !== 'Cancelled'
@@ -103,9 +89,4 @@
 </div>
 <br>
 
-<!-- Coupons -->
-<!-- <div *ngIf="loading">
-   <p-skeleton class="banner-img" height="150px"></p-skeleton>
-</div>
-<img *ngIf="!loading" class="banner-img" src="https://dropzonevendor.magicqr.in/assets/img/theme/coupan.jpg"
-   alt="coupon" /> -->
+</section>

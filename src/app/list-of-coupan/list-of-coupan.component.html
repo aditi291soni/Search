@@ -12,7 +12,7 @@
 
 <div class="header">
    <div>
-      <h2>List of Coupan</h2>
+      <h2>Available Coupons For You</h2>
       <!-- <div class="thin">List of addresses</div> -->
    </div>
    <!-- <button pButton type="button" type="button" icon="pi pi-map-marker" label="Select on Map"
@@ -56,29 +56,41 @@
 
    <!-- Address List -->
    <div *ngIf="!loading && coupanList.length > 0">
-      <div class="recent-order-item" *ngFor="let coupan of coupanList">
+      <div class="recent-order-item" *ngFor="let coupan of coupanList; let i = index">
          <div class="recent-order-flex">
             <div>
-               <div class="maintext">{{ coupan.code | titlecase }}</div>
+               <div class="maintext">{{ coupan.name | titlecase }}</div>
             </div>
             <div>
                <p-toast />
                <p-confirmdialog />
             </div>
             <div>
-               <div class="subtext">{{ coupan.name | titlecase }}</div>
+               <div class="subtext">{{ coupan.code | uppercase }}</div>
             </div>
          </div>
          <div class="recent-order-flex">
-            <div>
-               <div class="address">
-                  {{ coupan.feature_coupon }}
-               </div>
-               <div class="address">
+            <div >
+               <!-- <div class="address">
                   {{ coupan.schme_code_type }}
-               </div>
+               </div> -->
+               <!-- <div class="address">
+                  {{  }}
+               </div> -->
+               <ng-container *ngIf="expandedIndex === i; else collapsed">
+                  {{ coupan.description }}
+                  <a *ngIf="coupan.description"  href="#" style="color:var(--primary-light);" (click)="toggleDescription(i, $event)"> less</a>
+                </ng-container>
+          
+                <ng-template #collapsed>
+                 <span *ngIf="coupan.description">
+                  {{ getFirstWords(coupan.description, getCollapsedWordsCount()) }}... 
+                 </span>
+                  <a *ngIf="coupan.description" href="#" style="color:var(--primary-light);" class="primary" (click)="toggleDescription(i, $event)"> more</a>
+                </ng-template>
             </div>
             <button
+            style="padding: 10px 30px;"
                type="button"
                pButton
                label="Apply"

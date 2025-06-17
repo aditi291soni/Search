@@ -28,6 +28,8 @@ export class ListOfCoupanComponent {
    orderdetail: any;
    super_business: any;
    address_preview: any;
+   expandedIndex: number | null = null;
+   isMobile: boolean = false;
    constructor(
       private apiService: ApiService,
       private activatedRoute: ActivatedRoute,
@@ -47,7 +49,32 @@ export class ListOfCoupanComponent {
    }
    ngOnInit() {
       this.fetchcoupanList()
+      this.updateScreenSize();
    }
+
+
+   onResize(): void {
+      this.updateScreenSize();
+    }
+  
+    updateScreenSize(): void {
+      this.isMobile = window.innerWidth <= 768;
+    }
+  
+    toggleDescription(index: number, event: Event): void {
+      event.preventDefault();
+      this.expandedIndex = this.expandedIndex === index ? null : index;
+    }
+  
+    getFirstWords(text: string, wordCount: number): string {
+      return text.split(' ').slice(0, wordCount).join(' ');
+    }
+  
+    getCollapsedWordsCount(): number {
+      return this.isMobile ? 6 : 35;
+    }
+
+ 
    fetchcoupanList(): void {
       // const business = localStorage.getItem('bussinessDetails');
       // const businessId = business ? JSON.parse(business).id : null;
@@ -58,7 +85,7 @@ export class ListOfCoupanComponent {
 
       // }
       let payload: any = {}
-
+      payload.available_at_pay=this.address_preview?.mode_of_payment
       // payload.business_id = this.businessDetails?.id;
       payload.vehicle_type_id = this.orderdetail?.vehicle_type_id
       payload.super_admin_id = this.super_admin_id;
@@ -95,11 +122,12 @@ export class ListOfCoupanComponent {
       // payload.coupon_code = coupan.code
       payload.user_id = this.userData.id
       // payload.mode_of_payment = this.address_preview.mode_of_payment
-      payload.mode_of_payment = 'cash'
-      payload.amount = this.address_preview.amount
+      // payload.mode_of_payment = 'cash'
+      payload.amount = this.address_preview?.amount
       payload.platform = 'vendor-app'
-      payload.delivery_type_id = this.address_preview.delivery_type_id
-      payload.super_admin_id = this.userData.super_admin_id
+      payload.delivery_type_id = this.address_preview?.delivery_type_id
+      payload.super_admin_id = this.userData?.super_admin_id
+      payload.available_at_pay=this.address_preview?.mode_of_payment
       // payload.business_id = this.businessDetails?.id;
       // payload.business_id = this.super_business
       payload.vehicle_type_id = this.orderdetail?.vehicle_type_id
@@ -111,13 +139,13 @@ export class ListOfCoupanComponent {
 
                // localStorage.setItem('address', JSON.stringify(this.coupanList));
             } else {
-               console.error('Error fetching list of business:', response.message);
+               console.error("r" ,response);
             this.toastService.showError(response.message);
             }
          },
          error: (err) => {
-            console.error('Error fetching list of business:', err);
-             this.toastService.showError(err.error);
+            console.error("e", err);
+             this.toastService.showError(err);
          },
          complete: () => {
             this.loading = false;

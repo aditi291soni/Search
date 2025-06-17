@@ -55,7 +55,7 @@ export class AddBusinessComponent {
          gst_registration: ['0'],
          gst_number: ['',],
          super_admin: [this.superAdminId],
-         logo_image: [''],
+         // logo_image: [''],
          country_id: ['101'],
          own_business: ['1'],
       });

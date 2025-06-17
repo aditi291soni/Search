@@ -14,6 +14,7 @@
 }
 
 .recent-order-item {
+   background-color: white;
    border: 1px solid var(--primary-light);
    border-radius: 8px;
    margin: 10px 0px;
@@ -35,7 +36,24 @@
    font-size: medium;
    font-weight: 500;
 }
-
+.maintext2 {
+   font-size: medium;
+   font-weight: 400;
+   margin-bottom: 10px;
+   background-color: rgb(51, 137, 207);
+   padding: 5px;
+   border-radius: 5px;
+   color:white
+ 
+}
+.maintext3 {
+   font-size: large;
+   font-weight: 400;
+   margin-bottom: 10px;
+   /* background-color: rgb(51, 137, 207);
+   padding: 4px;
+   border-radius: 5px; */
+}
 .subtext2 {
    font-size: 0.8rem;
 }

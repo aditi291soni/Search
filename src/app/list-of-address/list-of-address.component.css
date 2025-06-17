@@ -17,6 +17,7 @@ p-skeleton {
    border-radius: 4px;
    background-color: var(--info-main);
    color: var(--text-secondary);
+ 
 }
 
 /* Header Styles */
@@ -44,6 +45,9 @@ p-skeleton {
    padding: 8px 12px;
    /* cursor: pointer; */
    background: var(--background-light);
+   background-color: white;
+   display: flex;
+   justify-content: space-between;
    /* Optional background for cards */
 }
 
@@ -101,10 +105,23 @@ p-skeleton {
    /* position: absolute !important; */
    top: -5px;
    right: 0px !important;
+   
    cursor: pointer;
    font-size: 18px;
    color:  #007bff;
    font-weight: bold;
+}
+.close-icons {
+   /* position: relative !important; */
+   /* bottom: 40px;
+   right: 0px !important; */
+   
+   cursor: pointer;
+   font-size: 18px;
+   color:  #ff001e;
+
+   font-weight: bold;
+ 
 }
 
 
@@ -114,14 +131,22 @@ p-skeleton {
 
 .close-icon {
    /* position: absolute !important; */
-   top: -5px;
+   bottom: 0px;
    right: 0px !important;
    cursor: pointer;
    font-size: 18px;
    color: red;
    font-weight: bold;
 }
+.reverse {
+   display: flex;
+   flex-direction: column;
+   justify-content: space-between;
+   height: 100%; /* or set a fixed height like 100px */
 
+  
+ }
+ 
 /* .recent-order-item {
    position: relative;
    padding: 10px;

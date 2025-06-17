@@ -8,9 +8,10 @@
 
 
    <form  [formGroup]="projectForm">
-      <div class="form-group">
+      <div class="form-group" style="margin-top: 10px;">
          <div class="address_details">Address Detail <span class="mandatory">*</span></div>
-         <textarea pInputText p-autoTextarea id="address_details" type="text" formControlName="address_details"
+         <h4>{{projectForm.get('address_details').value}}</h4>
+         <!-- <textarea pInputText p-autoTextarea id="address_details" type="text" formControlName="address_details"
             [ngClass]="{'error-border': submitted && projectForm.get('address_details')?.invalid}" readonly></textarea>
          <small
             *ngIf="submitted &&  projectForm.get('address_details')?.hasError('required') && projectForm.get('address_details')?.invalid "
@@ -19,10 +20,10 @@
          </small>
          <small *ngIf=" projectForm.get('address_details')?.hasError('pattern')" class="error-text">
             Invalid address format. Please enter a valid address.
-         </small>
+         </small> -->
       </div>
 
-      <div class="form-group">
+      <div class="form-group " style="margin-top: 10px;">
          <div class="address_details">Name <span class="mandatory">*</span></div>
          <input pInputText id="address_details" type="text" formControlName="person_name"
             [ngClass]="{'error-border': submitted && projectForm.get('person_name')?.invalid}" />
@@ -76,17 +77,17 @@
          <input pInputText id="landmark" type="text" formControlName="landmark" />
       </div>
 
-      <div class="form-group">
+      <!-- <div class="form-group">
          <div class="address_details">City <span class="mandatory">*</span></div>
          <input pInputText type="text" formControlName="city" readonly />
-      </div>
+      </div> -->
       <div class="form-group">
          <div class="address_details">Pincode</div>
          <input pInputText type="text" maxlength="6" minlength="6" formControlName="postal_code"  />
       </div>
    </form>
 
-   <div class="form-group" >
-      <button pButton label="Save" class="save-btn" (click)="editAddress()"></button>
+   <div  style="display: flex; justify-content: center; " >
+      <button pButton label="Update" class="save-btn" (click)="editAddress()"></button>
    </div>
 </div>

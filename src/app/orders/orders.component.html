@@ -28,9 +28,10 @@
          </div>
          <div class="order-no">
             <div class="subtext2">Order No.</div>
-            <div class="maintext2">#{{order.order_no}}</div>
+            <div  style="display: flex; justify-content: flex-end;"><span class="maintext2 ">#{{order.order_no}}</span></div>
+            <!-- <div class="maintext2">#{{order.order_no}}</div> -->
             <!-- <div class="subtext2">Order Status.</div> -->
-            <div class="maintext2" [ngClass]="{
+            <div class="maintext3" [ngClass]="{
                'text-success': order.status_name == 'Delivered',
                'text-danger ': order.status_name == 'Cancelled',
                'text-dark': order.status_name!== 'Delivered' && order.status_name !== 'Cancelled'

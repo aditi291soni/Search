@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { MenubarModule } from 'primeng/menubar';
 import { RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -7,6 +7,7 @@ import { ToastModule } from 'primeng/toast'; // Import ToastModule
 import { BrowserModule } from '@angular/platform-browser';
 import { MatIconModule } from '@angular/material/icon';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { ApiService } from './services/api.service';
 @Component({
    selector: 'app-root',
    standalone: true,
@@ -16,5 +17,32 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
    styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-   constructor(private toastService: MessageService) { }
+   constructor(private toastService: MessageService, private apiService: ApiService, private cdr: ChangeDetectorRef,) { }
+   ngOnInit(): void {
+      console.log('Si')
+      // this.refreshToken()
+      this.cdr.detectChanges();
+   }
+   refreshToken() {
+
+      try {
+         this.apiService.refresh_token().subscribe({
+            next: (data: any) => {
+               if (data.status) {
+                  let ApiResponse: any = data;
+                  console.log(data?.data.token)
+                  localStorage.setItem('authToken', data?.data?.token);
+                  localStorage.setItem('refreshToken', data?.data?.token);
+               }
+
+            },
+            error: (error: any) => {
+
+               console.log('Error fetching data', error);
+            }
+         });
+      } catch (error) {
+         console.log('Error in the catch block', error);
+      }
+   }
 }

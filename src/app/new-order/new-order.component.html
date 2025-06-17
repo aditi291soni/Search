@@ -80,8 +80,8 @@
          <ng-container *ngFor="let vehicle of vehicleTypeList">
             <div class="vehicle-card" *ngIf="vehicle.status =='1'"
                [class.selected]="form.get('vehicle_type_id')?.value === vehicle.id" (click)="selectVehicle(vehicle.id)">
-               <img [src]="vehicle.image" alt="{{ vehicle.vehicle_type }}" class="vehicle-image" />
-               <div class="vehicle-name">{{ vehicle?.vehicle_type }}</div>
+               <img *ngIf="vehicle.image" [src]="vehicle.image" alt="{{ vehicle.vehicle_type }}" class="vehicle-image" />
+               <div class="vehicle-name">{{ vehicle?.vehicle_type | titlecase }}</div>
             </div>
          </ng-container>
          
@@ -97,7 +97,7 @@
          <button pButton type="button" label="Select on Map" class="map-button" (click)="addPickUpAddress('pickup')">
             <mat-icon class="icon">gps_fixed</mat-icon></button>
       </div>
-      <div *ngIf="pickupLocation" class="address-card">
+      <div *ngIf="pickupLocation" class="address-card" style="background-color: white;">
          <div class="address-info">
             <div class="personal-info">
                <div>
@@ -125,7 +125,7 @@
             class="map-button">
             <mat-icon class="icon">gps_fixed</mat-icon></button>
       </div>
-      <div *ngIf="dropLocation" class="address-card">
+      <div *ngIf="dropLocation" class="address-card" style="background-color: white;">
          <div class="address-info">
             <div class="personal-info">
                <div>
@@ -137,7 +137,7 @@
                   <i class="pi pi-times"></i> <!-- PrimeNG Close Icon -->
                </button>
             </div>
-            <p *ngIf="dropLocation?.house_no">{{ dropLocation?.house_no }},<ng-container
+            <p  *ngIf="dropLocation?.house_no">{{ dropLocation?.house_no }},<ng-container
                   *ngIf="dropLocation?.landmark">{{ dropLocation?.landmark }}</ng-container> </p>
             <p>{{ dropLocation?.address_details }}</p>
          </div>
@@ -176,7 +176,7 @@
          Parcel Details are required
       </small>
       <div class="bottom-buttons">
-         <button pButton type="button" label="Cancel" class="p-button-outlined p-button-danger"
+         <button pButton type="button" label="Cancel" style="background-color: white;" class="p-button-outlined p-button-danger"
             (click)="cancel()"></button>
          <button pButton type="submit" [loading]="loading_button" [disabled]="loading_button" label="Continue"
             class="p-button-contained p-button-success" (click)="calculateDistanceNews()"></button>

@@ -11,7 +11,7 @@ import { ToastModule } from 'primeng/toast';
 @Component({
    selector: 'app-list-of-address',
    standalone: true,
-
+ 
    providers: [ConfirmationService, MessageService],
    imports: [CommonModule, SkeletonModule, ButtonModule, ConfirmDialog, ToastModule],
    templateUrl: './list-of-address.component.html',

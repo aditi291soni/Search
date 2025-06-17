@@ -43,7 +43,7 @@ export class NewOrderComponent {
    private distanceMatrixService: google.maps.DistanceMatrixService
    distance: any;
    distanceResult: string = '';
-   categories: string[] = ['Food', 'Book', 'Medicines', 'Documents', 'Grocery', 'Cake', 'Other'];
+   categories: string[] = ['Food', 'Book', 'Medicines', 'Cake','Documents', 'Grocery' , 'Other'];
    superAdminId: any;
    super_business: any;
 

@@ -76,6 +76,7 @@ export class DashboardComponent implements OnInit {
       this.fetchOrderList();
       this.getOrderStatus();
       this.getlistofBanner()
+      // this.refreshToken()
       this.clearLocal();
       this.cdr.detectChanges();
 
@@ -88,13 +89,34 @@ export class DashboardComponent implements OnInit {
       // this.clearLocal()
       // this.cdr.detectChanges();
    }
+   refreshToken() {
+      this.loading = true
+      try {
+         this.apiService.refresh_token().subscribe({
+            next: (data: any) => {
+               if (data.status) {
+                  let ApiResponse: any = data;  
+                  console.log(data?.data.token)
+                  localStorage.setItem('authToken', data?.data.token);
+               }
+
+            },
+            error: (error: any) => {
+
+               console.log('Error fetching data', error);
+            }
+         });
+      } catch (error) {
+         console.log('Error in the catch block', error);
+      }
+   }
    getlistofBanner() {
       this.loading = true
       try {
-         this.apiService.list_of_banner({ business_id:  this.super_business }).subscribe({
+         this.apiService.list_of_banner({ super_admin_id:  this.superAdminId }).subscribe({
             next: (data: any) => {
                if (data.status) {
-                  let ApiResponse: any = data;
+                  let ApiResponse: any = data;  
                   // this.listofBanner = ApiResponse.data;
 
                   this.listofBanner = ApiResponse.data

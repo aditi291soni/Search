@@ -93,13 +93,13 @@
                <div>
                   <div class="add">
                      Collect From:-
-                     {{ pickupLocation.person_name | titlecase }}({{
-                     pickupLocation.person_phone_no
+                     {{ pickupLocation?.person_name | titlecase }}({{
+                     pickupLocation?.person_phone_no
                      }})
                   </div>
                   <div class="address">
-                     {{ pickupLocation.house_no
-                     }}{{ pickupLocation.address_details }}
+                     {{ pickupLocation?.house_no
+                     }}{{ pickupLocation?.address_details }}
                   </div>
                </div>
             </div>
@@ -111,13 +111,13 @@
                <i class="pi pi-map-marker icon"></i>
                <div>
                   <div class="add">
-                     Drop To :- {{ dropLocation.person_name | titlecase }}({{
-                     dropLocation.person_phone_no
+                     Drop To :- {{ dropLocation?.person_name | titlecase }}({{
+                     dropLocation?.person_phone_no
                      }})
                   </div>
                   <div class="address">
-                     {{ dropLocation.house_no
-                     }}{{ dropLocation.address_details }}
+                     {{ dropLocation?.house_no
+                     }}{{ dropLocation?.address_details }}
                   </div>
                </div>
             </div>
@@ -182,32 +182,32 @@
          </h4>
 
          <div class="container" *ngIf="selectedDeliveryType">
-            <div class="recent-order-items" (click)="paymentTypesSelection(this.wallets)"
+            <div class="recent-order-items" (click)="paymentTypesSelection($event,this.wallets)"
                [class.selected]="selectedPaymentType == this.wallets">
                <i class="pi pi-wallet"></i> Wallet
             </div>
-            <div class="recent-order-items" *ngIf="autoaccept == 1" (click)="paymentTypesSelection(this.cash)"
+            <div class="recent-order-items" *ngIf="autoaccept == 1" (click)="paymentTypesSelection($event,this.cash)"
                [class.selected]="selectedPaymentType == this.cash">
                <i class="pi pi-money-bill"></i> Cash
             </div>
          </div>
          <br />
 
-         <div class="text-center mt-3" *ngIf="!selectedCoupon && selectedDeliveryType">
+         <div class="text-center mt-3 d-flex justify-content-between" *ngIf="!selectedCoupon && selectedDeliveryType">
             <div class="space mt-4">
                <button pButton class="p-button-outlined p-button-secondary ml-5 mt-5" label="Apply Coupon"
-                  (click)="coupon()"></button>
+                  (click)="coupon()" style="background-color: white;"></button>
             </div>
          </div>
          <br />
          <div *ngIf="selectedCoupon">
             <h4>Added Coupon Details</h4>
 
-            <div class="selected-coupon">
+            <div class="selected-coupon" style="background-color: white;">
                <span class="close-icon" style="position: relative; left:100%;top:-17px;" (click)="confirm3()">
                   <i class="pi pi-times"></i>
                </span>
-               <div class="d-flex justify-content-between">
+               <div class="d-flex justify-content-between" >
                
                   <div>
                    
@@ -222,13 +222,16 @@
                         -
                         {{
                         this.businessDetails
-                        ? this.businessDetails.currency_symbol
+                        ? this.businessDetails?.currency_symbol
                         : "₹"
                         }}
                         {{ this.selectedCoupon?.discount_value }}
                      </div>
                   </div>
                </div>
+               <small *ngIf="submitted && !this.selectedSlot && timeslot === '1'" class="error-text">
+                  Please select a Slot Time
+               </small>
             </div>
          </div>
          <br />
@@ -239,7 +242,7 @@
                <div>
                   {{
                   this.businessDetails
-                  ? this.businessDetails.currency_symbol
+                  ? this.businessDetails?.currency_symbol
                   : "₹"
                   }}
                   {{ this.sub_total | number : "1.2-2" }}
@@ -252,7 +255,7 @@
                   -
                   {{
                   this.businessDetails
-                  ? this.businessDetails.currency_symbol
+                  ? this.businessDetails?.currency_symbol
                   : "₹"
                   }}
                   {{ this.selectedCoupon?.discount_value | number : "1.2-2" }}
@@ -264,7 +267,7 @@
                <div>
                   {{
                   this.businessDetails
-                  ? this.businessDetails.currency_symbol
+                  ? this.businessDetails?.currency_symbol
                   : "₹"
                   }}
                   {{ this.grand_total | number : "1.2-2" }}
@@ -273,7 +276,7 @@
          </div>
 
 
-         <div *ngIf="selectedDeliveryType">
+         <div *ngIf="selectedDeliveryType" >
             <h4>Payment at <span class="mandatory">*</span></h4>
 
             <p-select *ngIf="selectedPaymentType == this.cash" (click)="paymentType($event)" [options]="CashTypes"
@@ -303,7 +306,7 @@
       <div>
          <div class="text-center" style="margin-top: 10px" *ngIf="!this.riderloader">
             <div class="space">
-               <button pButton class="p-button-outlined p-button-danger ml-5" label="Cancel"
+               <button pButton class="p-button-outlined p-button-danger ml-5" label="Cancel" style="background-color: white;"
                   (click)="cancel()"></button>
                <button [loading]="loading_button" [disabled]="loading_button" pButton type="submit" label="Submit"
                   (click)="getlastinvoice()"></button>
@@ -338,7 +341,7 @@
          </div>
 
          <img
-            src="assets/brand/rider2.gif"
+            src="assets/brand/rider2-unscreen.gif"
             alt=""
             class="rider-img"
             [@searching]="animationState"

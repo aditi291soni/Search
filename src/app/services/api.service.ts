@@ -64,16 +64,30 @@ export class ApiService {
          })
       );
    }
+   // list_of_banner(payload: object): Observable<any> {
+   //    return this.http.post(`${this.baseUrl}/get-public-banner-list`, payload, this.getHttpOptions()).pipe(
+   //       catchError((error) => {
+   //          console.error('Error fetching the list of businesses:', error); // Log error for debugging
+   //          return throwError(() => new Error('Failed to fetch the list of businesses')); // Return a user-friendly error message
+   //       })
+   //    );
+   // }
    list_of_banner(payload: object): Observable<any> {
-      return this.http.post(`${this.baseUrl}/get-public-banner-list`, payload, this.getHttpOptions()).pipe(
+      return this.http.post(`${this.baseUrl}/get-super-banner-list`, payload, this.getHttpOptions()).pipe(
          catchError((error) => {
             console.error('Error fetching the list of businesses:', error); // Log error for debugging
             return throwError(() => new Error('Failed to fetch the list of businesses')); // Return a user-friendly error message
          })
       );
    }
-
-
+   refresh_token(): Observable<any> {
+      return this.http.post(`${this.baseUrl}/refresh-token`, this.getHttpOptions()).pipe(
+         catchError((error) => {
+            console.error('Error fetching the list of businesses:', error); // Log error for debugging
+            return throwError(() => new Error('Failed to fetch the list of businesses')); // Return a user-friendly error message
+         })
+      );
+   }
    create_wallet_amount(payload: object): Observable<any> {
       return this.http.post(`${this.baseUrl}/create-wallet`, payload, this.getHttpOptions()).pipe(
          catchError((error) => {
@@ -137,8 +151,17 @@ export class ApiService {
       const devURL = "https://api2.magicqr.in"
       return this.http.post(`${devURL}/coupon/redeem/verify-redeem-coupon`, payload, this.getHttpOptions()).pipe(
          catchError((error) => {
-            console.error('Error fetching the redeem coupan:', error); // Log error for debugging
-            return throwError(() => new Error('Failed to fetch the redeem coupan')); // Return a user-friendly error message
+            console.error('Error fetching the redeem coupan:', error.error.error); // Log error for debugging
+            return throwError(() => new Error(error.error.error)); // Return a user-friendly error message
+         })
+      );
+   }
+   add_redeem(payload: any): Observable<any> {
+      const devURL = "https://api2.magicqr.in"
+      return this.http.post(`${devURL}/coupon/redeem/add-redeem-coupon`, payload, this.getHttpOptions()).pipe(
+         catchError((error) => {
+            console.error('Error fetching the redeem coupan:', error.error.error); // Log error for debugging
+            return throwError(() => new Error(error.error.error)); // Return a user-friendly error message
          })
       );
    }

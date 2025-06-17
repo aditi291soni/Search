@@ -39,6 +39,10 @@ export const routes: Routes = [
             loadComponent: () => import('./settings/settings.component').then(m => m.SettingsComponent),
          },
          {
+            path: 'support',
+            loadComponent: () => import('../support/support.component').then(m => m.SupportComponent),
+         },
+         {
             path: 'customers/new-customer',
             loadComponent: () => import('./new-customer/new-customer.component').then(m => m.NewCustomerComponent),
          },
@@ -68,7 +72,7 @@ export const routes: Routes = [
          },
          {
             path: 'edit-business',
-            loadComponent: () => import('./edit-address/edit-address.component').then(m => m.EditAddressComponent),
+            loadComponent: () => import('./add-business/add-business.component').then(m => m.AddBusinessComponent),
          },
          {
             path: 'wallet',
@@ -112,7 +116,11 @@ export const routes: Routes = [
          {
             path: 'sign-up',
             loadComponent: () => import('./signup/signup.component').then(m => m.SignupComponent),
-         }
+         },
+         {
+            path: '**',
+            loadComponent: () => import('./signin/signin.component').then(m => m.SigninComponent),
+         },
       ]
    }
 ];
