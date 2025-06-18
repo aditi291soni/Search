@@ -81,13 +81,25 @@ export class ApiService {
       );
    }
    refresh_token(): Observable<any> {
-      return this.http.post(`${this.baseUrl}/refresh-token`, this.getHttpOptions()).pipe(
-         catchError((error) => {
-            console.error('Error fetching the list of businesses:', error); // Log error for debugging
-            return throwError(() => new Error('Failed to fetch the list of businesses')); // Return a user-friendly error message
-         })
+      const token = localStorage.getItem('authToken');
+    
+      return this.http.post(
+        `${this.baseUrl}/refresh-token`,
+        {}, // send body here if needed, or replace `{}` with actual data
+        {
+          headers: new HttpHeaders({
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token || ''}`,
+          }),
+        }
+      ).pipe(
+        catchError((error) => {
+          console.error('Error in refresh token:', error);
+          return throwError(() => new Error('Failed to refresh token'));
+        })
       );
-   }
+    }
+    
    create_wallet_amount(payload: object): Observable<any> {
       return this.http.post(`${this.baseUrl}/create-wallet`, payload, this.getHttpOptions()).pipe(
          catchError((error) => {
@@ -298,8 +310,9 @@ console.log("payadd",params)
 
       return this.http.post(`${this.baseUrl}/get-order-delivery-details-list`, params, this.getHttpOptions()).pipe(
          catchError((error) => {
-            console.error('Error fetching the list of addresses:', error); // Log error for debugging
-            return throwError(() => new Error('Failed to fetch the list of addresses')); // Return a user-friendly error message
+           
+            console.error('Error fetching in delivery detail:', error.error.msg); // Log error for debugging
+            return throwError(() => new Error(error.error.msg)); // Return a user-friendly error message
          })
       );
    }
@@ -507,6 +520,7 @@ console.log("payadd",params)
     * @returns The HTTP options including headers with authorization token.
     */
    private getHttpOptions(): { headers: HttpHeaders } {
+      const refreshToken = localStorage.getItem('refreshToken'); 
       const token = localStorage.getItem('authToken'); // Replace with a secure method if needed
       return {
          headers: new HttpHeaders({

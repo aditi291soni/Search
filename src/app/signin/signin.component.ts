@@ -8,6 +8,7 @@ import { ButtonModule } from 'primeng/button';
 import { PasswordModule } from 'primeng/password';
 import { ToastNotificationService } from '../services/toast-notification.service';
 import { CommonModule } from '@angular/common';
+import { version } from '../../../version';
 
 /**
  * SigninComponent handles the user sign-in process.
@@ -32,7 +33,7 @@ export class SigninComponent {
    /** State to track whether the API call is in progress */
    loading: boolean = false;
    business: any[] = [];
-
+versions:any=''
    /**
     * Constructor to inject required services.
     * 
@@ -50,6 +51,7 @@ export class SigninComponent {
          email_or_phone: ['', [Validators.required, Validators.pattern(/^(.+)@(.+)$|^\d{10}$/)]],
          password: ['', [Validators.required, Validators.minLength(6)]],
       });
+      this.getVersion()
    }
 
    togglePasswordVisibility() {
@@ -171,5 +173,10 @@ export class SigninComponent {
             this.loading = false;
          },
       });
+   }
+   getVersion() {
+      this.versions = version
+console.log("version",this.versions)
+
    }
 }

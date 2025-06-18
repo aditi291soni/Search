@@ -13,6 +13,7 @@ import { SearchBarService } from '../services/search-bar.service';
 import { environment } from '../../environments/environment';
 import { ApiService } from '../services/api.service';
 import { filter } from 'rxjs';
+import {version} from '../../../version'
 
 @Component({
    selector: 'app-layout',
@@ -25,6 +26,7 @@ import { filter } from 'rxjs';
 })
 export class LayoutComponent {
    profileMenuItems: any;
+   versions: any;
    isSidebarVisible = true; // Controls sidebar visibility
    isSmallDevice = false; // Tracks if it's a small device
    searchQuery = ''; // Stores search input
@@ -48,7 +50,13 @@ export class LayoutComponent {
       this.businessDetail = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
       this.wallet = this.apiService.getLocalValueInJSON(localStorage.getItem('wallet'));
       this.updateDeviceView();
+      this.getVersion()
       window.addEventListener('resize', this.updateDeviceView.bind(this));
+   }
+   getVersion() {
+      this.versions = version
+console.log("version",this.versions)
+
    }
    ngOnInit(): void {
       this.router.events.subscribe(() => {
@@ -57,14 +65,16 @@ export class LayoutComponent {
       });
       this.checkSearchBarVisibility();
       this.checkProfileBarVisibility()
-      this.getWalletAmount()
-      console.log("rendered")
-      this.cdr.detectChanges();
+      
+    
       this.router.events
          .pipe(filter(event => event instanceof NavigationEnd))
          .subscribe(() => {
             this.getWalletAmount(); // Fetch wallet amount on every navigation
          });
+         this.getWalletAmount()
+         console.log("rendered")
+         this.cdr.detectChanges();
    }
 
    handleGlobalSearch(query: string) {
@@ -189,6 +199,7 @@ export class LayoutComponent {
 
    }
    getWalletAmount(): void {
+      this.cdr.detectChanges();
       let payload: any = {};
       payload.super_admin_id =  this.superAdminId;
       payload.user_id = this.userData ? this.userData.id : 0;

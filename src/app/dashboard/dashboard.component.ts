@@ -8,6 +8,7 @@ import { NoDataFoundComponent } from '../no-data-found/no-data-found.component';
 import { CorouselComponent } from '../corousel/corousel.component';
 import { environment } from '../../environments/environment';
 import { CarouselModule } from 'primeng/carousel';
+import { TokenService } from '../services/token.service';
 
 @Component({
    selector: 'app-dashboard',
@@ -57,7 +58,7 @@ export class DashboardComponent implements OnInit {
     * Creates an instance of DashboardComponent.
     * @param {ApiService} apiService - The service to interact with the API.
     */
-   constructor(private apiService: ApiService, private router: Router, private cdr: ChangeDetectorRef,) {
+   constructor(private apiService: ApiService, private router: Router, private cdr: ChangeDetectorRef,private tokenService :TokenService) {
       this.userInfo = this.apiService.getLocalValueInJSON(localStorage.getItem('userData'));
       this.businessDetails = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
       this.superAdminId = this.apiService.getLocalValueInJSON(localStorage.getItem('super_admin'));
@@ -78,6 +79,8 @@ export class DashboardComponent implements OnInit {
       this.getlistofBanner()
       // this.refreshToken()
       this.clearLocal();
+      // this.tryTokenRefreshOnAppLoad();
+      this.cdr.detectChanges();
       this.cdr.detectChanges();
 
 
@@ -89,27 +92,27 @@ export class DashboardComponent implements OnInit {
       // this.clearLocal()
       // this.cdr.detectChanges();
    }
-   refreshToken() {
-      this.loading = true
-      try {
-         this.apiService.refresh_token().subscribe({
-            next: (data: any) => {
-               if (data.status) {
-                  let ApiResponse: any = data;  
-                  console.log(data?.data.token)
-                  localStorage.setItem('authToken', data?.data.token);
-               }
+   // refreshToken() {
+   //    this.loading = true
+   //    try {
+   //       this.apiService.refresh_token().subscribe({
+   //          next: (data: any) => {
+   //             if (data.status) {
+   //                let ApiResponse: any = data;  
+   //                console.log(data?.data.token)
+   //                localStorage.setItem('authToken', data?.data.token);
+   //             }
 
-            },
-            error: (error: any) => {
+   //          },
+   //          error: (error: any) => {
 
-               console.log('Error fetching data', error);
-            }
-         });
-      } catch (error) {
-         console.log('Error in the catch block', error);
-      }
-   }
+   //             console.log('Error fetching data', error);
+   //          }
+   //       });
+   //    } catch (error) {
+   //       console.log('Error in the catch block', error);
+   //    }
+   // }
    getlistofBanner() {
       this.loading = true
       try {
@@ -147,6 +150,31 @@ export class DashboardComponent implements OnInit {
          console.log('Error in the catch block', error);
       }
    }
+   tryTokenRefreshOnAppLoad() {
+      const token = localStorage.getItem('authToken');
+      const refreshToken = localStorage.getItem('refreshToken');
+   
+      if (token ) {
+        this.apiService.refresh_token().subscribe({
+          next: (data) => {
+            console.log("token",data.data.token)
+            localStorage.setItem('authToken', data.data?.token);
+            localStorage.setItem('refreshToken', data.data?.token);
+            this.tokenService.setToken(data.data.token);
+            console.log('Token refreshed on app load',data.data.token);
+            this.ngOnInit()
+          },
+          error: (err) => {
+            console.warn('Failed to refresh token on app load', err);
+            if(localStorage){
+               localStorage.clear();
+                       sessionStorage.clear();
+                       }
+                   
+                       this.router.navigate(['/auth/sign-in']);
+            // Optionally logout
+          }
+        });}}
    editDeliveries(data: any) {
       console.log("data", data)
 
@@ -219,12 +247,18 @@ export class DashboardComponent implements OnInit {
                // }
                this.cdr.detectChanges();
             } else {
+               
                console.error('Error fetching list of business:', response.message);
                this.loading = false;
             }
          },
          error: (err) => {
-            console.error('Error fetching list of business:', err);
+            console.log("e",err) 
+            if(err =='Error: Token invalid.'){
+               console.log("e")  
+               this.tryTokenRefreshOnAppLoad()
+            }
+            // console.error('Error fetching list of business:', err);
          },
          complete: () => {
             this.loading = false;
