@@ -256,12 +256,15 @@ export class AddAddressComponent implements AfterViewInit {
          return; // Avoid further calls while request is in progress
       }
 
-      this.isSaving = true;
+      
       if (!this.projectForm.valid) {
+   
          // this.toastService.showError('Please fill in all required fields correctly.');
          // Show an error message for invalid form
          //   this.messageService.showError('Please fill in all required fields correctly.', 'Error');
          return; // Stop further execution
+      }else{
+         this.isSaving = false;
       }
       if (this.addressType === 'drop') {
          localStorage.setItem('selectedDrop', JSON.stringify(this.projectForm.value));
@@ -274,11 +277,11 @@ export class AddAddressComponent implements AfterViewInit {
       } else {
          this.projectForm.value.user_id = this.userData.id
       }
-
+      this.isSaving = true;
       this.apiService.add_address(this.projectForm.value).subscribe({
          next: (data: any) => {
             if (data?.data?.status) {
-
+               this.isSaving = false;
                this.toastService.showSuccess("Address Added Successfully")
                if (this.addressType === 'drop') {
                   this.router.navigate(['/orders/new-order']);
@@ -293,11 +296,13 @@ export class AddAddressComponent implements AfterViewInit {
                // this.messageService.showSuccess(data.msg, 'Success');
             } else {
                this.toastService.showError(data.msg)
+               this.isSaving = false;
                // this.messageService.showError(data.msg, 'Error');
             }
          },
          error: (error: any) => {
             console.error('Error adding address:', error);
+            this.isSaving = false;
          },
       });
    }
