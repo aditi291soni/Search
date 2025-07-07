@@ -88,9 +88,10 @@ console.log("version",this.versions)
       const allowedUrls = [
          '/dashboard',
          '/settings',
+      //   '/contact-detail',
          // '/orders/new-order',
          '/orders/new-order/order-preview/779',
-         '/orders/new-order/add-address/drops',
+         '/orders/new-order/add-address/drops'
       ];
 
       const currentUrl = this.router.url;

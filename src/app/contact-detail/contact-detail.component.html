@@ -6,10 +6,10 @@
 
 <div class="recent-orders-container">
 
-   <div *ngIf="contacts.length > 0; else noContacts">
+   <div *ngIf="filteredContacts.length > 0; else noContacts">
       <div
          class="recent-order-item"
-         *ngFor="let contact of contacts"
+         *ngFor="let contact of filteredContacts"
          [ngClass]="{ selected: isSelected(contact) }"
          (click)="selectContact(contact)"
       >

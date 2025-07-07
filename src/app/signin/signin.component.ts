@@ -90,11 +90,11 @@ export class SigninComponent {
             } else {
                console.log('Working check')
                // ⚠️ Warning toast
-               this.toastService.showWarn('Received empty contacts data.');
+               // this.toastService.showWarn('Received empty contacts data.');
             }
          } catch (error) {
             // ❌ Error toast
-            this.toastService.showError('Invalid contacts data.');
+            // this.toastService.showError('Invalid contacts data.');
          }
       };
    }
