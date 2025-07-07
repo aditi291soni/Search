@@ -13,29 +13,24 @@ export class TokenService {
     private refreshTokenSubject = new BehaviorSubject<string | null>(null);
   
     constructor(private http: HttpClient) {}
-  
-    getToken() {
+    getAuthToken() {
       return localStorage.getItem('authToken');
     }
   
-    setToken(token: string) {
-      console.log("Set",token)
-      const refreshToken :any = localStorage.getItem('authToken');
+    getRefreshToken() {
+      return localStorage.getItem('refreshToken');
+    }
+  
+    setAuthToken(token: string) {
       localStorage.setItem('authToken', token);
+    }
+  
+    setRefreshToken(token: string) {
       localStorage.setItem('refreshToken', token);
-      this.refreshTokenSubject.next(token);
     }
   
-    getRefreshTokenSubject() {
-      return this.refreshTokenSubject.asObservable();
-    }
-  
-    isRefreshingToken() {
-      return this.isRefreshing;
-    }
-  
-    setRefreshing(value: boolean) {
-      this.isRefreshing = value;
+    clearTokens() {
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('refreshToken');
     }
   }
-  

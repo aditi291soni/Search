@@ -5,10 +5,10 @@ import { providePrimeNG } from 'primeng/config';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import Noir from '../themes/mypreset';
-import { authInterceptor } from './auth.interceptor'; // Import the interceptor
 import { MessageService } from 'primeng/api'; // Import MessageService
 import { ToastModule } from 'primeng/toast';
 import { provideServiceWorker } from '@angular/service-worker';  // Import ToastModule
+import { authInterceptor } from './auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
    providers: [

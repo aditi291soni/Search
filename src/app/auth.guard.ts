@@ -20,8 +20,15 @@ export const authGuard: CanActivateFn = (route, state) => {
       return false;
    }
 
-   return true;
-};
+   if (allowedRoles && !allowedRoles.includes(userRoleId)) {
+      router.navigate(['/access-denied']); // Or redirect elsewhere
+      return false;
+    }
+  
+    return true;
+  };
+  
+
 
 function checkAuthentication(): boolean {
    // Example: Check for a token in localStorage (customize as needed)

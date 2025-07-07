@@ -150,31 +150,31 @@ export class DashboardComponent implements OnInit {
          console.log('Error in the catch block', error);
       }
    }
-   tryTokenRefreshOnAppLoad() {
-      const token = localStorage.getItem('authToken');
-      const refreshToken = localStorage.getItem('refreshToken');
+   // tryTokenRefreshOnAppLoad() {
+   //    const token = localStorage.getItem('authToken');
+   //    const refreshToken = localStorage.getItem('refreshToken');
    
-      if (token ) {
-        this.apiService.refresh_token().subscribe({
-          next: (data) => {
-            console.log("token",data.data.token)
-            localStorage.setItem('authToken', data.data?.token);
-            localStorage.setItem('refreshToken', data.data?.token);
-            this.tokenService.setToken(data.data.token);
-            console.log('Token refreshed on app load',data.data.token);
-            this.ngOnInit()
-          },
-          error: (err) => {
-            console.warn('Failed to refresh token on app load', err);
-            if(localStorage){
-               localStorage.clear();
-                       sessionStorage.clear();
-                       }
+   //    if (token ) {
+   //      this.apiService.refresh_token().subscribe({
+   //        next: (data) => {
+   //          console.log("token",data.data.token)
+   //          localStorage.setItem('authToken', data.data?.token);
+   //          localStorage.setItem('refreshToken', data.data?.token);
+   //          this.tokenService.setToken(data.data.token);
+   //          console.log('Token refreshed on app load',data.data.token);
+   //          this.ngOnInit()
+   //        },
+   //        error: (err) => {
+   //          console.warn('Failed to refresh token on app load', err);
+   //          if(localStorage){
+   //             localStorage.clear();
+   //                     sessionStorage.clear();
+   //                     }
                    
-                       this.router.navigate(['/auth/sign-in']);
-            // Optionally logout
-          }
-        });}}
+   //                     this.router.navigate(['/auth/sign-in']);
+   //          // Optionally logout
+   //        }
+   //      });}}
    editDeliveries(data: any) {
       console.log("data", data)
 
@@ -256,7 +256,7 @@ export class DashboardComponent implements OnInit {
             console.log("e",err) 
             if(err =='Error: Token invalid.'){
                console.log("e")  
-               this.tryTokenRefreshOnAppLoad()
+               // this.tryTokenRefreshOnAppLoad()
             }
             // console.error('Error fetching list of business:', err);
          },

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { ApiService } from '../services/api.service';
 import { Router } from '@angular/router';
 import { InputTextModule } from 'primeng/inputtext';
@@ -28,6 +28,8 @@ export class SignupComponent {
    business: any[] = [];
    signInForm: any;
    showPassword: boolean = false;
+   contacts: any = 'something one';
+   event: any;
 //   super_admin_list:any = [
 //       { name: 'Bhopal', id: '8' },  
 //       // { name: 'Indore', id: '9' },
@@ -48,6 +50,8 @@ export class SignupComponent {
       private router: Router,
       private toastService: ToastNotificationService,
       private fb: FormBuilder,
+
+      private ngZone: NgZone
    ) {
       this.signInForm = this.fb.group({
          email: ['', [Validators.required, Validators.email]],
@@ -59,7 +63,31 @@ export class SignupComponent {
          role_id: ['4']
       })
    }
-
+   ngOnInit() {
+      (window as any).receiveContacts = (data: string) => {
+        try {
+          const parsed = JSON.parse(data);
+    
+          // Check if parsed has some value
+          const hasValue = Array.isArray(parsed)
+            ? parsed.length > 0
+            : parsed && Object.keys(parsed).length > 0;
+    
+          if (hasValue) {
+            this.ngZone.run(() => {
+              this.contacts = parsed;
+              localStorage.setItem('contact', JSON.stringify(this.contacts));
+              console.log('Contacts received:', this.contacts);
+            });
+          } else {
+            console.warn('Received empty contacts data');
+          }
+    
+        } catch (error) {
+          console.error('Invalid contacts data', error);
+        }
+      };
+    }
    redirectToSignUp() {
       this.router.navigate(['/auth/sign-in']); // Navigates to the route
    }

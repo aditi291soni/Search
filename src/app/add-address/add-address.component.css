@@ -164,3 +164,24 @@ textarea {
    font-weight: bold;
    padding-right: 20px;
 }
+
+.input-with-icon {
+   position: relative;
+   width: 100%;
+ }
+ 
+ .input-with-icon input {
+   width: 100%;
+   padding-right: 2.5rem; /* Space for icon inside input */
+ }
+ 
+ .input-with-icon .icon {
+   position: absolute;
+   right: 0.75rem;
+   top: 50%;
+   transform: translateY(-50%);
+   cursor: pointer;
+   color: #6c757d;
+   font-size: 1.2rem;
+ }
+ 

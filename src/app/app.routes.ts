@@ -22,6 +22,11 @@ export const routes: Routes = [
 
          },
          {
+            path: 'contact-detail',
+            loadComponent: () => import('./contact-detail/contact-detail.component').then(m => m.ContactDetailComponent),
+
+         },
+         {
             path: 'orders',
             loadComponent: () => import('./orders/orders.component').then(m => m.OrdersComponent),
          },

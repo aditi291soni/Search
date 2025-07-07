@@ -43,8 +43,15 @@
 
       <div class="form-group">
          <div class="address_details">Name <span class="mandatory">*</span></div>
-         <input pInputText id="address_details" type="text" formControlName="person_name"
-            [ngClass]="{'error-border': submitted && projectForm.get('person_name')?.invalid}" />
+         <div class="input-with-icon">
+            <input pInputText id="address_details" type="text" formControlName="person_name"
+               [ngClass]="{'error-border': submitted && projectForm.get('person_name')?.invalid}" />
+               <span class="icon"  (click)="contactDetail()">
+                  <i class="pi pi-user"></i>
+                </span>
+                </div>
+         <!-- <input pInputText id="address_details" type="text" formControlName="person_name"
+            [ngClass]="{'error-border': submitted && projectForm.get('person_name')?.invalid}" /> -->
 
       </div>
       <small

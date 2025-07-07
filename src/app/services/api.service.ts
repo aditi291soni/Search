@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+import { TokenService } from './token.service';
 
 /**
  * ApiService provides methods for interacting with the backend API.
@@ -23,7 +24,7 @@ export class ApiService {
     *
     * @param http - The HttpClient used for making HTTP requests.
     */
-   constructor(private http: HttpClient) { }
+   constructor(private http: HttpClient,private tokenService: TokenService) { }
 
    /**
     * Signs in a user by sending the provided email_or_phone and password to the API.
@@ -80,25 +81,30 @@ export class ApiService {
          })
       );
    }
-   refresh_token(): Observable<any> {
-      const token = localStorage.getItem('authToken');
-    
-      return this.http.post(
-        `${this.baseUrl}/refresh-token`,
-        {}, // send body here if needed, or replace `{}` with actual data
-        {
-          headers: new HttpHeaders({
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token || ''}`,
-          }),
-        }
-      ).pipe(
-        catchError((error) => {
-          console.error('Error in refresh token:', error);
-          return throwError(() => new Error('Failed to refresh token'));
-        })
-      );
+   refreshToken(): Observable<any> {
+      return this.http.post('/refresh-token', {
+        refreshToken: this.tokenService.getRefreshToken()
+      });
     }
+   // refresh_token(): Observable<any> {
+   //    const token = localStorage.getItem('authToken');
+    
+   //    return this.http.post(
+   //      `${this.baseUrl}/refresh-token`,
+   //      {}, // send body here if needed, or replace `{}` with actual data
+   //      {
+   //        headers: new HttpHeaders({
+   //          'Content-Type': 'application/json',
+   //          Authorization: `Bearer ${token || ''}`,
+   //        }),
+   //      }
+   //    ).pipe(
+   //      catchError((error) => {
+   //        console.error('Error in refresh token:', error);
+   //        return throwError(() => new Error('Failed to refresh token'));
+   //      })
+   //    );
+   //  }
     
    create_wallet_amount(payload: object): Observable<any> {
       return this.http.post(`${this.baseUrl}/create-wallet`, payload, this.getHttpOptions()).pipe(
@@ -529,6 +535,7 @@ console.log("payadd",params)
          }),
       };
    }
+
    private getHttpOptionMaster(): { headers: HttpHeaders } {
       const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvYXBpLm1hZ2ljcXIuaW5cL3B1YmxpY1wvYXBpXC9zdXBlci1hZG1pbi1zaWduLWluIiwiaWF0IjoxNzQ2NDI0NjM3LCJleHAiOjE3NDcwMjk0MzcsIm5iZiI6MTc0NjQyNDYzNywianRpIjoibGlsTnRTMXVaSXBhOThRWCIsInN1YiI6OCwicHJ2IjoiOTcxMDBmOGFjNDQyY2FiMWNkY2RlZmNkNjZkMDZmYzE4YzE0MGZmZCIsImVtYWlsIjoiZHJvcHpvbmVAZ21haWwuY29tIiwicGhvbmUiOiIxMjU0NjMyNTYxIiwiaWQiOjgsInVzZXIiOnsiZW1haWwiOm51bGwsInBob25lIjpudWxsLCJpZCI6bnVsbH19.p2N6hijIinP5UG8wjXFloCnTOfO24kYMp-4_Ca3wY9k"; // Replace with a secure method if needed
       return {
@@ -543,7 +550,7 @@ console.log("payadd",params)
       try {
          let localValueConvertInJSONFormat = JSON.parse(localValueInString);
          // console.log(localValueConvertInJSONFormat);
-         return JSON.parse(localValueConvertInJSONFormat);
+         return localValueConvertInJSONFormat;
       } catch (error: any) {
          // console.error("Error parsing JSON:", error.message);
          console.error("Error parsing JSON:", error);

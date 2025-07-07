@@ -28,44 +28,44 @@ export class AppComponent {
 
 
 
- tryTokenRefreshOnAppLoad() {
-   const token = localStorage.getItem('authToken');
-   const refreshToken = localStorage.getItem('refreshToken');
+//  tryTokenRefreshOnAppLoad() {
+//    const token = localStorage.getItem('authToken');
+//    const refreshToken = localStorage.getItem('refreshToken');
 
-   if (token ) {
-     this.apiService.refresh_token().subscribe({
-       next: (data) => {
-         console.log("token",data.data.token)
-         localStorage.setItem('authToken', data.data?.token);
-         localStorage.setItem('refreshToken', data.data?.token);
-         this.tokenService.setToken(data.data.token);
-         console.log('Token refreshed on app load',data.data.token);
-       },
-       error: (err) => {
-         console.warn('Failed to refresh token on app load', err);
-         // Optionally logout
-       }
-     });}}
-   refreshToken() {
+//    if (token ) {
+//      this.apiService.refresh_token().subscribe({
+//        next: (data) => {
+//          console.log("token",data.data.token)
+//          localStorage.setItem('authToken', data.data?.token);
+//          localStorage.setItem('refreshToken', data.data?.token);
+//          this.tokenService.setToken(data.data.token);
+//          console.log('Token refreshed on app load',data.data.token);
+//        },
+//        error: (err) => {
+//          console.warn('Failed to refresh token on app load', err);
+//          // Optionally logout
+//        }
+//      });}}
+   // refreshToken() {
 
-      try {
-         this.apiService.refresh_token().subscribe({
-            next: (data: any) => {
-               if (data.status) {
-                  let ApiResponse: any = data;
-                  console.log(data?.data?.token)
-                  localStorage.setItem('authToken', data?.data?.token);
-                  localStorage.setItem('refreshToken', data?.data?.token);
-               }
+   //    try {
+   //       this.apiService.refresh_token().subscribe({
+   //          next: (data: any) => {
+   //             if (data.status) {
+   //                let ApiResponse: any = data;
+   //                console.log(data?.data?.token)
+   //                localStorage.setItem('authToken', data?.data?.token);
+   //                localStorage.setItem('refreshToken', data?.data?.token);
+   //             }
 
-            },
-            error: (error: any) => {
+   //          },
+   //          error: (error: any) => {
 
-               console.log('Error fetching data', error);
-            }
-         });
-      } catch (error) {
-         console.log('Error in the catch block', error);
-      }
-   }
+   //             console.log('Error fetching data', error);
+   //          }
+   //       });
+   //    } catch (error) {
+   //       console.log('Error in the catch block', error);
+   //    }
+   // }
 }

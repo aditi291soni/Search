@@ -201,7 +201,9 @@ export class AddAddressComponent implements AfterViewInit {
       });
 
    }
-
+   contactDetail(){
+      this.router.navigate(['/contact-detail']);
+   }
    getlistofState() {
       try {
          this.apiService.getStateList('101').subscribe({
