@@ -1,35 +1,40 @@
 <div class="header">
-    <div>
-       <h2>Saved Contact</h2>
-    </div>
- </div>
- 
- <br />
- 
- <div class="recent-orders-container">
-    <div *ngIf="contacts.length > 0">
-       <div
-          class="recent-order-item"
-          *ngFor="let contact of contacts; let i = index"
-       >
-       <div style="width: 95%;">
-         <div class="recent-order-flex" style="display: flex; align-items: center; gap: 10px;">
-           
-           <!-- Circle DP -->
-           <div 
-             class="circle-dp">
-             {{ contact.displayName?.charAt(0) | uppercase }}
-           </div>
-       
-           <div>
-             <div class="maintext">{{ contact.displayName | titlecase }}</div>
-             <div class="subtext">{{ contact.phoneNumbers }}</div>
-           </div>
-       
+   <h2>Saved Contact</h2>
+</div>
+
+<br />
+
+<div class="recent-orders-container">
+   <div *ngIf="contacts.length > 0; else noContacts">
+      <div
+         class="recent-order-item"
+         *ngFor="let contact of contacts"
+         [ngClass]="{ selected: isSelected(contact) }"
+         (click)="selectContact(contact)"
+      >
+         <div
+            class="recent-order-flex"
+            style="display: flex; align-items: center; gap: 10px"
+         >
+            <!-- Circle DP -->
+            <div class="circle-dp">
+               {{ contact.displayName?.charAt(0) | uppercase }}
+            </div>
+
+            <!-- Contact Info -->
+            <div>
+               <div class="maintext">{{ contact.displayName | titlecase }}</div>
+               <div class="subtext">
+                  {{
+                     contact.phoneNumbers?.join(", ") || "No number available"
+                  }}
+               </div>
+            </div>
          </div>
-       </div>
-       
-       </div>
-    </div>
- </div>
- 
+      </div>
+   </div>
+
+   <ng-template #noContacts>
+      <p style="text-align: center; color: #999">No contacts available.</p>
+   </ng-template>
+</div>

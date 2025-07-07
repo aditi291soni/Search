@@ -1,28 +1,36 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { ButtonModule } from 'primeng/button';
-import { SkeletonModule } from 'primeng/skeleton';
-import { ToastModule } from 'primeng/toast';
+import { CommonModule } from '@angular/common';
 import { ApiService } from '../services/api.service';
 
 @Component({
-  selector: 'app-contact-detail',
-  providers: [ConfirmationService, MessageService],
-  imports: [CommonModule, SkeletonModule, ButtonModule, ToastModule],
-  templateUrl: './contact-detail.component.html',
-  styleUrl: './contact-detail.component.css'
+   selector: 'app-contact-detail',
+   templateUrl: './contact-detail.component.html',
+   imports: [CommonModule],
+   styleUrls: ['./contact-detail.component.css'],
 })
 export class ContactDetailComponent {
-  contacts: any;
+   contacts: any[] = [];
+   selectedContact: any = null;
 
-  constructor(
-    
-     private cdr: ChangeDetectorRef,
-     private apiService: ApiService
-  ) {
-      this.contacts= this.apiService.getLocalValueInJSON(localStorage.getItem('contact'));
-    //  this.contacts = [{"displayName":"Prashant","phoneNumbers":["9009984758"],"emailAddresses":[]}]
-   
-  }
+   constructor(private cdr: ChangeDetectorRef, private apiService: ApiService) {
+      const stored = localStorage.getItem('contact');
+      this.contacts = this.apiService.getLocalValueInJSON(stored) || [];
+
+      const selected = localStorage.getItem('selectedContact');
+      this.selectedContact = selected ? JSON.parse(selected) : null;
+   }
+
+   selectContact(contact: any) {
+      this.selectedContact = contact;
+      localStorage.setItem('selectedContact', JSON.stringify(contact));
+   }
+
+   isSelected(contact: any): boolean {
+      return (
+         this.selectedContact &&
+         this.selectedContact.displayName === contact.displayName &&
+         JSON.stringify(this.selectedContact.phoneNumbers) ===
+            JSON.stringify(contact.phoneNumbers)
+      );
+   }
 }
