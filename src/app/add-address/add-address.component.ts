@@ -119,13 +119,41 @@ export class AddAddressComponent implements AfterViewInit {
 
       this.currentLocation();
       const selectedContact = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedContact'));
+      const savedData = this.apiService.getLocalValueInJSON(localStorage.getItem('savedAddressForm'));
+      if (savedData) {
+         console.log("saved data",savedData.address_name)
+         this.projectForm.patchValue({
+            address_name: savedData.address_name,
+            address_details: savedData.address_details ? savedData.address_details  :"",
+            city: savedData.city,
+            state_id: this.businessDetail
+              ? this.businessDetail.state_id
+              : this.getStateId(),
+            country_id: '101',
+            state: savedData.state,
+            country: savedData.country,
+            postal_code: savedData.postal_code,
+            lat_val: savedData.lat_val,
+            long_val: savedData.long_val,
+            person_phone_no: savedData.person_phone_no,
+            person_name: savedData.person_name
+          })
+        this.isFormVisible = true;
+        console.log("saved data",this.projectForm.value)
+      }
+      // const selectedContact = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedContact'));
       if (selectedContact) {
          const name = selectedContact.displayName || '';
          const phone = selectedContact.phoneNumbers?.[0] || '';
+         console.log(name)
+    
          this.projectForm.patchValue({
+         
             person_name: name,
             person_phone_no: phone
          });
+
+         this.isFormVisible =true
       }
    }
    map: google.maps.Map | undefined;
@@ -156,8 +184,9 @@ export class AddAddressComponent implements AfterViewInit {
    ngAfterViewInit(): void {
       this.initializeMap();
       this.getlistofState();
+      if (this.searchBox?.nativeElement) {
       const searchBox = new google.maps.places.SearchBox(
-         this.searchBox.nativeElement
+         this.searchBox.nativeElement 
       );
       console.log('ll', searchBox);
       this.map?.addListener('bounds_changed', () => {
@@ -248,11 +277,18 @@ export class AddAddressComponent implements AfterViewInit {
             long_val: this.formData.long_val,
          });
          console.log(this.formData, 'value');
+         if (this.searchBox?.nativeElement) {
          this.searchBox.nativeElement.value = place.formatted_address || '';
          console.log(place.formatted_address, 'valuffe');
+
+         
+         }
       });
+   } 
    }
    contactDetail() {
+   
+   
       this.router.navigate(['/contact-detail']);
    }
    getlistofState() {
@@ -304,9 +340,7 @@ export class AddAddressComponent implements AfterViewInit {
       }
 
       if (!this.projectForm.valid) {
-         // this.toastService.showError('Please fill in all required fields correctly.');
-         // Show an error message for invalid form
-         //   this.messageService.showError('Please fill in all required fields correctly.', 'Error');
+      
          return; // Stop further execution
       } else {
          this.isSaving = false;
@@ -340,14 +374,25 @@ export class AddAddressComponent implements AfterViewInit {
                      'selectedDrop',
                      JSON.stringify(data?.data)
                   );
+                  this.isFormVisible =false
+         
+                  localStorage.removeItem('savedAddressForm');
+                  localStorage.removeItem('selectedContact');
                } else if (this.addressType === 'pickup') {
                   this.router.navigate(['/orders/new-order']);
                   localStorage.setItem(
                      'selectedPickup',
                      JSON.stringify(data?.data)
                   );
+                  this.isFormVisible =false
+               
+                  localStorage.removeItem('savedAddressForm');
+                  localStorage.removeItem('selectedContact');
                } else {
                   this.router.navigate(['/address/list-of-address']);
+                 
+                  localStorage.removeItem('savedAddressForm');
+                  localStorage.removeItem('selectedContact');
                }
                // this.commonService.goBack();
                // this.messageService.showSuccess(data.msg, 'Success');
@@ -387,6 +432,10 @@ export class AddAddressComponent implements AfterViewInit {
          //   this.messageService.showError("Please select Address", 'Error');
          return;
       }
+      localStorage.setItem(
+         'savedAddressForm',
+         JSON.stringify(this.projectForm.value)
+      );
       switch (key) {
          case 'one-time':
             this.handleOneTime(this.projectForm.value);
@@ -395,6 +444,7 @@ export class AddAddressComponent implements AfterViewInit {
          case 'save':
             //  this.drops = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedDrop'));
             this.isFormVisible = true;
+        
             // this.addAddress();
             break;
 
@@ -502,8 +552,9 @@ export class AddAddressComponent implements AfterViewInit {
                   lat_val: location.lat,
                   long_val: location.lng,
                };
-
-               this.searchBox.nativeElement.value = address;
+               if (this.searchBox?.nativeElement) {
+               this.searchBox.nativeElement.value = address || '';
+               }
             } else {
                console.error('Geocoder failed due to: ' + status);
             }
@@ -536,6 +587,7 @@ export class AddAddressComponent implements AfterViewInit {
                   });
 
                   // alert("This area is currently not served by us!.");
+                  
                   this.searchBox.nativeElement.value = '';
                   return;
                }
@@ -575,8 +627,10 @@ export class AddAddressComponent implements AfterViewInit {
                            lat_val: position.lat(),
                            long_val: position.lng(),
                         };
+                        if (this.searchBox?.nativeElement) {
 
-                        this.searchBox.nativeElement.value = address;
+                        this.searchBox.nativeElement.value = address || '';
+                        }
                      } else {
                         console.error('Geocoder failed due to: ' + status);
                      }
@@ -645,7 +699,7 @@ export class AddAddressComponent implements AfterViewInit {
                      long_val: position.lng(),
                   };
 
-                  this.searchBox.nativeElement.value = address;
+                  this.searchBox.nativeElement.value = address || '';
                   console.log(address, 'fnjwnjfe');
                } else {
                   console.error('Geocoder failed due to: ' + status);

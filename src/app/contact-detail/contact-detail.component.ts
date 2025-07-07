@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../services/api.service';
 import { ToastNotificationService } from '../services/toast-notification.service';
-
+import { Location } from '@angular/common';
 @Component({
    selector: 'app-contact-detail',
    templateUrl: './contact-detail.component.html',
@@ -16,7 +16,8 @@ export class ContactDetailComponent {
    constructor(
       private cdr: ChangeDetectorRef,
       private apiService: ApiService,
-      private toastService: ToastNotificationService
+      private toastService: ToastNotificationService,
+      private location: Location // ⬅️ added here
    ) {
       try {
          const stored = localStorage.getItem('contact');
@@ -30,8 +31,15 @@ export class ContactDetailComponent {
             this.toastService.showWarn('No contact data found.');
          }
 
+         // this.contacts = [{
+         //    displayName: "Aditi Sharma",
+         //    phoneNumbers: ["9876543210"],
+         //    emailAddresses: ["aditi.sharma@example.com"]
+         //  }];
+          
          const selected = localStorage.getItem('selectedContact');
          this.selectedContact = selected ? JSON.parse(selected) : null;
+         
       } catch (error) {
          this.toastService.showError('Error loading contact data.');
          console.error('Contact parsing error:', error);
@@ -41,6 +49,7 @@ export class ContactDetailComponent {
    selectContact(contact: any) {
       this.selectedContact = contact;
       localStorage.setItem('selectedContact', JSON.stringify(contact));
+      this.location.back();
    }
 
    isSelected(contact: any): boolean {

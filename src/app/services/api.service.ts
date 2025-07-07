@@ -792,7 +792,7 @@ export class ApiService {
       try {
          let localValueConvertInJSONFormat = JSON.parse(localValueInString);
          // console.log(localValueConvertInJSONFormat);
-         return localValueConvertInJSONFormat;
+         return  JSON.parse(localValueConvertInJSONFormat);
       } catch (error: any) {
          // console.error("Error parsing JSON:", error.message);
          console.error('Error parsing JSON:', error);
