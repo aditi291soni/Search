@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ApiService } from '../services/api.service';
 import { ToastNotificationService } from '../services/toast-notification.service';
 import { Location } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 @Component({
    selector: 'app-contact-detail',
    templateUrl: './contact-detail.component.html',
@@ -16,8 +16,9 @@ export class ContactDetailComponent {
    searchQuery: any;
    constructor(
       private cdr: ChangeDetectorRef,
-      private activatedRoute: ActivatedRoute, 
+      private activatedRoute: ActivatedRoute,
       private apiService: ApiService,
+      private router: Router,
       private toastService: ToastNotificationService,
       private location: Location // ⬅️ added here
    ) {
@@ -43,16 +44,27 @@ export class ContactDetailComponent {
          //    phoneNumbers: ["9876543210"],
          //    emailAddresses: ["aditi.sharma@example.com"]
          //  }];
-    
+
          const selected = localStorage.getItem('selectedContact');
          this.selectedContact = selected ? JSON.parse(selected) : null;
-         this.activatedRoute.queryParams.subscribe(params => {
-            this.searchQuery = params['search'] ;  // Default to empty string if no 'search' param is found
-            console.log('Search Query:', this.searchQuery);  // Log search query for debugging
+         this.activatedRoute.queryParams.subscribe((params) => {
+            this.searchQuery = params['search']; // Default to empty string if no 'search' param is found
+            const isReload =
+               (
+                  performance.getEntriesByType(
+                     'navigation'
+                  )[0] as PerformanceNavigationTiming
+               )?.type === 'reload' || performance.navigation.type === 1; // Fallback for some older browsers
 
+            if (isReload && this.searchQuery) {
+               this.router.navigate([], {
+                  relativeTo: this.activatedRoute,
+                  queryParams: { search: null },
+                  queryParamsHandling: 'merge',
+                  replaceUrl: true,
+               });
+            }
          });
-   
-         
       } catch (error) {
          this.toastService.showError('Error loading contact data.');
          console.error('Contact parsing error:', error);
@@ -61,15 +73,15 @@ export class ContactDetailComponent {
    get filteredContacts(): any[] {
       const query = this.searchQuery;
       if (!query) return this.contacts;
-  
-      return this.contacts.filter(contact => {
+
+      return this.contacts.filter((contact) => {
          const name = contact.displayName?.trim().toLowerCase().normalize();
          const q = query.trim().toLowerCase().normalize();
-   
-         return name.includes(q); 
+
+         return name.includes(q);
       });
    }
-   
+
    selectContact(contact: any) {
       this.selectedContact = contact;
       localStorage.setItem('selectedContact', JSON.stringify(contact));

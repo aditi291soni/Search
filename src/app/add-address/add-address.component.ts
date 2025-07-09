@@ -118,17 +118,23 @@ export class AddAddressComponent implements AfterViewInit {
       });
 
       this.currentLocation();
-      const selectedContact = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedContact'));
-      const savedData = this.apiService.getLocalValueInJSON(localStorage.getItem('savedAddressForm'));
+      const selectedContact = this.apiService.getLocalValueInJSON(
+         localStorage.getItem('selectedContact')
+      );
+      const savedData = this.apiService.getLocalValueInJSON(
+         localStorage.getItem('savedAddressForm')
+      );
       if (savedData) {
-         console.log("saved data",savedData.address_name)
+         console.log('saved data', savedData.address_name);
          this.projectForm.patchValue({
             address_name: savedData.address_name,
-            address_details: savedData.address_details ? savedData.address_details  :"",
+            address_details: savedData.address_details
+               ? savedData.address_details
+               : '',
             city: savedData.city,
             state_id: this.businessDetail
-              ? this.businessDetail.state_id
-              : this.getStateId(),
+               ? this.businessDetail.state_id
+               : this.getStateId(),
             country_id: '101',
             state: savedData.state,
             country: savedData.country,
@@ -136,24 +142,23 @@ export class AddAddressComponent implements AfterViewInit {
             lat_val: savedData.lat_val,
             long_val: savedData.long_val,
             person_phone_no: savedData.person_phone_no,
-            person_name: savedData.person_name
-          })
-        this.isFormVisible = true;
-        console.log("saved data",this.projectForm.value)
+            person_name: savedData.person_name,
+         });
+         this.isFormVisible = true;
+         console.log('saved data', this.projectForm.value);
       }
       // const selectedContact = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedContact'));
       if (selectedContact) {
          const name = selectedContact.displayName || '';
          const phone = selectedContact.phoneNumbers?.[0] || '';
-         console.log(name)
-    
+         console.log(name);
+
          this.projectForm.patchValue({
-         
             person_name: name,
-            person_phone_no: phone
+            person_phone_no: phone,
          });
 
-         this.isFormVisible =true
+         this.isFormVisible = true;
       }
    }
    map: google.maps.Map | undefined;
@@ -185,110 +190,109 @@ export class AddAddressComponent implements AfterViewInit {
       this.initializeMap();
       this.getlistofState();
       if (this.searchBox?.nativeElement) {
-      const searchBox = new google.maps.places.SearchBox(
-         this.searchBox.nativeElement 
-      );
-      console.log('ll', searchBox);
-      this.map?.addListener('bounds_changed', () => {
-         searchBox.setBounds(this.map!.getBounds() as google.maps.LatLngBounds);
-      });
+         const searchBox = new google.maps.places.SearchBox(
+            this.searchBox.nativeElement
+         );
+         console.log('ll', searchBox);
+         this.map?.addListener('bounds_changed', () => {
+            searchBox.setBounds(
+               this.map!.getBounds() as google.maps.LatLngBounds
+            );
+         });
 
-      searchBox.addListener('places_changed', () => {
-         const places = searchBox.getPlaces();
-         // this.isFormVisible = true;
-         if (!places || places.length === 0) {
-            console.error('No places were found.');
-            return;
-         }
+         searchBox.addListener('places_changed', () => {
+            const places = searchBox.getPlaces();
+            // this.isFormVisible = true;
+            if (!places || places.length === 0) {
+               console.error('No places were found.');
+               return;
+            }
 
-         const place = places[0];
-         if (!place.geometry || !place.geometry.location) {
-            console.error('Place has no geometry or location.');
-            return;
-         }
-         // this.isFormVisible = true;
-         const selectedLocation = place.geometry.location;
-         console.log('g', place.geometry.location);
+            const place = places[0];
+            if (!place.geometry || !place.geometry.location) {
+               console.error('Place has no geometry or location.');
+               return;
+            }
+            // this.isFormVisible = true;
+            const selectedLocation = place.geometry.location;
+            console.log('g', place.geometry.location);
 
-         if (!this.isWithinGeofence(selectedLocation)) {
-            this.searchBox.nativeElement.value = '';
-            this.confirmationService.confirm({
-               message: 'This area is currently not served by us!',
-               header: ' ',
-               icon: 'pi pi-info-circle',
-               closable: false, // Prevent closing without clicking OK
-               acceptLabel: 'OK', // Change label to OK
-               rejectVisible: false,
-               acceptButtonProps: {
-                  severity: 'primary', // Primary color for OK button
-                  outlined: true,
-               },
-               accept: () => {
-                  this.confirmationService.close(); // Close dialog on OK
-                  return;
-               },
+            if (!this.isWithinGeofence(selectedLocation)) {
+               this.searchBox.nativeElement.value = '';
+               this.confirmationService.confirm({
+                  message: 'This area is currently not served by us!',
+                  header: ' ',
+                  icon: 'pi pi-info-circle',
+                  closable: false, // Prevent closing without clicking OK
+                  acceptLabel: 'OK', // Change label to OK
+                  rejectVisible: false,
+                  acceptButtonProps: {
+                     severity: 'primary', // Primary color for OK button
+                     outlined: true,
+                  },
+                  accept: () => {
+                     this.confirmationService.close(); // Close dialog on OK
+                     return;
+                  },
+               });
+
+               // alert("This area is currently not served by us!.");
+               return;
+            }
+
+            this.map?.setCenter(selectedLocation);
+            this.map?.setZoom(20);
+
+            if (this.marker) {
+               this.marker.setMap(null);
+            }
+            this.marker = new google.maps.Marker({
+               position: selectedLocation,
+               map: this.map,
             });
 
-            // alert("This area is currently not served by us!.");
-            return;
-         }
+            const addressComponents = place.address_components || [];
+            console.log('gnn', place.address_components);
+            const getAddressComponent = (type: string) => {
+               const component = addressComponents.find((c) =>
+                  c.types.includes(type)
+               );
+               return component ? component.long_name : null;
+            };
 
-         this.map?.setCenter(selectedLocation);
-         this.map?.setZoom(20);
+            this.formData = {
+               address_details: place.formatted_address,
+               city: getAddressComponent('locality'),
+               state: getAddressComponent('administrative_area_level_1'),
+               country: getAddressComponent('country'),
+               postal_code: getAddressComponent('postal_code'),
+               lat_val: selectedLocation.lat(),
+               long_val: selectedLocation.lng(),
+            };
 
-         if (this.marker) {
-            this.marker.setMap(null);
-         }
-         this.marker = new google.maps.Marker({
-            position: selectedLocation,
-            map: this.map,
+            this.projectForm.patchValue({
+               address_details: this.formData.address_details,
+               city: this.formData.city,
+               state_id: this.businessDetail
+                  ? this.businessDetail.state_id
+                  : this.getStateId(),
+
+               state: this.formData.state,
+               country: '101',
+               postal_code: this.formData.postal_code,
+               lat_val: this.formData.lat_val,
+               long_val: this.formData.long_val,
+            });
+            console.log(this.formData, 'value');
+            if (this.searchBox?.nativeElement) {
+               this.searchBox.nativeElement.value =
+                  place.formatted_address || '';
+               console.log(place.formatted_address, 'valuffe');
+            }
          });
-
-         const addressComponents = place.address_components || [];
-         console.log('gnn', place.address_components);
-         const getAddressComponent = (type: string) => {
-            const component = addressComponents.find((c) =>
-               c.types.includes(type)
-            );
-            return component ? component.long_name : null;
-         };
-
-         this.formData = {
-            address_details: place.formatted_address,
-            city: getAddressComponent('locality'),
-            state: getAddressComponent('administrative_area_level_1'),
-            country: getAddressComponent('country'),
-            postal_code: getAddressComponent('postal_code'),
-            lat_val: selectedLocation.lat(),
-            long_val: selectedLocation.lng(),
-         };
-
-         this.projectForm.patchValue({
-            address_details: this.formData.address_details,
-            city: this.formData.city,
-            state_id: this.businessDetail
-               ? this.businessDetail.state_id
-               : this.getStateId(),
-
-            state: this.formData.state,
-            country: '101',
-            postal_code: this.formData.postal_code,
-            lat_val: this.formData.lat_val,
-            long_val: this.formData.long_val,
-         });
-         console.log(this.formData, 'value');
-         if (this.searchBox?.nativeElement) {
-         this.searchBox.nativeElement.value = place.formatted_address || '';
-         console.log(place.formatted_address, 'valuffe');
-
-         
-         }
-      });
-   } 
+      }
    }
    contactDetail() {
-   
-   
       this.router.navigate(['/contact-detail']);
    }
    getlistofState() {
@@ -336,12 +340,11 @@ export class AddAddressComponent implements AfterViewInit {
    addAddress() {
       this.submitted = true;
       if (this.isSaving) {
-         return; // Avoid further calls while request is in progress
+         return;
       }
 
       if (!this.projectForm.valid) {
-      
-         return; // Stop further execution
+         return;
       } else {
          this.isSaving = false;
       }
@@ -374,8 +377,8 @@ export class AddAddressComponent implements AfterViewInit {
                      'selectedDrop',
                      JSON.stringify(data?.data)
                   );
-                  this.isFormVisible =false
-         
+                  this.isFormVisible = false;
+
                   localStorage.removeItem('savedAddressForm');
                   localStorage.removeItem('selectedContact');
                } else if (this.addressType === 'pickup') {
@@ -384,13 +387,13 @@ export class AddAddressComponent implements AfterViewInit {
                      'selectedPickup',
                      JSON.stringify(data?.data)
                   );
-                  this.isFormVisible =false
-               
+                  this.isFormVisible = false;
+
                   localStorage.removeItem('savedAddressForm');
                   localStorage.removeItem('selectedContact');
                } else {
                   this.router.navigate(['/address/list-of-address']);
-                 
+
                   localStorage.removeItem('savedAddressForm');
                   localStorage.removeItem('selectedContact');
                }
@@ -444,7 +447,7 @@ export class AddAddressComponent implements AfterViewInit {
          case 'save':
             //  this.drops = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedDrop'));
             this.isFormVisible = true;
-        
+
             // this.addAddress();
             break;
 
@@ -469,25 +472,6 @@ export class AddAddressComponent implements AfterViewInit {
    initializeMap(): void {
       const defaultLocation = this.cityCoordinates; // Bhopal's default location
       this.setMapLocation(defaultLocation);
-      // if (navigator.geolocation) {
-      //   navigator.geolocation.getCurrentPosition(
-      //     (position) => {
-      //       const currentLocation = {
-      //         lat: position.coords.latitude,
-      //         lng: position.coords.longitude
-      //       };
-
-      //       this.setMapLocation(currentLocation);
-      //     },
-      //     (error) => {
-      //       console.error("Geolocation error: ", error);
-      //       this.setMapLocation(defaultLocation);
-      //     }
-      //   );
-      // } else {
-      //   this.setMapLocation(defaultLocation);
-
-      // }
    }
    clear() {
       this.searchBox.nativeElement.value = '';
@@ -553,7 +537,7 @@ export class AddAddressComponent implements AfterViewInit {
                   long_val: location.lng,
                };
                if (this.searchBox?.nativeElement) {
-               this.searchBox.nativeElement.value = address || '';
+                  this.searchBox.nativeElement.value = address || '';
                }
             } else {
                console.error('Geocoder failed due to: ' + status);
@@ -587,7 +571,7 @@ export class AddAddressComponent implements AfterViewInit {
                   });
 
                   // alert("This area is currently not served by us!.");
-                  
+
                   this.searchBox.nativeElement.value = '';
                   return;
                }
@@ -628,8 +612,7 @@ export class AddAddressComponent implements AfterViewInit {
                            long_val: position.lng(),
                         };
                         if (this.searchBox?.nativeElement) {
-
-                        this.searchBox.nativeElement.value = address || '';
+                           this.searchBox.nativeElement.value = address || '';
                         }
                      } else {
                         console.error('Geocoder failed due to: ' + status);

@@ -1,4 +1,9 @@
-import { ChangeDetectorRef, Component, HostListener, NgZone } from '@angular/core';
+import {
+   ChangeDetectorRef,
+   Component,
+   HostListener,
+   NgZone,
+} from '@angular/core';
 import { CommonModule, LocationStrategy } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
@@ -10,7 +15,13 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { ToastNotificationService } from '../services/toast-notification.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { CalendarModule } from 'primeng/calendar';
-import { trigger, state, style, transition, animate } from '@angular/animations';
+import {
+   trigger,
+   state,
+   style,
+   transition,
+   animate,
+} from '@angular/animations';
 import { ProgressBar } from 'primeng/progressbar';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialog } from 'primeng/confirmdialog';
@@ -20,20 +31,27 @@ import { Platform } from '@angular/cdk/platform';
 @Component({
    selector: 'app-address-preview',
    standalone: true,
-   imports: [CommonModule, ButtonModule, Select, SkeletonModule, CalendarModule, FormsModule, ToastModule, ConfirmDialog],
+   imports: [
+      CommonModule,
+      ButtonModule,
+      Select,
+      SkeletonModule,
+      CalendarModule,
+      FormsModule,
+      ToastModule,
+      ConfirmDialog,
+   ],
    templateUrl: './address-preview.component.html',
    styleUrls: ['./address-preview.component.css'],
    animations: [
       trigger('searching', [
          state('start', style({ transform: 'scale(1)' })),
          state('end', style({ transform: 'scale(1.2)' })),
-         transition('start <=> end', animate('0.5s ease-in-out'))
-      ])
-   ]
+         transition('start <=> end', animate('0.5s ease-in-out')),
+      ]),
+   ],
 })
-
 export class AddressPreviewComponent {
-
    businessDetails: any;
    pickupLocation: any;
    dropLocation: any;
@@ -62,7 +80,7 @@ export class AddressPreviewComponent {
    selectedSlot: any;
    order_status: any;
    selectedDate: string = '';
-   formattedDate: string = ''
+   formattedDate: string = '';
    formattedDates: Date | undefined;
    minDate: Date | undefined;
    distance_value: any;
@@ -75,7 +93,7 @@ export class AddressPreviewComponent {
    animationState = 'end';
    bill_status: string = '0';
    value: number = 0;
-   orderComplete = false
+   orderComplete = false;
    interval: any;
    ledger: any;
    private popStateListener: any;
@@ -90,98 +108,128 @@ export class AddressPreviewComponent {
    wallets: any;
    MOP: any;
    addressPreview: any;
-   available_at_pay: any='wallet';
-   constructor(private locationStrategy: LocationStrategy, private platform: Platform, private location: Location, private messageService: MessageService, private cdr: ChangeDetectorRef, private apiService: ApiService, private router: Router, private confirmationService: ConfirmationService, private fb: FormBuilder, private route: ActivatedRoute, private toastService: ToastNotificationService, private ngZone: NgZone,) {
-      this.pickupLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedPickup'));
-      this.dropLocation = this.apiService.getLocalValueInJSON(localStorage.getItem('selectedDrop'));
-      this.businessDetails = this.apiService.getLocalValueInJSON(localStorage.getItem('bussinessDetails'));
-      this.newOrder = this.apiService.getLocalValueInJSON(localStorage.getItem('new-order'));
-      this.userData = this.apiService.getLocalValueInJSON(localStorage.getItem('userData'));
+   available_at_pay: any = 'wallet';
+   constructor(
+      private locationStrategy: LocationStrategy,
+      private platform: Platform,
+      private location: Location,
+      private messageService: MessageService,
+      private cdr: ChangeDetectorRef,
+      private apiService: ApiService,
+      private router: Router,
+      private confirmationService: ConfirmationService,
+      private fb: FormBuilder,
+      private route: ActivatedRoute,
+      private toastService: ToastNotificationService,
+      private ngZone: NgZone
+   ) {
+      this.pickupLocation = this.apiService.getLocalValueInJSON(
+         localStorage.getItem('selectedPickup')
+      );
+      this.dropLocation = this.apiService.getLocalValueInJSON(
+         localStorage.getItem('selectedDrop')
+      );
+      this.businessDetails = this.apiService.getLocalValueInJSON(
+         localStorage.getItem('bussinessDetails')
+      );
+      this.newOrder = this.apiService.getLocalValueInJSON(
+         localStorage.getItem('new-order')
+      );
+      this.userData = this.apiService.getLocalValueInJSON(
+         localStorage.getItem('userData')
+      );
       localStorage.setItem('orderComplete', 'false');
-      this.super_business = this.apiService.getLocalValueInJSON(localStorage.getItem('super_business'));
-      this.superAdminId = this.apiService.getLocalValueInJSON(localStorage.getItem('super_admin'));
-      this.selectedPaymentType = this.apiService.getLocalValueInJSON(localStorage.getItem('MOP'));
-      // NOTE: added delivery_type_id from localstorage - will be used after coupon selection -- 
+      this.super_business = this.apiService.getLocalValueInJSON(
+         localStorage.getItem('super_business')
+      );
+      this.superAdminId = this.apiService.getLocalValueInJSON(
+         localStorage.getItem('super_admin')
+      );
+      this.selectedPaymentType = this.apiService.getLocalValueInJSON(
+         localStorage.getItem('MOP')
+      );
+      // NOTE: added delivery_type_id from localstorage - will be used after coupon selection --
       this.delivery_type_id = 0;
-      this.addressPreview = this.apiService.getLocalValueInJSON(localStorage.getItem('address-preview'));
+      this.addressPreview = this.apiService.getLocalValueInJSON(
+         localStorage.getItem('address-preview')
+      );
       if (this.addressPreview) {
          this.delivery_type_id = this.addressPreview.delivery_type_id;
       }
 
-      // NOTE: If coupon found - 
-      this.selectedCoupon = this.apiService.getLocalValueInJSON(localStorage.getItem('coupan'));
+      // NOTE: If coupon found -
+      this.selectedCoupon = this.apiService.getLocalValueInJSON(
+         localStorage.getItem('coupan')
+      );
 
       this.route.params.subscribe((params) => {
-
          this.deliveryId = params['delivery_id'];
       });
 
-
-
-
-      console.log(this.deliveryId)
-      const parts = this.newOrder.distance.split(" ");
+      console.log(this.deliveryId);
+      const parts = this.newOrder.distance.split(' ');
       this.distance_value = Math.round(parts[0]); // "5.4"
       this.distance_unit = parts[1];
       const currentDate = new Date();
-
 
       this.selectedDate = currentDate.toISOString().split('T')[0];
 
       this.formattedDate = this.formatDateToDDMMYYYY(this.selectedDate);
       this.minDate = currentDate;
 
-      console.log(this.selectedDate)
+      console.log(this.selectedDate);
    }
    pickup = {
       name: 'Aditi Mp',
       phone: '73648236423',
-      address: '6, Hamidia Rd, Ghora Nakkas, Peer Gate Area, Bhopal, Madhya Pradesh 462001, India'
+      address:
+         '6, Hamidia Rd, Ghora Nakkas, Peer Gate Area, Bhopal, Madhya Pradesh 462001, India',
    };
 
    drop = {
       name: 'Aditi',
       phone: '362364723',
-      address: 'Minal Residency, Bhopal, Madhya Pradesh, India'
+      address: 'Minal Residency, Bhopal, Madhya Pradesh, India',
    };
    paymentTypes: any = [
-      { name: 'Online', value: 'online', img: 'pi pi-credit-card', disabled: true },
+      {
+         name: 'Online',
+         value: 'online',
+         img: 'pi pi-credit-card',
+         disabled: true,
+      },
       { name: 'Wallet', value: 'wallet', img: 'pi pi-wallet', disabled: false },
-      { name: 'Cash', value: 'cash', img: 'pi pi-money-bill', disabled: false }
+      { name: 'Cash', value: 'cash', img: 'pi pi-money-bill', disabled: false },
    ];
    CashTypes: any = [
       { name: 'Cash at Pickup (CAP)', value: 'pickup' },
       { name: 'Cash on Delivery (COD)', value: 'drop' },
-
-   ]
+   ];
 
    @HostListener('window:popstate', ['$event'])
-
    onPopState(event: Event) {
       console.log('Back or Forward button clicked');
-      this.confirm2(event) // Call the back action logic
+      this.confirm2(event); // Call the back action logic
    }
    @HostListener('window:beforeunload', ['$event'])
    onBeforeUnload(event: any) {
       console.log('App or browser is about to close');
-      this.confirm2(event)
+      this.confirm2(event);
    }
-
 
    ngOnInit(): void {
       this.loading_button = false;
       this.cdr.detectChanges();
 
-      console.log('s', this.loading_button)
+      console.log('s', this.loading_button);
       this.fetchDeliveryTypeList();
-      this.getfinancialYear()
-      this.getWalletAmount()
-      this.TimeSlot()
-      this.getledger()
-      console.log('lkajsdfas58q364', this.selectedCoupon, this.sub_total)
+      this.getfinancialYear();
+      this.getWalletAmount();
+      this.TimeSlot();
+      this.getledger();
+      console.log('lkajsdfas58q364', this.selectedCoupon, this.sub_total);
       this.grand_total = 0;
    }
-
 
    setDefaultDate() {
       const currentDate = new Date();
@@ -189,11 +237,10 @@ export class AddressPreviewComponent {
       this.minDate = currentDate;
 
       this.formattedDate = this.formatDateToDDMMYYYY(this.selectedDate);
-      console.log("hhwheqw", this.selectedDate, this.formattedDate)
+      console.log('hhwheqw', this.selectedDate, this.formattedDate);
       // console.log("Default Selected Date:", this.selectedDate);
    }
    onDateSelect(event: Date) {
-
       // const currentDate = new Date();
 
       // this.minDate = currentDate;
@@ -204,14 +251,14 @@ export class AddressPreviewComponent {
 
       this.selectedDate = localDate.toISOString().split('T')[0]; // Format as "yyyy-mm-dd"
       this.formattedDate = this.formatDateToDDMMYYYY(this.selectedDate);
-      console.log("Selected Date (IST):", this.formattedDates);
+      console.log('Selected Date (IST):', this.formattedDates);
 
-      this.TimeSlot()
+      this.TimeSlot();
    }
    formatDateToDDMMYYYY(date: string): string {
       if (!date) return '';
-      const [year, month, day] = date.split('-');  // date in yyyy-mm-dd format
-      return `${day}-${month}-${year}`;  // Return in dd-mm-yyyy format
+      const [year, month, day] = date.split('-'); // date in yyyy-mm-dd format
+      return `${day}-${month}-${year}`; // Return in dd-mm-yyyy format
    }
 
    // onDateSelect(event: Date) {
@@ -226,47 +273,56 @@ export class AddressPreviewComponent {
       payload.vehicle_type_id = this.newOrder.vehicle_type_id;
       this.apiService.getDeliveryType(payload).subscribe({
          next: (response) => {
-            this.deliveryList = response.data
+            this.deliveryList = response.data;
             if (response.status === true) {
-
-               this.order_status = response.data[0].master_order_status_id
+               this.order_status = response.data[0].master_order_status_id;
                // this.deliveryList = response.data || [];
                this.deliveryList = response.data.map((deliveryType: any) => {
-
-                  const pickup = this.time(deliveryType.eta, deliveryType.opening_hours, deliveryType.closing_hours)
+                  const pickup = this.time(
+                     deliveryType.eta,
+                     deliveryType.opening_hours,
+                     deliveryType.closing_hours
+                  );
                   const price = this.calculatePrice(deliveryType); // Calculate the price
-                  this.times = this.time(deliveryType.eta, deliveryType.opening_hours, deliveryType.closing_hours)
+                  this.times = this.time(
+                     deliveryType.eta,
+                     deliveryType.opening_hours,
+                     deliveryType.closing_hours
+                  );
                   //  console.log(  this.times)
                   return {
                      ...deliveryType,
                      pickup,
                      price, // Add the calculated price as a new key
                   };
-
-
-               })
-               const firstPickupDelivery = this.deliveryList.find(delivery => delivery.pickup === true);
+               });
+               const firstPickupDelivery = this.deliveryList.find(
+                  (delivery) => delivery.pickup === true
+               );
                // ✅ Set `selectedDeliveryType` accordingly
                // this.selectedDeliveryType = firstPickupDelivery ? firstPickupDelivery.id : this.deliveryList[0]?.id;
                // this.sub_total = firstPickupDelivery ? firstPickupDelivery.price : this.deliveryList[0]?.price;
                // this.selectedDeliveryType = this.deliveryList[0].id;
                // this.sub_total = this.deliveryList[0].price
-               console.log(this.deliveryList)
-
-
+               console.log(this.deliveryList);
 
                // NOTE: this will used to check if the delivery_type_id already exists in localStorage
                // Then use that id (becuase that id was saved to continue the coupon process) ->
-               console.log('delviery ', this.delivery_type_id, this.deliveryList);
+               console.log(
+                  'delviery ',
+                  this.delivery_type_id,
+                  this.deliveryList
+               );
                if (this.delivery_type_id) {
-                  const foundDelivery = this.deliveryList.find((item) => Number(item.id) === Number(this.delivery_type_id));
+                  const foundDelivery = this.deliveryList.find(
+                     (item) => Number(item.id) === Number(this.delivery_type_id)
+                  );
 
                   if (foundDelivery) {
-                     console.log('found d', foundDelivery)
+                     console.log('found d', foundDelivery);
                      this.onDeliveryTypeSelect(foundDelivery);
                   }
                }
-
             } else {
                console.error('Error fetching vehicle types:', response.message);
             }
@@ -296,16 +352,25 @@ export class AddressPreviewComponent {
                const today = currentTime.toISOString().split('T')[0]; // Format: YYYY-MM-DD
                const scheduleDate = this.selectedDate; // Assume this is in YYYY-MM-DD format
 
-
                if (scheduleDate == today) {
-                  const adjustedTime = new Date(currentTime.getTime() + (1.5 * 60 * 60 * 1000));
+                  const adjustedTime = new Date(
+                     currentTime.getTime() + 1.5 * 60 * 60 * 1000
+                  );
                   const adjustedHour = adjustedTime.getHours();
                   const adjustedMinute = adjustedTime.getMinutes();
-                  console.log("ad", adjustedTime)
-                  timeSlots = timeSlots.filter((slot: { start_time: string }) => {
-                     const [slotHour, slotMinute] = slot.start_time.split(':').map(Number);
-                     return slotHour > adjustedHour || (slotHour === adjustedHour && slotMinute > adjustedMinute);
-                  });
+                  console.log('ad', adjustedTime);
+                  timeSlots = timeSlots.filter(
+                     (slot: { start_time: string }) => {
+                        const [slotHour, slotMinute] = slot.start_time
+                           .split(':')
+                           .map(Number);
+                        return (
+                           slotHour > adjustedHour ||
+                           (slotHour === adjustedHour &&
+                              slotMinute > adjustedMinute)
+                        );
+                     }
+                  );
                   // const currentHour = currentTime.getHours();
                   // const currentMinute = currentTime.getMinutes();
 
@@ -313,11 +378,13 @@ export class AddressPreviewComponent {
                   //    const [slotHour, slotMinute] = slot.start_time.split(':').map(Number);
                   //    return slotHour > currentHour || (slotHour === currentHour && slotMinute > currentMinute);
                   // });
-
                }
 
                // Sort time slots in ascending order
-               timeSlots.sort((a: { start_time: string; }, b: { start_time: any; }) => a.start_time.localeCompare(b.start_time));
+               timeSlots.sort(
+                  (a: { start_time: string }, b: { start_time: any }) =>
+                     a.start_time.localeCompare(b.start_time)
+               );
 
                this.timeSlot = timeSlots;
                this.formattedDate = this.formatDateToDDMMYYYY(scheduleDate);
@@ -327,7 +394,6 @@ export class AddressPreviewComponent {
             }
             // if (response.status === true) {
             //    // this.timeSlot = response.data; // All time slots
-
 
             //    this.setDefaultDate();
             // } else {
@@ -351,9 +417,6 @@ export class AddressPreviewComponent {
          next: (response) => {
             if (response.status === true) {
                this.wallet = response?.data?.total_balance; // All time slots
-
-
-
             } else {
                this.wallet = 0;
                console.error('Error fetching time slots:', response.message);
@@ -369,24 +432,36 @@ export class AddressPreviewComponent {
       });
    }
    calculatePrice(price: any): any {
-      const parts = this.newOrder.distance.split(" ");
+      const parts = this.newOrder.distance.split(' ');
       this.distance_value = Math.round(parts[0]); // "5.4"
       this.distance_unit = parts[1];
       if (this.distance_value <= price.minimum_km) {
-         console.log("base", price.base_charges, this.distance_value <= price.minimum_km, this.distance_value)
+         console.log(
+            'base',
+            price.base_charges,
+            this.distance_value <= price.minimum_km,
+            this.distance_value
+         );
          // If the distance is within the minimum, use only the base price for the distance.
          this.price = Math.abs(price.base_charges);
       } else {
-
          // If the distance exceeds the minimum:
-         console.log("based", price.base_charges, this.distance_value <= price.minimum_km, this.newOrder.distance, price.minimum_km, this.distance_value)
+         console.log(
+            'based',
+            price.base_charges,
+            this.distance_value <= price.minimum_km,
+            this.newOrder.distance,
+            price.minimum_km,
+            this.distance_value
+         );
          const minimumDistancePrice = Number(price.base_charges);
-         const extraDistancePrice = (Number(this.distance_value) - Number(price.minimum_km)) * Number(price.per_km_charge);
+         const extraDistancePrice =
+            (Number(this.distance_value) - Number(price.minimum_km)) *
+            Number(price.per_km_charge);
          this.price = minimumDistancePrice + extraDistancePrice;
-
       }
 
-      return Math.abs(this.price)
+      return Math.abs(this.price);
    }
    time(eta: any, opening_hr: any, closing_hr: any) {
       function toDateTime(timeStr: any) {
@@ -409,10 +484,7 @@ export class AddressPreviewComponent {
       } else {
          return now >= openingTime && now <= closingTime;
       }
-
-
    }
-
 
    getfinancialYear() {
       try {
@@ -420,11 +492,10 @@ export class AddressPreviewComponent {
             next: (data: any) => {
                let ApiResponse: any = data;
                this.financial = ApiResponse.data[0].id;
-
             },
             error: (error: any) => {
                console.log('Error fetching data', error);
-            }
+            },
          });
       } catch (error) {
          console.log('Error in the catch block', error);
@@ -432,43 +503,45 @@ export class AddressPreviewComponent {
    }
    getledger() {
       try {
-         this.apiService.getLedger({ business_id: this.super_business }).subscribe({
-            next: (data: any) => {
-               let ApiResponse: any = data;
-               this.ledger = ApiResponse.data;
-               this.ledger.map((e: any) => {
-                  if (e.ledger_type_id == 8) {
-                     this.cash = e.id
-                  } else if (e.ledger_type_id == 25) {
-                     this.wallets = e.id
-                  } else {
-
-                  }
-               })
-
-            },
-            error: (error: any) => {
-               console.log('Error fetching data', error);
-            }
-         });
+         this.apiService
+            .getLedger({ business_id: this.super_business })
+            .subscribe({
+               next: (data: any) => {
+                  let ApiResponse: any = data;
+                  this.ledger = ApiResponse.data;
+                  this.ledger.map((e: any) => {
+                     if (e.ledger_type_id == 8) {
+                        this.cash = e.id;
+                     } else if (e.ledger_type_id == 25) {
+                        this.wallets = e.id;
+                     } else {
+                     }
+                  });
+               },
+               error: (error: any) => {
+                  console.log('Error fetching data', error);
+               },
+            });
       } catch (error) {
          console.log('Error in the catch block', error);
       }
    }
-   async  onDeliveryTypeSelect(value: any) {
-      console.log('selected value', value)
-        if (this.selectedCoupon && value.id != this.delivery_type_id) {
-    let confirmed =await   this.confirm3(); // wait for user confirmation
+   async onDeliveryTypeSelect(value: any) {
+      console.log('selected value', value);
+      if (this.selectedCoupon && value.id != this.delivery_type_id) {
+         let confirmed = await this.confirm3(); // wait for user confirmation
 
-    if (!confirmed) {
-      return; // Do nothing if not confirmed
-    }
-  }
+         if (!confirmed) {
+            return; // Do nothing if not confirmed
+         }
+      }
 
-  // Proceed if not changing coupon OR user confirmed
-  if (this.selectedCoupon && value.id == this.delivery_type_id) {
-    this.grand_total = this.selectedCoupon ? value.price - this.selectedCoupon?.discount_value : value.price;
-  }
+      // Proceed if not changing coupon OR user confirmed
+      if (this.selectedCoupon && value.id == this.delivery_type_id) {
+         this.grand_total = this.selectedCoupon
+            ? value.price - this.selectedCoupon?.discount_value
+            : value.price;
+      }
 
       // if (this.selectedCoupon && value.id != this.delivery_type_id) {
       //    this.confirm3(value.id)
@@ -476,14 +549,14 @@ export class AddressPreviewComponent {
       // } else if (this.selectedCoupon && value.id == this.delivery_type_id) {
       //    this.grand_total = this.selectedCoupon ? value.price - this.selectedCoupon?.discount_value : 0;
       // }
-      this.sub_total = value.price
-      this.order_status = value.master_order_status_id
-      this.timeslot = value.time_slot
-      this.autoaccept = value.auto_accepted_id
-      this.delivery_name = value.delivery_name
-      this.master_delivery = value.master_delivery_type_id
+      this.sub_total = value.price;
+      this.order_status = value.master_order_status_id;
+      this.timeslot = value.time_slot;
+      this.autoaccept = value.auto_accepted_id;
+      this.delivery_name = value.delivery_name;
+      this.master_delivery = value.master_delivery_type_id;
       // this.base_price=value.price.base_price
-      console.log(value.id, 'order-status')
+      console.log(value.id, 'order-status');
       this.selectedDeliveryType = value.id;
       // if (value.id == 43 || value.id == '40') {
       //    console.log(value.id, 'selectedPaymentType')
@@ -492,62 +565,54 @@ export class AddressPreviewComponent {
       // }
       if (value.auto_accepted_id == 1) {
          // NOTE: Here the API call for get ledger loads slow so the wallet won't be auto selected if coupon found.
-         console.log(value.id, 'selectedPaymentType', value, "wallets", this.wallets)
-         this.paymentTypesSelection('wallet',this.wallets)
-
-
+         console.log(
+            value.id,
+            'selectedPaymentType',
+            value,
+            'wallets',
+            this.wallets
+         );
+         this.paymentTypesSelection('wallet', this.wallets);
 
          const localDate = new Date(); // Convert UTC to IST
          // this.minDa  te = localDate;
          this.selectedDate = localDate.toISOString().split('T')[0]; // Format as "yyyy-mm-dd"
          this.formattedDate = this.formatDateToDDMMYYYY(this.selectedDate);
-         this.formattedDates = localDate
+         this.formattedDates = localDate;
 
-
-
-         console.log("Selected Date (IST):", localDate);
+         console.log('Selected Date (IST):', localDate);
       }
-
-
    }
-   paymentTypesSelection(event:any,value: any): void {
-      console.log(value, "po82u350",event.target.innerText)
-      this.available_at_pay=event.target.innerText.trim()
+   paymentTypesSelection(event: any, value: any): void {
+      console.log(value, 'po82u350', event.target.innerText);
+      this.available_at_pay = event.target.innerText.trim();
       if (value.value == 'online') {
-         this.toastService.showError("This service is not working yet")
+         this.toastService.showError('This service is not working yet');
       } else if (value.value == this.wallets) {
-
       }
-      console.log('selected value', this.selectedPaymentType)
+      console.log('selected value', this.selectedPaymentType);
       if (this.selectedCoupon && value.id != this.selectedPaymentType) {
          // this.toastService.showError("On changing delivery type the coupon will be removed.");
-         this.confirm3()
-
+         this.confirm3();
       } else if (this.selectedCoupon && value.id == this.selectedPaymentType) {
          const currentDate = new Date();
          this.selectedDate = currentDate.toISOString().split('T')[0];
          this.formattedDate = this.formatDateToDDMMYYYY(this.selectedDate);
          this.selectedPaymentType = value;
-
-      }
-      else {
+      } else {
          const currentDate = new Date();
          this.selectedDate = currentDate.toISOString().split('T')[0];
          this.formattedDate = this.formatDateToDDMMYYYY(this.selectedDate);
          this.selectedPaymentType = value;
       }
 
-
-
       localStorage.setItem('MOP', JSON.stringify(this.selectedPaymentType));
-
-
    }
    deduct_wallet_amount(): void {
       let payload: any = {};
       payload.super_admin_id = this.superAdminId;
       payload.user_id = this.userData.id;
-      payload.amount = this.grand_total ?this.grand_total: this.sub_total
+      payload.amount = this.grand_total ? this.grand_total : this.sub_total;
       // payload.vehicle_type_id = this.newOrder.vehicleType;
       this.apiService.deduct_wallet_amount(payload).subscribe({
          next: (response) => {
@@ -572,7 +637,7 @@ export class AddressPreviewComponent {
       let payload: any = {};
       payload.super_admin_id = this.superAdminId;
       payload.user_id = this.userData.id;
-      payload.amount = this.grand_total ?this.grand_total: this.sub_total
+      payload.amount = this.grand_total ? this.grand_total : this.sub_total;
       // payload.vehicle_type_id = this.newOrder.vehicleType;
       this.apiService.add_wallet_amount(payload).subscribe({
          next: (response) => {
@@ -597,36 +662,38 @@ export class AddressPreviewComponent {
       this.selectedPayment = event.target.innerText;
 
       if (this.selectedPayment == 'Cash at Pickup (CAP)') {
-         this.pay_on_pickup = '1'
-         this.pay_on_delivery = '0'
-         console.log(this.pay_on_pickup)
+         this.pay_on_pickup = '1';
+         this.pay_on_delivery = '0';
+         console.log(this.pay_on_pickup);
       } else {
-         this.pay_on_delivery = '1'
-         this.pay_on_pickup = '0'
-         console.log(this.pay_on_delivery)
+         this.pay_on_delivery = '1';
+         this.pay_on_pickup = '0';
+         console.log(this.pay_on_delivery);
       }
-      console.log(this.pay_on_delivery, this.pay_on_pickup)
+      console.log(this.pay_on_delivery, this.pay_on_pickup);
    }
    async getlastinvoice() {
-      this.submitted = true
-      console.log(this.loading_button)
+      this.submitted = true;
+      console.log(this.loading_button);
       if (this.loading_button) return; // Prevent multiple clicks while loading
 
       this.loading_button = true; // Disable button immediately
-      if (this.wallet < (this.grand_total ?this.grand_total: this.sub_total) && this.selectedPaymentType == this.wallets) {
+      if (
+         this.wallet < (this.grand_total ? this.grand_total : this.sub_total) &&
+         this.selectedPaymentType == this.wallets
+      ) {
          // this.toastService.showError("Insufficient balance")
          this.loading_button = false;
          this.cdr.detectChanges();
          return;
       }
       if (this.timeslot == '1' && !this.selectedSlot) {
-
          // this.toastService.showError("Please select time slot")
          this.loading_button = false;
          this.cdr.detectChanges();
          return;
-      } if (this.timeslot == '1' && !this.selectedDate) {
-
+      }
+      if (this.timeslot == '1' && !this.selectedDate) {
          // this.toastService.showError("Please select delivery date")
          this.loading_button = false;
          this.cdr.detectChanges();
@@ -640,13 +707,11 @@ export class AddressPreviewComponent {
          return;
       }
       if (this.selectedPaymentType == this.cash && !this.selectedPayment) {
-
          // this.toastService.showError("Please select payment location")
          this.loading_button = false;
          this.cdr.detectChanges();
          return;
-      }
-      else if (!this.selectedDeliveryType) {
+      } else if (!this.selectedDeliveryType) {
          // this.toastService.showError("Please select Delivery Type")
          this.loading_button = false;
          this.cdr.detectChanges();
@@ -655,49 +720,45 @@ export class AddressPreviewComponent {
       // if (this.selectedCoupon) {
       //    this.applyCoupan()
 
-
-
       // }
       if (this.selectedCoupon) {
-//   let isCouponApplied = this.applyCoupan(); // Should return boolean
-// console.log("coupan",isCouponApplied)
-try {
-   const isCouponApplied = await this.applyCoupan();  // wait for async operation
-   console.log("coupanss", isCouponApplied);
-   if (!isCouponApplied) {
-     this.loading_button = false;
-     this.cdr.detectChanges();
-     this.toastService.showWarn('Coupans is not valid!');
-     return;
-   }
- } catch (err) {
-   console.error("Coupon application failed:", err);
-   this.loading_button = false;
-   this.cdr.detectChanges();
-   return;
- }
-
-}
-if (this.selectedCoupon) {
-   //   let isCouponApplied = this.applyCoupan(); // Should return boolean
-   // console.log("coupan",isCouponApplied)
-   try {
-      const isCouponRedeem= await this.redeemCoupan();  // wait for async operation
-      console.log("coupan", isCouponRedeem);
-      if (!isCouponRedeem) {
-        this.loading_button = false;
-        this.cdr.detectChanges();
-        this.toastService.showWarn('Coupan is not valid!');
-        return;
+         //   let isCouponApplied = this.applyCoupan(); // Should return boolean
+         // console.log("coupan",isCouponApplied)
+         try {
+            const isCouponApplied = await this.applyCoupan(); // wait for async operation
+            console.log('coupanss', isCouponApplied);
+            if (!isCouponApplied) {
+               this.loading_button = false;
+               this.cdr.detectChanges();
+               this.toastService.showWarn('Coupans is not valid!');
+               return;
+            }
+         } catch (err) {
+            console.error('Coupon application failed:', err);
+            this.loading_button = false;
+            this.cdr.detectChanges();
+            return;
+         }
       }
-    } catch (err) {
-      console.error("Coupon application failed:", err);
-      this.loading_button = false;
-      this.cdr.detectChanges();
-      return;
-    }
-   
-   }
+      if (this.selectedCoupon) {
+         //   let isCouponApplied = this.applyCoupan(); // Should return boolean
+         // console.log("coupan",isCouponApplied)
+         try {
+            const isCouponRedeem = await this.redeemCoupan(); // wait for async operation
+            console.log('coupan', isCouponRedeem);
+            if (!isCouponRedeem) {
+               this.loading_button = false;
+               this.cdr.detectChanges();
+               this.toastService.showWarn('Coupan is not valid!');
+               return;
+            }
+         } catch (err) {
+            console.error('Coupon application failed:', err);
+            this.loading_button = false;
+            this.cdr.detectChanges();
+            return;
+         }
+      }
       this.ngZone.runOutsideAngular(() => {
          this.interval = setInterval(() => {
             this.ngZone.run(() => {
@@ -712,38 +773,37 @@ if (this.selectedCoupon) {
       });
       try {
          this.riderloader = true;
-         this.apiService.last_invoice({ business_id: this.super_business }).subscribe({
-            next: (data: any) => {
-               // this.loading_button = true;
-               let ApiResponse: any = data;
-               this.listofInvoice = ApiResponse.data.order_no ? Number(ApiResponse.data.order_no) + 1 : Number(ApiResponse.data.id) + 1
-               console.log(this.listofInvoice, this.selectedDeliveryType)
-               if (this.listofInvoice) {
-
-                  this.addInvoice(this.listofInvoice)
-
-
-               }
-
-               else {
+         this.apiService
+            .last_invoice({ business_id: this.super_business })
+            .subscribe({
+               next: (data: any) => {
+                  // this.loading_button = true;
+                  let ApiResponse: any = data;
+                  this.listofInvoice = ApiResponse.data.order_no
+                     ? Number(ApiResponse.data.order_no) + 1
+                     : Number(ApiResponse.data.id) + 1;
+                  console.log(this.listofInvoice, this.selectedDeliveryType);
+                  if (this.listofInvoice) {
+                     this.addInvoice(this.listofInvoice);
+                  } else {
+                     this.loading_button = false;
+                     //   this.messageService.showError('Order Id Invalid', 'Error')
+                  }
+               },
+               error: (error: any) => {
                   this.loading_button = false;
-                  //   this.messageService.showError('Order Id Invalid', 'Error')
-               }
-            },
-            error: (error: any) => {
-               this.loading_button = false;
-               console.log('Error fetching data', error);
-            }
-
-         });
+                  console.log('Error fetching data', error);
+               },
+            });
       } catch (error) {
          console.log('Error in the catch block', error);
       }
    }
    onSlotChange(event: any): void {
-    
       this.selectedSlot = event.value;
-      const selectedSlotData = this.timeSlot.find((slot: any) => slot.id === this.selectedSlot);
+      const selectedSlotData = this.timeSlot.find(
+         (slot: any) => slot.id === this.selectedSlot
+      );
 
       if (selectedSlotData && selectedSlotData.start_time) {
          const timeParts = selectedSlotData.start_time.split(':');
@@ -762,7 +822,6 @@ if (this.selectedCoupon) {
             this.notificationTime = `${hour12}:${formattedMinutes} ${period}`;
             console.log(this.notificationTime, 'notificationTime');
          } else {
-         
             this.notificationTime = 'Invalid Time';
          }
       } else {
@@ -771,7 +830,6 @@ if (this.selectedCoupon) {
       }
 
       this.formattedDate = this.formatDateToDDMMYYYY(this.selectedDate);
-
    }
 
    // onSlotChange(event: any): void {
@@ -811,72 +869,81 @@ if (this.selectedCoupon) {
    //    console.log('Selected Delivery Type:', this.formattedDate);
    // }
    addInvoice(order_id: any) {
-
       const currentDate = new Date();
       const formattedDate = currentDate.toISOString().split('T')[0];
-      const formattedTime = currentDate.getHours().toString().padStart(2, '0') + ":" +
+      const formattedTime =
+         currentDate.getHours().toString().padStart(2, '0') +
+         ':' +
          currentDate.getMinutes().toString().padStart(2, '0');
-      let payload: any = {}
-      payload.business_id = this.super_business
+      let payload: any = {};
+      payload.business_id = this.super_business;
       // payload.business_id = this.businessDetails ? this.businessDetails.id : null
       // payload.for_business_id = this.businessDetails ? this.businessDetails.id : this.userData.id
       if (this.businessDetails && this.businessDetails.id) {
-         payload.for_business_id = this.businessDetails ? this.businessDetails.id : null
+         payload.for_business_id = this.businessDetails
+            ? this.businessDetails.id
+            : null;
       } else {
-         payload.for_user_id = this.userData.id
+         payload.for_user_id = this.userData.id;
       }
       if (this?.selectedCoupon) {
-         payload.coupon_id = this?.selectedCoupon.id
+         payload.coupon_id = this?.selectedCoupon.id;
       }
-      payload.for_user_id = this.userData.id,
-         payload.master_order_status_id = this.order_status
-      payload.pay_on_pickup = this.pay_on_pickup,
-         payload.pay_on_delivery = this.pay_on_delivery,
-         payload.for_booking_slot_id = Number(this.selectedSlot)
-      payload.for_slot_id = this.timeslot
-      payload.super_admin_id = this.superAdminId
-      payload.delivery_id = this.deliveryId
+      (payload.for_user_id = this.userData.id),
+         (payload.master_order_status_id = this.order_status);
+      (payload.pay_on_pickup = this.pay_on_pickup),
+         (payload.pay_on_delivery = this.pay_on_delivery),
+         (payload.for_booking_slot_id = Number(this.selectedSlot));
+      payload.for_slot_id = this.timeslot;
+      payload.super_admin_id = this.superAdminId;
+      payload.delivery_id = this.deliveryId;
       // payload.end_time = this.deliveryId
       // payload.start_time = this.deliveryId
-      payload.for_booking_time = formattedTime
-      payload.disc_rs = this.selectedCoupon ? (this.selectedCoupon?.discount_type === "amount" ? this.selectedCoupon?.discount_value : 0) : null
-      payload.prefix_value = 'ORDER'
-      payload.invoice_type = 'order'
-      payload.financial_year_id = this.financial
-      payload.subtotal = this.sub_total
-      payload.order_no = order_id
-      payload.total_tax = 0
-      payload.adjustment_value = 0
-      payload.grand_total = this.grand_total ?this.grand_total: this.sub_total
-      payload.for_date = formattedDate
-      payload.delivery_id = this.deliveryId
-      payload.created_on_date = formattedDate
-      payload.for_booking_date = this.selectedDeliveryType == '42' ? this.selectedDate : formattedDate
-      payload.drop_name = this.dropLocation.person_name
-      payload.drop_mobile = this.dropLocation?.person_phone_no
-      payload.pickup_name = this.pickupLocation?.person_name
-      payload.pickup_mobile = this.pickupLocation?.person_phone_no
+      payload.for_booking_time = formattedTime;
+      payload.disc_rs = this.selectedCoupon
+         ? this.selectedCoupon?.discount_type === 'amount'
+            ? this.selectedCoupon?.discount_value
+            : 0
+         : null;
+      payload.prefix_value = 'ORDER';
+      payload.invoice_type = 'order';
+      payload.financial_year_id = this.financial;
+      payload.subtotal = this.sub_total;
+      payload.order_no = order_id;
+      payload.total_tax = 0;
+      payload.adjustment_value = 0;
+      payload.grand_total = this.grand_total
+         ? this.grand_total
+         : this.sub_total;
+      payload.for_date = formattedDate;
+      payload.delivery_id = this.deliveryId;
+      payload.created_on_date = formattedDate;
+      payload.for_booking_date =
+         this.selectedDeliveryType == '42' ? this.selectedDate : formattedDate;
+      payload.drop_name = this.dropLocation.person_name;
+      payload.drop_mobile = this.dropLocation?.person_phone_no;
+      payload.pickup_name = this.pickupLocation?.person_name;
+      payload.pickup_mobile = this.pickupLocation?.person_phone_no;
       try {
          this.apiService.addInvoice(payload).subscribe({
             next: (data: any) => {
                let ApiResponse: any = data;
-              
+
                if (data.status) {
                   // this.loading_button = true;
                   // this.listofInvoice = ApiResponse.data;
-                  this.invoice_id = ApiResponse?.data?.id
+                  this.invoice_id = ApiResponse?.data?.id;
 
                   if (this.selectedPaymentType == this.wallets) {
-                     this.deduct_wallet_amount()
+                     this.deduct_wallet_amount();
                   }
                   if (this.selectedPaymentType == this.wallets) {
-                     this.bill_status = '1'
+                     this.bill_status = '1';
                   } else {
-                     this.bill_status = '0'
+                     this.bill_status = '0';
                   }
-                  this.editDelivery(this.deliveryId)
-                  this.addTransaction(data.data.id)
-
+                  this.editDelivery(this.deliveryId);
+                  this.addTransaction(data.data.id);
 
                   // if(  this.selectedPaymentType == 'cash'){
                   //   this.addDeliveryAllot(this.invoice_id)
@@ -896,14 +963,10 @@ if (this.selectedCoupon) {
                   this.loading_button = false;
                   this.cdr.detectChanges();
                }
-
-
-
             },
             error: (error: any) => {
-
                console.log('Error fetching data', error);
-            }
+            },
          });
       } catch (error) {
          console.log('Error in the catch block', error);
@@ -913,41 +976,45 @@ if (this.selectedCoupon) {
    editInvoice() {
       const currentDate = new Date();
       const formattedDate = currentDate.toISOString().split('T')[0];
-      let payload: any = {}
+      let payload: any = {};
 
-      payload.business_id = this.super_business
+      payload.business_id = this.super_business;
       // payload.business_id = this.businessDetails ? this.businessDetails.id : null
       if (this.businessDetails && this.businessDetails.id) {
-         payload.for_business_id = this.businessDetails ? this.businessDetails.id : null
+         payload.for_business_id = this.businessDetails
+            ? this.businessDetails.id
+            : null;
       } else {
-         payload.for_user_id = this.userData.id
+         payload.for_user_id = this.userData.id;
       }
       // payload.for_business_id = this.businessDetails ? this.businessDetails.id : this.userData.id
 
-      payload.for_user_id = this.userData.id,
-         payload.master_order_status_id = this.order_status
+      (payload.for_user_id = this.userData.id),
+         (payload.master_order_status_id = this.order_status);
       // payload.pay_on_pickup = this.pay_on_pickup,
       // payload.pay_on_delivery = this.pay_on_delivery,
       // payload.for_booking_slot_id = Number(this.selectedSlot)
       // payload.for_slot_id = this.timeslot
-      payload.super_admin_id = this.superAdminId
-      payload.delivery_id = this.deliveryId
+      payload.super_admin_id = this.superAdminId;
+      payload.delivery_id = this.deliveryId;
       // payload.end_time = this.deliveryId
       // payload.start_time = this.deliveryId
       // payload.for_booking_time=
-      payload.invoice_id = this.invoice_id
-      payload.prefix_value = 'ORDER'
-      payload.invoice_type = 'order'
-      payload.financial_year_id = this.financial
-      payload.subtotal = this.sub_total
+      payload.invoice_id = this.invoice_id;
+      payload.prefix_value = 'ORDER';
+      payload.invoice_type = 'order';
+      payload.financial_year_id = this.financial;
+      payload.subtotal = this.sub_total;
       // payload.order_no = order_id
-      payload.total_tax = 0
+      payload.total_tax = 0;
       payload.bill_status = this.bill_status;
-      payload.adjustment_value = 0
-      payload.grand_total = this.grand_total ?this.grand_total: this.sub_total
-      payload.for_date = formattedDate
-      payload.delivery_id = this.deliveryId
-      payload.created_on_date = formattedDate
+      payload.adjustment_value = 0;
+      payload.grand_total = this.grand_total
+         ? this.grand_total
+         : this.sub_total;
+      payload.for_date = formattedDate;
+      payload.delivery_id = this.deliveryId;
+      payload.created_on_date = formattedDate;
       // payload.for_booking_date = this.selectedDate
       // payload.drop_name = this.dropLocation.person_name
       // payload.drop_mobile = this.dropLocation?.person_phone_no
@@ -955,11 +1022,10 @@ if (this.selectedCoupon) {
       // payload.pickup_mobile = this.pickupLocation?.person_phone_no
       try {
          this.apiService.editInvoice(payload).subscribe({
-            next: (data: any) => {
-            },
+            next: (data: any) => {},
             error: (error: any) => {
                console.log('Error fetching data', error);
-            }
+            },
          });
       } catch (error) {
          console.log('Error in the catch block', error);
@@ -968,44 +1034,38 @@ if (this.selectedCoupon) {
    addTransaction(id: any) {
       const currentDate = new Date();
       const formattedDate = currentDate.toISOString().split('T')[0];
-      let payload: any = {}
-      payload.business_id = this.super_business
+      let payload: any = {};
+      payload.business_id = this.super_business;
       // payload.user_id = this.userData.id;
       // payload.business_id = this.businessDetails ? this.businessDetails.id : 983
-      payload.pay_to_uid = this.userData.id
-      payload.invoice_id = id
-      payload.dr_amount = this.grand_total ?this.grand_total: this.sub_total
-      payload.amount = this.grand_total ?this.grand_total: this.sub_total
-      payload.super_admin_id = this.superAdminId
-      payload.created_on_date = formattedDate
-      payload.payment_date = formattedDate
-      payload.pay_for_ledger = this.selectedPaymentType
+      payload.pay_to_uid = this.userData.id;
+      payload.invoice_id = id;
+      payload.dr_amount = this.grand_total ? this.grand_total : this.sub_total;
+      payload.amount = this.grand_total ? this.grand_total : this.sub_total;
+      payload.super_admin_id = this.superAdminId;
+      payload.created_on_date = formattedDate;
+      payload.payment_date = formattedDate;
+      payload.pay_for_ledger = this.selectedPaymentType;
       try {
          this.apiService.addTransaction(payload).subscribe({
             next: (data: any) => {
                // this.loading_button = true;
-             
+
                let ApiResponse: any = data;
 
                // this.clearLocal()
                // this.addNotification()
                if (data.status) {
                   if (this.selectedPaymentType == this.wallets) {
-                     this.bill_status = '1'
+                     this.bill_status = '1';
                   } else {
-                     this.bill_status = '0'
+                     this.bill_status = '0';
                   }
                   // this.router.navigate(['/dashboard']);
-                  this.editInvoice()
-
-
-
-
-
+                  this.editInvoice();
 
                   // this.toastService.showSuccess("Order Placed Successfully")
-               }
-               else {
+               } else {
                   this.toastService.showError('Error in Payment');
                }
                // this.listofInvoice = ApiResponse.data;
@@ -1017,11 +1077,10 @@ if (this.selectedCoupon) {
                // this.clearLocal()
                // this.router.navigate(['/order-list']);
                // this.addDeliveryAllot(ApiResponse.data.id)
-
             },
             error: (error: any) => {
                console.log('Error fetching data', error);
-            }
+            },
          });
       } catch (error) {
          console.log('Error in the catch block', error);
@@ -1030,40 +1089,37 @@ if (this.selectedCoupon) {
    creaditTransaction(id: any) {
       const currentDate = new Date();
       const formattedDate = currentDate.toISOString().split('T')[0];
-      let payload: any = {}
-      payload.pay_to_uid = this.userData.id
-      payload.business_id = this.super_business
+      let payload: any = {};
+      payload.pay_to_uid = this.userData.id;
+      payload.business_id = this.super_business;
       // payload.business_id = this.businessDetails ? this.businessDetails.id : null
       // payload.for_user_id=this.userId ? this.userId : this.default
-      payload.invoice_id = id
-      payload.cr_amont = this.grand_total ?this.grand_total: this.sub_total
-      payload.amount = this.grand_total ?this.grand_total: this.sub_total
-      payload.super_admin_id = this.superAdminId
-      payload.created_on_date = formattedDate
-      payload.payment_date = formattedDate
-      payload.pay_for_ledger = this.selectedPaymentType
+      payload.invoice_id = id;
+      payload.cr_amont = this.grand_total ? this.grand_total : this.sub_total;
+      payload.amount = this.grand_total ? this.grand_total : this.sub_total;
+      payload.super_admin_id = this.superAdminId;
+      payload.created_on_date = formattedDate;
+      payload.payment_date = formattedDate;
+      payload.pay_for_ledger = this.selectedPaymentType;
       try {
          this.apiService.addTransaction(payload).subscribe({
             next: (data: any) => {
                // this.loading_button = true;
                if (this.selectedPaymentType == this.wallets) {
-                  this.bill_status = '1'
+                  this.bill_status = '1';
                } else {
-                  this.bill_status = '0'
+                  this.bill_status = '0';
                }
 
                let ApiResponse: any = data;
                // this.clearLocal()
                // this.addNotification()
                if (data.status) {
-                  this.editInvoice()
+                  this.editInvoice();
                   // this.router.navigate(['/dashboard']);
 
-
-
                   // this.toastService.showSuccess("Order Placed Successfully")
-               }
-               else {
+               } else {
                   this.toastService.showError('Error in Payment');
                }
                // this.listofInvoice = ApiResponse.data;
@@ -1075,11 +1131,10 @@ if (this.selectedCoupon) {
                // this.clearLocal()
                // this.router.navigate(['/order-list']);
                // this.addDeliveryAllot(ApiResponse.data.id)
-
             },
             error: (error: any) => {
                console.log('Error fetching data', error);
-            }
+            },
          });
       } catch (error) {
          console.log('Error in the catch block', error);
@@ -1088,60 +1143,66 @@ if (this.selectedCoupon) {
    editDelivery(id: any) {
       const currentDate = new Date();
       const formattedDate = currentDate.toISOString().split('T')[0];
-      const formattedTime = currentDate.getHours().toString().padStart(2, '0') + ":" +
+      const formattedTime =
+         currentDate.getHours().toString().padStart(2, '0') +
+         ':' +
          currentDate.getMinutes().toString().padStart(2, '0');
-      let payload: any = {}
-      payload.business_id = this.super_business
+      let payload: any = {};
+      payload.business_id = this.super_business;
       if (this.businessDetails && this.businessDetails.id) {
-         payload.for_business_id = this.businessDetails ? this.businessDetails.id : null
+         payload.for_business_id = this.businessDetails
+            ? this.businessDetails.id
+            : null;
       } else {
-         payload.for_user_id = this.userData.id
-      }      // payload.business_id = this.businessDetails ? this.businessDetails.id : null
-      payload.order_delivery_details_id = id
-      payload.status = 1
-      payload.master_order_status_id = this.order_status
-      payload.delivery_type_id = this.selectedDeliveryType
-      payload.order_value = this.grand_total ?this.grand_total: this.sub_total
-      payload.delivery_charges = this.grand_total ?this.grand_total: this.sub_total
-      payload.time_slot = this.timeslot
-      payload.for_booking_time = formattedTime
-      payload.pickup_address_id = this.pickupLocation.id
-      payload.drop_address_id = this.dropLocation.id
+         payload.for_user_id = this.userData.id;
+      } // payload.business_id = this.businessDetails ? this.businessDetails.id : null
+      payload.order_delivery_details_id = id;
+      payload.status = 1;
+      payload.master_order_status_id = this.order_status;
+      payload.delivery_type_id = this.selectedDeliveryType;
+      payload.order_value = this.grand_total
+         ? this.grand_total
+         : this.sub_total;
+      payload.delivery_charges = this.grand_total
+         ? this.grand_total
+         : this.sub_total;
+      payload.time_slot = this.timeslot;
+      payload.for_booking_time = formattedTime;
+      payload.pickup_address_id = this.pickupLocation.id;
+      payload.drop_address_id = this.dropLocation.id;
       // payload.delivery_payment_status = this.selectedPaymentType
-      payload.delivery_payment_status = this.bill_status
-      payload.drop_person_name = this.dropLocation.person_name
-      payload.drop_phone_no = this.dropLocation.person_phone_no
-      payload.pickup_person_name = this.pickupLocation.person_name
-      payload.pickup_phone_no = this.pickupLocation.person_phone_no
-      payload.super_admin_id = this.superAdminId
-      payload.drop_address = this.dropLocation.address_details
-      payload.pickup_address = this.pickupLocation.address_details
-      payload.parcel_weight = this.listofInvoice
-      payload.invoice_id = this.invoice_id ? this.invoice_id : 0
+      payload.delivery_payment_status = this.bill_status;
+      payload.drop_person_name = this.dropLocation.person_name;
+      payload.drop_phone_no = this.dropLocation.person_phone_no;
+      payload.pickup_person_name = this.pickupLocation.person_name;
+      payload.pickup_phone_no = this.pickupLocation.person_phone_no;
+      payload.super_admin_id = this.superAdminId;
+      payload.drop_address = this.dropLocation.address_details;
+      payload.pickup_address = this.pickupLocation.address_details;
+      payload.parcel_weight = this.listofInvoice;
+      payload.invoice_id = this.invoice_id ? this.invoice_id : 0;
       payload.bill_status = this.bill_status;
       // payload.pay_on = this.selectedPaymentType
 
-      payload.pay_on = this.selectedPayment ? this.selectedPayment : 'Wallet'
-      payload.time_slot_id = Number(this.selectedSlot)
+      payload.pay_on = this.selectedPayment ? this.selectedPayment : 'Wallet';
+      payload.time_slot_id = Number(this.selectedSlot);
       // payload.user_id=
       try {
          this.apiService.edit_order_delivery_details(payload).subscribe({
             next: (data: any) => {
                let ApiResponse: any = data;
-               this.addNotification()
-
+               this.addNotification();
 
                // this.loading_button = true;
                // this.listofDelivery = ApiResponse.data;
                // this.clearLocal()
                // this.router.navigate(['/order-list']);
-
             },
             error: (error: any) => {
                console.log('Error fetching data', error);
                this.loading_button = false;
                this.cdr.detectChanges();
-            }
+            },
          });
       } catch (error) {
          console.log('Error in the catch block', error);
@@ -1149,42 +1210,43 @@ if (this.selectedCoupon) {
    }
 
    editDeliveries(id: any) {
-      let payload: any = {}
+      let payload: any = {};
 
-      payload.business_id = this.super_business
-
+      payload.business_id = this.super_business;
 
       if (this.businessDetails && this.businessDetails.id) {
-         payload.for_business_id = this.businessDetails ? this.businessDetails.id : null
+         payload.for_business_id = this.businessDetails
+            ? this.businessDetails.id
+            : null;
       } else {
-         payload.for_user_id = this.userData.id
+         payload.for_user_id = this.userData.id;
       }
 
-      payload.order_delivery_details_id = id
-      payload.status = 1
-      payload.for_booking_slot_id = Number(this.selectedSlot)
-      payload.master_order_status_id = this.order_status
-      payload.delivery_type_id = this.selectedDeliveryType
-      payload.order_value = this.grand_total ?? this.sub_total
-      payload.delivery_charges = this.grand_total ?? this.sub_total
-      payload.time_slot = this.timeslot
+      payload.order_delivery_details_id = id;
+      payload.status = 1;
+      payload.for_booking_slot_id = Number(this.selectedSlot);
+      payload.master_order_status_id = this.order_status;
+      payload.delivery_type_id = this.selectedDeliveryType;
+      payload.order_value = this.grand_total ?? this.sub_total;
+      payload.delivery_charges = this.grand_total ?? this.sub_total;
+      payload.time_slot = this.timeslot;
       payload.bill_status = this.bill_status;
-      payload.pickup_address_id = this.pickupLocation.id
-      payload.drop_address_id = this.dropLocation.id
+      payload.pickup_address_id = this.pickupLocation.id;
+      payload.drop_address_id = this.dropLocation.id;
       // payload.delivery_payment_status = this.selectedPaymentType
-      payload.delivery_payment_status = this.bill_status
-      payload.drop_person_name = this.dropLocation.person_name
-      payload.drop_phone_no = this.dropLocation.person_phone_no
-      payload.pickup_person_name = this.pickupLocation.person_name
-      payload.pickup_phone_no = this.pickupLocation.person_phone_no
-      payload.super_admin_id = this.superAdminId
-      payload.drop_address = this.dropLocation.address_details
-      payload.pickup_address = this.pickupLocation.address_details
-      payload.parcel_weight = this.listofInvoice
-      payload.invoice_id = this.invoice_id ? this.invoice_id : 0
-      payload.time_slot_id = Number(this.selectedSlot)
+      payload.delivery_payment_status = this.bill_status;
+      payload.drop_person_name = this.dropLocation.person_name;
+      payload.drop_phone_no = this.dropLocation.person_phone_no;
+      payload.pickup_person_name = this.pickupLocation.person_name;
+      payload.pickup_phone_no = this.pickupLocation.person_phone_no;
+      payload.super_admin_id = this.superAdminId;
+      payload.drop_address = this.dropLocation.address_details;
+      payload.pickup_address = this.pickupLocation.address_details;
+      payload.parcel_weight = this.listofInvoice;
+      payload.invoice_id = this.invoice_id ? this.invoice_id : 0;
+      payload.time_slot_id = Number(this.selectedSlot);
       // payload.pay_on = this.selectedPayment ? 'Wallet' : this.selectedPaymentType
-      payload.pay_on = this.selectedPayment ? this.selectedPayment : 'Wallet'
+      payload.pay_on = this.selectedPayment ? this.selectedPayment : 'Wallet';
       // payload.user_id=
       try {
          this.apiService.edit_order_delivery_details(payload).subscribe({
@@ -1195,79 +1257,71 @@ if (this.selectedCoupon) {
                // this.listofDelivery = ApiResponse.data;
                // this.clearLocal()
                // this.router.navigate(['/order-list']);
-
             },
             error: (error: any) => {
                console.log('Error fetching data', error);
                this.loading_button = false;
                this.cdr.detectChanges();
-            }
+            },
          });
       } catch (error) {
          console.log('Error in the catch block', error);
       }
    }
 
-
    addNotification() {
       if (!this.invoice_id) {
-         console.log("nf", this.invoice_id)
+         console.log('nf', this.invoice_id);
          this.toastService.showSuccess('Your Order is Successfully Cancelled');
          return;
       } else {
-         console.log("f", this.invoice_id)
+         console.log('f', this.invoice_id);
       }
       let payload: any = {
          // "user_id": environment.riderId,
          // "super_admin_id": this.superAdminId ,
          // "authToken": localStorage.getItem('authToken'),
-         "delivery_id": this.deliveryId,
-         "invoice_id": String(this.invoice_id),
-         'delivery_type_id': this.selectedDeliveryType,
-         "vehicle_type_id": this.newOrder?.vehicle_type_id,
-         "master_delivery_type_id": this.master_delivery,
-         'notification_timing': '',
-         "details": {
-            'delivery_type': this.selectedDeliveryType,
-            "distance": this.newOrder?.distance,
-            'pickup_address': this.pickupLocation?.address_details,
-            'order_status': this.order_status,
-
+         delivery_id: this.deliveryId,
+         invoice_id: String(this.invoice_id),
+         delivery_type_id: this.selectedDeliveryType,
+         vehicle_type_id: this.newOrder?.vehicle_type_id,
+         master_delivery_type_id: this.master_delivery,
+         notification_timing: '',
+         details: {
+            delivery_type: this.selectedDeliveryType,
+            distance: this.newOrder?.distance,
+            pickup_address: this.pickupLocation?.address_details,
+            order_status: this.order_status,
          },
-         "pickup_location": {
-            "longitude": Number(this.pickupLocation.long_val),
-            "latitude": Number(this.pickupLocation.lat_val)
-         }
-      }
+         pickup_location: {
+            longitude: Number(this.pickupLocation.long_val),
+            latitude: Number(this.pickupLocation.lat_val),
+         },
+      };
       // if (this.selectedDeliveryType == '46') {
       if (this.timeslot == 1) {
-         payload.notification_timing = this.notificationTime + "," + this.formattedDate
+         payload.notification_timing =
+            this.notificationTime + ',' + this.formattedDate;
       }
-      console.log(typeof (payload.pickup_location.latitude))
+      console.log(typeof payload.pickup_location.latitude);
       try {
-
          this.apiService.addNotification(payload).subscribe({
             next: (data: any) => {
-
                if (data.status) {
-
-                  console.log("api call3")
+                  console.log('api call3');
 
                   // this.loading_button = true;
                   this.riderloader = true;
                   if (this.autoaccept == 0) {
                      // if (this.selectedDeliveryType == '43' || this.selectedDeliveryType == '40') {
-                     console.log("api call2")
+                     console.log('api call2');
                      // this.getDeliveryDetail()
-                     this.startDeliveryCheck()
-                     this.animationState = 'end'
+                     this.startDeliveryCheck();
+                     this.animationState = 'end';
                      setInterval(() => {
-                        this.animationState = this.animationState === 'start' ? 'end' : 'start';
+                        this.animationState =
+                           this.animationState === 'start' ? 'end' : 'start';
                      }, 500);
-
-
-
-
                   }
 
                   // else if (this.selectedDeliveryType == '45') {
@@ -1281,13 +1335,11 @@ if (this.selectedCoupon) {
                         accept: () => {
                            console.log('Thank you message displayed');
                            localStorage.setItem('orderComplete', 'true');
-                           this.orderComplete = true
+                           this.orderComplete = true;
                            this.confirmationService.close();
-                        }
-
+                        },
                      });
-                     this.clearLocal()
-
+                     this.clearLocal();
                   }
                   // else if (this.selectedDeliveryType == '42') {
 
@@ -1308,20 +1360,6 @@ if (this.selectedCoupon) {
                   //    this.clearLocal()
                   // }
                   else {
-                     // this.ngZone.runOutsideAngular(() => {
-                     //    this.interval = setInterval(() => {
-                     //       this.ngZone.run(() => {
-                     //          this.value = this.value + Math.floor(Math.random() * 10) + 1;
-                     //          if (this.value >= 100) {
-                     //             this.value = 100;
-                     //             // this.messageService.add({ severity: 'info', summary: 'Success', detail: 'Process Completed' });
-                     //             clearInterval(this.interval);
-                     //          }
-                     //       });
-                     //    }, 200);
-                     // });
-                     // setTimeout(() => {
-
                      this.confirmationService.confirm({
                         message: `Thank Your Order Placed Successfully and will be delivered soon under ${this.delivery_name} Delivery !`,
                         header: 'Thank You!',
@@ -1331,51 +1369,54 @@ if (this.selectedCoupon) {
                         accept: () => {
                            console.log('Thank you message displayed');
                            localStorage.setItem('orderComplete', 'true');
-                           this.orderComplete = true
-                        }
-
+                           this.orderComplete = true;
+                        },
                      });
                      // }, 45000); // 45 seconds delay
-                     this.clearLocal()
+                     this.clearLocal();
                   }
-               }
-               else {
+               } else {
                   this.riderloader = true;
 
-
-                  console.log(this.selectedDeliveryType, "rider")
+                  console.log(this.selectedDeliveryType, 'rider');
 
                   // if (this.selectedDeliveryType == '43' || this.selectedDeliveryType == '40') {
                   if (this.autoaccept == 0) {
                      // this.startDeliveryCheck()
                      setTimeout(() => {
-
-
-                        this.order_status = 21,
+                        (this.order_status = 21),
                            this.confirmationService.confirm({
-                              message: 'No Rider is Available at your Locations please try Standard or Schedule Delivery!',
+                              message:
+                                 'No Rider is Available at your Locations please try Standard or Schedule Delivery!',
                               header: 'Sorry!',
                               icon: 'pi pi-times-circle',
                               acceptLabel: 'OK',
                               rejectVisible: false, // Hides the "No" button
 
                               accept: () => {
-                                 console.log('Thank you message displayed Express');
+                                 console.log(
+                                    'Thank you message displayed Express'
+                                 );
                                  this.confirmationService.close();
                                  if (this.selectedPaymentType == this.wallets) {
-                                    this.add_wallet_amount()
+                                    this.add_wallet_amount();
                                  }
-                                 this.creaditTransaction(this.invoice_id)
+                                 this.creaditTransaction(this.invoice_id);
 
-                                 console.log("cancel", this.wallet)
-                                 this.getWalletAmount()
+                                 console.log('cancel', this.wallet);
+                                 this.getWalletAmount();
                                  // this.order_status = 25
-                                 this.editDeliveries(this.deliveryId)
-                                 this.orderComplete = true
+                                 this.editDeliveries(this.deliveryId);
+                                 this.orderComplete = true;
                                  localStorage.removeItem('selectedPickup');
                                  localStorage.removeItem('selectedDrop');
+                                 localStorage.removeItem('savedAddressForm');
+                                 localStorage.removeItem('selectedContact');
                                  localStorage.removeItem('new-order');
-                                 localStorage.setItem('dashboardLoaded', 'false');
+                                 localStorage.setItem(
+                                    'dashboardLoaded',
+                                    'false'
+                                 );
                                  this.riderloaders = false;
                                  // setTimeout(() => {
                                  this.router.navigate(['/dashboard']);
@@ -1387,17 +1428,12 @@ if (this.selectedCoupon) {
                                  // this.noorder()
                                  this.loading_button = false;
                                  // this.router.navigate(['/dashboard']);
-                              }
-
-                           }
-
-                           );
+                              },
+                           });
                      }, 60000);
 
                      // I have added this temproray code to check the rider is available or not in standarad as because we were getting status false for temporary server.
-                  }
-
-                  else if (this.autoaccept == 1) {
+                  } else if (this.autoaccept == 1) {
                      this.confirmationService.confirm({
                         message: `Thank Your Order Placed Successfully and will be delivered soon under ${this.delivery_name} Delivery!`,
                         header: 'Thank You!',
@@ -1405,20 +1441,19 @@ if (this.selectedCoupon) {
                         acceptLabel: 'OK',
                         rejectVisible: false, // Hides the "No" button
                         accept: () => {
-                           this.orderComplete = true
+                           this.orderComplete = true;
                            localStorage.setItem('orderComplete', 'true');
                            console.log('Thank you message displayed');
                            this.confirmationService.close();
-                        }
-
+                        },
                      });
-                     this.clearLocal()
-
+                     this.clearLocal();
                   } else {
                      this.loading_button = false;
 
                      this.confirmationService.confirm({
-                        message: 'No Rider is Available at your Locations please try Standard or Schedule Delivery',
+                        message:
+                           'No Rider is Available at your Locations please try Standard or Schedule Delivery',
                         header: 'Sorry!',
                         icon: 'pi pi-times-circle',
                         // styleClass: 'custom-confirm-dialog', // Custom class for styling
@@ -1426,41 +1461,22 @@ if (this.selectedCoupon) {
                         acceptLabel: 'OK',
                         rejectVisible: false, // Hides the "No" button
                         accept: () => {
-                           this.orderComplete = true
+                           this.orderComplete = true;
 
                            console.log('Thank you message displayed');
                            this.confirmationService.close();
-                        }
-
+                        },
                      });
-                     this.cancel()
+                     this.cancel();
                      if (this.selectedPaymentType == this.wallets) {
-                        this.add_wallet_amount()
+                        this.add_wallet_amount();
                      }
-                     this.creaditTransaction(this.invoice_id)
-                     this.editInvoice()
+                     this.creaditTransaction(this.invoice_id);
+                     this.editInvoice();
                      // this.clearLocal()
                      this.loading_button = false;
                      localStorage.setItem('orderComplete', 'true');
                   }
-                  // else if (this.selectedDeliveryType == '42') {
-                  //    this.confirmationService.confirm({
-                  //       message: 'Thank Your Order Placed Successfully and will be delivered soon as per Schedule!',
-                  //       header: 'Thank You!',
-                  //       icon: 'pi pi-check-circle',
-                  //       acceptLabel: 'OK',
-                  //       rejectVisible: false,
-                  //       accept: () => {
-                  //          this.orderComplete = true
-                  //          localStorage.setItem('orderComplete', 'true');
-                  //          console.log('Thank you message displayed');
-                  //          this.orderComplete = true
-                  //          this.confirmationService.close();
-                  //       }
-
-                  //    });
-                  //    this.clearLocal()
-                  // }
                }
                this.loading_button = false;
             },
@@ -1469,7 +1485,8 @@ if (this.selectedCoupon) {
                this.loading_button = false;
 
                this.confirmationService.confirm({
-                  message: 'No Rider is Available at your Locations please try Standard or Schedule Delivery',
+                  message:
+                     'No Rider is Available at your Locations please try Standard or Schedule Delivery',
                   header: 'Sorry!',
                   icon: 'pi pi-times-circle',
                   // styleClass: 'custom-confirm-dialog', // Custom class for styling
@@ -1477,29 +1494,27 @@ if (this.selectedCoupon) {
                   acceptLabel: 'OK',
                   rejectVisible: false, // Hides the "No" button
                   accept: () => {
-                     this.orderComplete = true
+                     this.orderComplete = true;
 
                      console.log('Thank you message displayed');
                      this.confirmationService.close();
-                  }
-
+                  },
                });
-               this.cancel()
+               this.cancel();
                if (this.selectedPaymentType == this.wallets) {
-                  this.add_wallet_amount()
+                  this.add_wallet_amount();
                }
-               this.creaditTransaction(this.invoice_id)
-               this.editInvoice()
+               this.creaditTransaction(this.invoice_id);
+               this.editInvoice();
                // this.clearLocal()
                this.loading_button = false;
                localStorage.setItem('orderComplete', 'true');
-            }
-
+            },
          });
       } catch (error) {
          console.log('Error in the catch block', error);
       }
-      this.getWalletAmount()
+      this.getWalletAmount();
    }
 
    startDeliveryCheck() {
@@ -1507,17 +1522,16 @@ if (this.selectedCoupon) {
       const intervalId = setInterval(() => {
          elapsedTime += 7; // Increase elapsed time by 7 sec
          if (this.order_status != '19') {
-
             return;
-         }
-         else if (elapsedTime >= 60) {
-            console.log("time end")
+         } else if (elapsedTime >= 60) {
+            console.log('time end');
             clearInterval(intervalId);
             // Stop after 1 min
             console.log('API calls stopped after 1 minute');
 
             this.confirmationService.confirm({
-               message: 'No Rider is Available at your Locations please try Standard or Schedule Delivery',
+               message:
+                  'No Rider is Available at your Locations please try Standard or Schedule Delivery',
                header: 'Sorry!',
                icon: 'pi pi-times-circle',
                acceptLabel: 'OK',
@@ -1525,48 +1539,47 @@ if (this.selectedCoupon) {
 
                rejectVisible: false, // Hides the "No" button
                accept: () => {
-
                   console.log('Thank you message displayed Else');
                   this.confirmationService.close();
-               }
-
+               },
             });
-            this.order_status = 21
-            this.cancel()
+            this.order_status = 21;
+            this.cancel();
             if (this.selectedPaymentType == this.wallets) {
-               this.add_wallet_amount()
+               this.add_wallet_amount();
             }
 
-            this.creaditTransaction(this.invoice_id)
+            this.creaditTransaction(this.invoice_id);
             // this.clearLocal()
             this.loading_button = false;
 
-            this.editInvoice()
-            this.orderComplete = true
+            this.editInvoice();
+            this.orderComplete = true;
             localStorage.setItem('orderComplete', 'true');
             return;
          }
 
          this.getDeliveryDetail(); // Call API every 7 sec
       }, 7000); // 7 sec interval
-
    }
    getDeliveryDetail() {
       this.cdr.detectChanges();
-      let payload = { order_delivery_details_id: this.deliveryId, super_admin_id: this.superAdminId }
+      let payload = {
+         order_delivery_details_id: this.deliveryId,
+         super_admin_id: this.superAdminId,
+      };
       try {
          this.apiService.getOrderDeliveryDetail(payload).subscribe({
             next: (data: any) => {
                let ApiResponse: any = data;
-               this.order_status = data.data.master_order_status_id
+               this.order_status = data.data.master_order_status_id;
                this.riderloader = true;
-               this.animationState = 'end'
+               this.animationState = 'end';
                // setInterval(() => {
                //    this.confirmationService.confirm({
                //       message: 'Searching Rider',
 
                //       icon: 'pi pi-check-circle',
-
 
                //       accept: () => {
                //          console.log('Thank you message displayed');
@@ -1578,7 +1591,7 @@ if (this.selectedCoupon) {
                // if (this.selectedDeliveryType == '43' || this.selectedDeliveryType == '40') {
                if (this.autoaccept == '0') {
                   if (this.order_status != '19') {
-                     console.log("order")
+                     console.log('order');
                      this.confirmationService.confirm({
                         message: 'Thank Your Order Placed Successfully!',
                         header: 'Thank You!',
@@ -1586,29 +1599,25 @@ if (this.selectedCoupon) {
                         acceptLabel: 'OK',
                         rejectVisible: false, // Hides the "No" button
                         accept: () => {
-                           this.orderComplete = true
+                           this.orderComplete = true;
                            console.log('Thank you message displayed');
-                           this.orderComplete = true
+                           this.orderComplete = true;
                            localStorage.setItem('orderComplete', 'true');
-                        }
-
+                        },
                      });
-                     this.clearLocal()
+                     this.clearLocal();
 
                      this.animationState = 'end';
                      this.riderloader = false;
-                     return
+                     return;
                   } else {
-
                   }
-
                }
                // setTimeout(() => {
                //    console.log("api call")
                //    this.getDeliveryDetail();
                //    // Recursive call
                // }, 7000); // 10 seconds
-
 
                // const intervalId = setInterval(() => {
                //    // this.animationState = this.animationState === 'start' ? 'end' : 'start';
@@ -1621,13 +1630,12 @@ if (this.selectedCoupon) {
                //    return;
                //    console.log('API calls stopped after 1 minute');
                // }, 30000);
-
             },
             error: (error: any) => {
                console.log('Error fetching data', error);
                this.loading_button = false;
                this.cdr.detectChanges();
-            }
+            },
          });
       } catch (error) {
          console.log('Error in the catch block', error);
@@ -1635,111 +1643,110 @@ if (this.selectedCoupon) {
    }
    cancels() {
       // this.riderloader = false;
-      this.bill_status = '0'
-      this.order_status = 21
+      this.bill_status = '0';
+      this.order_status = 21;
       if (this.selectedPaymentType == this.wallets) {
-         this.add_wallet_amount()
+         this.add_wallet_amount();
       }
-      this.creaditTransaction(this.invoice_id)
-      this.editInvoice()
+      this.creaditTransaction(this.invoice_id);
+      this.editInvoice();
       // this.clearLocal()
       this.loading_button = false;
-      this.cancel()
-
-
+      this.cancel();
    }
    cancel() {
-      console.log("cancel", this.wallet)
-      this.getWalletAmount()
+      console.log('cancel', this.wallet);
+      this.getWalletAmount();
       // this.order_status = 25
-      this.editDeliveries(this.deliveryId)
+      this.editDeliveries(this.deliveryId);
 
       localStorage.removeItem('selectedPickup');
       localStorage.removeItem('selectedDrop');
-      this.removeCoupan()
+      this.removeCoupan();
       localStorage.removeItem('new-order');
       localStorage.setItem('dashboardLoaded', 'false');
+      localStorage.removeItem('savedAddressForm');
+      localStorage.removeItem('selectedContact');
       this.riderloaders = false;
       // setTimeout(() => {
       this.router.navigate(['/dashboard']);
       // }, 3000);
       return;
-
    }
-  applyCoupan (): Promise<boolean> {
-   return new Promise((resolve, reject) => {
-      let payload: any = {}
-      payload.coupon_id = this?.selectedCoupon.id
-      // payload.coupon_code = coupan.code
-      payload.user_id = this.userData?.id
-      // payload.mode_of_payment = this.address_preview.mode_of_payment
-      payload.available_at_pay = this.addressPreview?.mode_of_payment
-      payload.amount = this.sub_total
-      payload.platform = 'vendor-app'
-      payload.delivery_type_id = this.delivery_type_id
-      payload.super_admin_id = this.userData?.super_admin_id
+   applyCoupan(): Promise<boolean> {
+      return new Promise((resolve, reject) => {
+         let payload: any = {};
+         payload.coupon_id = this?.selectedCoupon.id;
+         // payload.coupon_code = coupan.code
+         payload.user_id = this.userData?.id;
+         // payload.mode_of_payment = this.address_preview.mode_of_payment
+         payload.available_at_pay = this.addressPreview?.mode_of_payment;
+         payload.amount = this.sub_total;
+         payload.platform = 'vendor-app';
+         payload.delivery_type_id = this.delivery_type_id;
+         payload.super_admin_id = this.userData?.super_admin_id;
 
-      payload.vehicle_type_id = this.newOrder?.vehicle_type_id,
-           this.apiService.redeem_coupan(payload).subscribe({
-      next: (response) => {
-        if (response.status === true) {
-         
-          resolve(true);
-        } else {
-          console.error('Coupon validation failed:', response.message);
-          resolve(false);
-        }
-      },
-      error: (err) => {
-        console.error('Error validating coupon:', err);
-        resolve(false);
-        return false
-      },
-      complete: () => {
-        this.loading = false;
-      },
-    });
-  });
-}
-redeemCoupan (): Promise<boolean> {
-   return new Promise((resolve, reject) => {
-      let payload: any = {}
-      payload.coupon_id = this?.selectedCoupon.id
-      // payload.coupon_code = coupan.code
-      payload.user_id = this.userData?.id
-      // payload.mode_of_payment = this.address_preview.mode_of_payment
-      payload.mode_of_payment = this.addressPreview?.mode_of_payment
-      payload.amount = this.sub_total
-      payload.platform = 'vendor-app'
-      payload.delivery_type_id = this.delivery_type_id
-      payload.super_admin_id = this.userData?.super_admin_id
+         (payload.vehicle_type_id = this.newOrder?.vehicle_type_id),
+            this.apiService.redeem_coupan(payload).subscribe({
+               next: (response) => {
+                  if (response.status === true) {
+                     resolve(true);
+                  } else {
+                     console.error(
+                        'Coupon validation failed:',
+                        response.message
+                     );
+                     resolve(false);
+                  }
+               },
+               error: (err) => {
+                  console.error('Error validating coupon:', err);
+                  resolve(false);
+                  return false;
+               },
+               complete: () => {
+                  this.loading = false;
+               },
+            });
+      });
+   }
+   redeemCoupan(): Promise<boolean> {
+      return new Promise((resolve, reject) => {
+         let payload: any = {};
+         payload.coupon_id = this?.selectedCoupon.id;
+         // payload.coupon_code = coupan.code
+         payload.user_id = this.userData?.id;
+         // payload.mode_of_payment = this.address_preview.mode_of_payment
+         payload.mode_of_payment = this.addressPreview?.mode_of_payment;
+         payload.amount = this.sub_total;
+         payload.platform = 'vendor-app';
+         payload.delivery_type_id = this.delivery_type_id;
+         payload.super_admin_id = this.userData?.super_admin_id;
 
-      payload.vehicle_type_id = this.newOrder?.vehicle_type_id,
-           this.apiService.add_redeem(payload).subscribe({
-      next: (response) => {
-      
-          resolve(true);
-       
-      },
-      error: (err) => {
-        console.error('Error validating coupon:', err);
-        resolve(false);
-        return false
-      },
-      complete: () => {
-        this.loading = false;
-      },
-    });
-  });
-}
+         (payload.vehicle_type_id = this.newOrder?.vehicle_type_id),
+            this.apiService.add_redeem(payload).subscribe({
+               next: (response) => {
+                  resolve(true);
+               },
+               error: (err) => {
+                  console.error('Error validating coupon:', err);
+                  resolve(false);
+                  return false;
+               },
+               complete: () => {
+                  this.loading = false;
+               },
+            });
+      });
+   }
    noorder() {
-      this.getWalletAmount()
+      this.getWalletAmount();
       // this.order_status = 25
-      this.editDeliveries(this.deliveryId)
+      this.editDeliveries(this.deliveryId);
       this.riderloaders = false;
    }
    clearLocal() {
-      this.removeCoupan()
+      this.removeCoupan();
       localStorage.removeItem('selectedPickup');
       localStorage.removeItem('selectedDrop');
       localStorage.removeItem('new-order');
@@ -1748,49 +1755,43 @@ redeemCoupan (): Promise<boolean> {
          this.router.navigate(['/dashboard']);
       }, 3000);
       return;
-
    }
-   confirm3() : Promise<boolean> {
-  return new Promise((resolve) => {
+   confirm3(): Promise<boolean> {
+      return new Promise((resolve) => {
+         this.confirmationService.confirm({
+            // target: event.target as EventTarget,
+            message: 'On changing delivery type the coupon will be removed.',
+            header: ' ',
+            icon: 'pi pi-info-circle',
+            rejectLabel: 'Cancel',
+            closable: false,
+            rejectButtonProps: {
+               label: 'Cancel',
+               severity: 'secondary',
+               outlined: true,
+            },
+            acceptButtonProps: {
+               label: 'Confirm',
+               severity: 'danger',
+            },
 
-      this.confirmationService.confirm({
-         // target: event.target as EventTarget,
-         message: 'On changing delivery type the coupon will be removed.',
-         header: ' ',
-         icon: 'pi pi-info-circle',
-         rejectLabel: 'Cancel',
-         closable: false,
-         rejectButtonProps: {
-            label: 'Cancel',
-            severity: 'secondary',
-            outlined: true,
-         },
-         acceptButtonProps: {
-            label: 'Confirm',
-            severity: 'danger',
-         },
+            accept: () => {
+               this.removeCoupan();
+               this.confirmationService.close();
+               resolve(true);
 
-         accept: () => {
-
-            this.removeCoupan()
-              this.confirmationService.close();
-resolve(true)
-          
-            // this.messageService.add({ severity: 'info', summary: 'Confirmed', detail: 'Record deleted' });
-         },
-         reject: () => {
-         // this.selectedDeliveryType=delivery
-                  this.confirmationService.close();
-      resolve(false);
-   
-         },
-         
+               // this.messageService.add({ severity: 'info', summary: 'Confirmed', detail: 'Record deleted' });
+            },
+            reject: () => {
+               // this.selectedDeliveryType=delivery
+               this.confirmationService.close();
+               resolve(false);
+            },
+         });
       });
- });
    }
    confirm2(event: Event) {
-
-      console.log(event)
+      console.log(event);
       this.confirmationService.confirm({
          // target: event.target as EventTarget,
          message: 'Do you want to cancel this order?',
@@ -1809,9 +1810,9 @@ resolve(true)
          },
 
          accept: () => {
-            console.log(event.target)
+            console.log(event.target);
 
-            this.cancels()
+            this.cancels();
             this.confirmationService.close();
             // this.messageService.add({ severity: 'info', summary: 'Confirmed', detail: 'Record deleted' });
          },
@@ -1822,23 +1823,22 @@ resolve(true)
    }
    // TODO: Fix the spelling of coupon here --
    coupon() {
-      console.log("payment",this.available_at_pay)
+      console.log('payment', this.available_at_pay);
       let payload: any = {
          amount: this.sub_total,
          delivery_type_id: this.selectedDeliveryType,
-         mode_of_payment: this.available_at_pay.toLowerCase()
+         mode_of_payment: this.available_at_pay.toLowerCase(),
       };
 
       localStorage.setItem('address-preview', JSON.stringify(payload));
       this.router.navigate(['/list-of-coupan']);
-
    }
    removeCoupan() {
       localStorage.setItem('coupan', JSON.stringify(''));
       localStorage.setItem('address-preview', JSON.stringify(''));
-      this.selectedCoupon = ''
+      this.selectedCoupon = '';
    }
    coupons() {
-      console.log("change")
+      console.log('change');
    }
 }
