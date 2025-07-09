@@ -48,13 +48,13 @@ export class ContactDetailComponent {
          const selected = localStorage.getItem('selectedContact');
          this.selectedContact = selected ? JSON.parse(selected) : null;
          this.activatedRoute.queryParams.subscribe((params) => {
-            this.searchQuery = params['search']; // Default to empty string if no 'search' param is found
+            this.searchQuery = params['search'];
             const isReload =
                (
                   performance.getEntriesByType(
                      'navigation'
                   )[0] as PerformanceNavigationTiming
-               )?.type === 'reload' || performance.navigation.type === 1; // Fallback for some older browsers
+               )?.type === 'reload' || performance.navigation.type === 1;
 
             if (isReload && this.searchQuery) {
                this.router.navigate([], {

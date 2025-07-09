@@ -1,4 +1,10 @@
-import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import {
+   Component,
+   AfterViewInit,
+   ViewChild,
+   ElementRef,
+   ChangeDetectorRef,
+} from '@angular/core';
 import {
    FormBuilder,
    FormGroup,
@@ -57,7 +63,8 @@ export class AddAddressComponent implements AfterViewInit {
       private router: Router,
       private fb: FormBuilder,
       private apiService: ApiService,
-      private toastService: ToastNotificationService
+      private toastService: ToastNotificationService,
+      private cdr: ChangeDetectorRef
    ) {
       this.route.params.subscribe((params) => {
          this.addressType = params['type'];
@@ -381,6 +388,7 @@ export class AddAddressComponent implements AfterViewInit {
 
                   localStorage.removeItem('savedAddressForm');
                   localStorage.removeItem('selectedContact');
+                  this.cdr.detectChanges();
                } else if (this.addressType === 'pickup') {
                   this.router.navigate(['/orders/new-order']);
                   localStorage.setItem(
@@ -391,11 +399,13 @@ export class AddAddressComponent implements AfterViewInit {
 
                   localStorage.removeItem('savedAddressForm');
                   localStorage.removeItem('selectedContact');
+                  this.cdr.detectChanges();
                } else {
                   this.router.navigate(['/address/list-of-address']);
 
                   localStorage.removeItem('savedAddressForm');
                   localStorage.removeItem('selectedContact');
+                  this.cdr.detectChanges();
                }
                // this.commonService.goBack();
                // this.messageService.showSuccess(data.msg, 'Success');
