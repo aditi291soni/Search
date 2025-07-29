@@ -1,11 +1,29 @@
+
+
+<!-- ✅ Search Bar -->
+<div class="search-bar" style="margin-bottom: 16px;">
+   <input
+      type="text"
+      placeholder="Search contact "
+      [(ngModel)]="searchQuery"
+      (ngModelChange)="onSearchChange()"
+      style="padding: 8px; width: 100%; border-radius: 20px; border: 1px solid #ccc;;background-color: #ffffff;"
+   />
+   <button pButton icon="pi pi-search" class="search-btn"></button>
+</div>
 <div class="header">
    <h2>Saved Contact</h2>
 </div>
 
 <br />
-
+<!-- <div class="topbar">
+<div class="search-bar" >
+   <input type="text" placeholder="Search..."  [(ngModel)]="searchQuery"
+   (ngModelChange)="onSearchChange()"/>
+   <button pButton icon="pi pi-search" class="search-btn"></button>
+</div>
+</div> -->
 <div class="recent-orders-container">
-
    <div *ngIf="filteredContacts.length > 0; else noContacts">
       <div
          class="recent-order-item"
@@ -26,9 +44,7 @@
             <div>
                <div class="maintext">{{ contact.displayName | titlecase }}</div>
                <div class="subtext">
-                  {{
-                     contact.phoneNumbers?.join(", ") || "No number available"
-                  }}
+                  {{ contact.phoneNumbers?.join(", ") || "No number available" }}
                </div>
             </div>
          </div>

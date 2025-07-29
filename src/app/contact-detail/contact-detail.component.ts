@@ -1,19 +1,23 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule, PlatformLocation } from '@angular/common';
+import { FormsModule } from '@angular/forms'; // ✅ added FormsModule
 import { ApiService } from '../services/api.service';
 import { ToastNotificationService } from '../services/toast-notification.service';
 import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+
 @Component({
    selector: 'app-contact-detail',
    templateUrl: './contact-detail.component.html',
-   imports: [CommonModule],
+   imports: [CommonModule, FormsModule], // ✅ added FormsModule
    styleUrls: ['./contact-detail.component.css'],
+   standalone: true // if this is a standalone component
 })
 export class ContactDetailComponent {
    contacts: any[] = [];
    selectedContact: any = null;
-   searchQuery: any;
+   searchQuery: string = '';
+
    constructor(
       private cdr: ChangeDetectorRef,
       private activatedRoute: ActivatedRoute,
@@ -25,79 +29,52 @@ export class ContactDetailComponent {
    ) {
       try {
          const stored = localStorage.getItem('contact');
-         const parsedContacts =
-            this.apiService.getLocalValueInJSON2(stored) || [];
+         const parsedContacts = this.apiService.getLocalValueInJSON2(stored) || [];
 
-         if (parsedContacts && parsedContacts.length > 0) {
-            this.contacts = parsedContacts;
-            // this.toastService.showSuccess('Contacts loaded successfully.');
-         } else {
-            // this.toastService.showWarn('No contact data found.');
-         }
-         if (this.searchQuery) {
-            console.log(this.searchQuery)
-            this.router.navigate([], {
-               relativeTo: this.activatedRoute,
-               queryParams: { search: this.searchQuery ? this.searchQuery : null },
-               queryParamsHandling: 'merge',
-               replaceUrl: true,
-            });
-         }
          this.contacts = parsedContacts;
-         // this.contacts = [{
-         //    displayName: "Aditi Sharma",
-         //    phoneNumbers: ["9876543210"],
-         //    emailAddresses: ["aditi.sharma@example.com"]
-         //  },
-         //  {
-         //    displayName: "Aman",
-         //    phoneNumbers: ["9876543210"],
-         //    emailAddresses: ["aditi.sharma@example.com"]
-         //  }];
 
          const selected = localStorage.getItem('selectedContact');
          this.selectedContact = selected ? JSON.parse(selected) : null;
-         this.activatedRoute.queryParams.subscribe((params) => {
-            this.searchQuery = params['search'];
-         //    const isReload =
-         //       (performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming)?.type === 'reload' ||
-         //       performance.navigation.type === 1;
 
-         //    if (isReload && this.searchQuery) {
-         //       this.router.navigate([], {
-         //          relativeTo: this.activatedRoute,
-         //          queryParams: { search: null },
-         //          queryParamsHandling: 'merge',
-         //          replaceUrl: true,
-         //       });
-         //    }
+         this.activatedRoute.queryParams.subscribe((params) => {
+            this.searchQuery = params['search'] || '';
          });
+
          const navType = (performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming)?.type;
          if (navType === 'reload' && this.searchQuery) {
             this.clearSearchParam();
          }
 
-         // Clear on back
          this.platformLocation.onPopState(() => {
             if (this.searchQuery) {
-              this.clearSearchParam();
+               this.clearSearchParam();
             }
-          });
-
+         });
 
       } catch (error) {
          this.toastService.showError('Error loading contact data.');
          console.error('Contact parsing error:', error);
       }
    }
+
+   // ✅ Search input update handler
+   onSearchChange() {
+      this.router.navigate([], {
+         relativeTo: this.activatedRoute,
+         queryParams: { search: this.searchQuery || null },
+         queryParamsHandling: 'merge',
+         replaceUrl: true,
+      });
+   }
+
    private clearSearchParam() {
       this.router.navigate([], {
          relativeTo: this.activatedRoute,
          queryParams: { search: null },
-         // queryParamsHandling: 'merge',
          replaceUrl: true,
       });
    }
+
    get filteredContacts(): any[] {
       const query = this.searchQuery;
       if (!query) return this.contacts;
@@ -105,7 +82,6 @@ export class ContactDetailComponent {
       return this.contacts.filter((contact) => {
          const name = contact.displayName?.trim().toLowerCase().normalize();
          const q = query.trim().toLowerCase().normalize();
-
          return name.includes(q);
       });
    }
@@ -117,18 +93,15 @@ export class ContactDetailComponent {
       const type = typeRaw ? JSON.parse(typeRaw) : typeRaw;
 
       if (type) {
-        this.router.navigate([`/orders/new-order/add-address/${type}`]);
+         this.router.navigate([`/orders/new-order/add-address/${type}`]);
       }
-
-      // this.router.navigate([`/orders/new-order/add-address/${localStorage.parse(type)}`]);
    }
 
    isSelected(contact: any): boolean {
       return (
          this.selectedContact &&
          this.selectedContact.displayName == contact.displayName &&
-         JSON.stringify(this.selectedContact.phoneNumbers) ===
-            JSON.stringify(contact.phoneNumbers)
+         JSON.stringify(this.selectedContact.phoneNumbers) === JSON.stringify(contact.phoneNumbers)
       );
    }
 }

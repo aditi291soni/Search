@@ -68,8 +68,8 @@ console.log("version",this.versions)
       });
       this.checkSearchBarVisibility();
       this.checkProfileBarVisibility()
-      
-    
+
+
       this.router.events
          .pipe(filter(event => event instanceof NavigationEnd))
          .subscribe(() => {
@@ -86,7 +86,7 @@ console.log("version",this.versions)
             this.router.navigate([], {
                relativeTo: this.activatedRoute,
                queryParams: query ? { search: query } : {},
-               replaceUrl: true 
+               replaceUrl: true
             });
          });
    }
@@ -106,7 +106,7 @@ console.log("version",this.versions)
          'dashboard',
          '/settings',
          // '/orders/new-order',
-      //   '/contact-detail',
+        '/contact-detail',
          // '/orders/new-order',
          '/orders/new-order/order-preview/779',
          '/orders/new-order/add-address/drops'
@@ -157,7 +157,7 @@ console.log("version",this.versions)
     localStorage.clear();
             sessionStorage.clear();
             }
-        
+
             this.router.navigate(['/auth/sign-in']);
          },
          reject: () => {
@@ -180,7 +180,7 @@ console.log("version",this.versions)
    //          queryParams: this.searchQuery.trim() ? { search: this.searchQuery } : {},
 
    //       });
-       
+
    //    } else {
    //       this.router.navigate([], {
    //          relativeTo: this.activatedRoute,
@@ -188,7 +188,7 @@ console.log("version",this.versions)
 
    //       });
    //    }
- 
+
    // }
    @HostListener('document:click', ['$event'])
    handleClickOutside(event: Event) {
