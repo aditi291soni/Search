@@ -449,6 +449,12 @@ export class AddAddressComponent implements AfterViewInit {
          'savedAddressForm',
          JSON.stringify(this.projectForm.value)
       );
+       if (this.addressType) {
+         localStorage.setItem(
+            'type',
+            JSON.stringify(this.addressType)
+         );
+      }
       switch (key) {
          case 'one-time':
             this.handleOneTime(this.projectForm.value);

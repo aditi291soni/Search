@@ -31,15 +31,15 @@ export class SignupComponent {
    contacts: any = 'something one';
    event: any;
 //   super_admin_list:any = [
-//       { name: 'Bhopal', id: '8' },  
+//       { name: 'Bhopal', id: '8' },
 //       // { name: 'Indore', id: '9' },
 //       { name: 'Vidisha', id: '6' },
-  
-   
+
+
 //   ];
   super_admin_list = [
-   
-    { name: 'Bhopal', id: '11' },
+   { name: 'Bhopal', id: '23' },
+    { name: 'Bhopal-old', id: '11' },
    { name: 'Super10', id: '10' },
    { name: 'Super-12', id: '12' },
    { name: 'Super8', id: '8' },
@@ -59,7 +59,7 @@ export class SignupComponent {
          phone: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
          password: ['', [Validators.required, Validators.minLength(6)]],
          password_confirmation: ['', [Validators.required]],
-         super_admin: ['11', [Validators.required]],
+         super_admin: ['23', [Validators.required]],
          role_id: ['4']
       })
    }
@@ -67,12 +67,12 @@ export class SignupComponent {
       (window as any).receiveContacts = (data: string) => {
         try {
           const parsed = JSON.parse(data);
-    
+
           // Check if parsed has some value
           const hasValue = Array.isArray(parsed)
             ? parsed.length > 0
             : parsed && Object.keys(parsed).length > 0;
-    
+
           if (hasValue) {
             this.ngZone.run(() => {
               this.contacts = parsed;
@@ -82,7 +82,7 @@ export class SignupComponent {
           } else {
             console.warn('Received empty contacts data');
           }
-    
+
         } catch (error) {
           console.error('Invalid contacts data', error);
         }

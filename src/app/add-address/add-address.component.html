@@ -46,7 +46,7 @@
          <div class="input-with-icon">
             <input pInputText id="address_details" type="text" formControlName="person_name"
                [ngClass]="{'error-border': submitted && projectForm.get('person_name')?.invalid}" />
-               <span class="icon"  (click)="contactDetail()">
+               <span class="icon mobile-only"  (click)="contactDetail()">
                   <i class="pi pi-user"></i>
                 </span>
                 </div>

@@ -726,7 +726,7 @@ export class AddressPreviewComponent {
          // console.log("coupan",isCouponApplied)
          try {
             const isCouponApplied = await this.applyCoupan(); // wait for async operation
-            console.log('coupanss', isCouponApplied);
+          
             if (!isCouponApplied) {
                this.loading_button = false;
                this.cdr.detectChanges();

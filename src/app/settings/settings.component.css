@@ -3,7 +3,9 @@
    justify-content: space-between;
    align-items: center;
 }
-
+.card-container {
+   flex: 1; /* Takes up remaining space */
+ }
 .thin {
    font-weight: 300;
    font-size: 16px;
@@ -66,7 +68,12 @@
    font-size: 14px;
    color: rgb(0, 0, 0);
 }
+.customer-mobiles {
 
+   font-size: 11px;
+   color: #198CCD;
+   text-align: center;
+}
 .p-avatar-xl {
    width: 6rem !important;
    height: 6rem !important;
@@ -109,3 +116,8 @@
    border-color: #007bff;
    background-color: #e6f7ff;
 }
+.profile-page-container {
+   display: flex;
+   flex-direction: column;
+   min-height: 85vh; /* Full height of the screen */
+ }

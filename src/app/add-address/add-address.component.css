@@ -184,4 +184,13 @@ textarea {
    color: #6c757d;
    font-size: 1.2rem;
  }
+ .mobile-only {
+   display: none;
+ }
  
+ /* Show only on screens smaller than 768px (typical mobile breakpoint) */
+ @media screen and (max-width: 767px) {
+   .mobile-only {
+     display: inline-block;
+   }
+ }

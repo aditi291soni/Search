@@ -12,9 +12,10 @@ import { SearchComponent } from '../search/search.component';
 import { SearchBarService } from '../services/search-bar.service';
 import { environment } from '../../environments/environment';
 import { ApiService } from '../services/api.service';
-import { filter } from 'rxjs';
-import {version} from '../../../version'
 
+import {version} from '../../../version'
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter } from 'rxjs/operators';
 @Component({
    selector: 'app-layout',
    standalone: true,
@@ -26,6 +27,8 @@ import {version} from '../../../version'
 })
 export class LayoutComponent {
    profileMenuItems: any;
+
+private searchSubject: Subject<string> = new Subject<string>();
    versions: any;
    isSidebarVisible = true; // Controls sidebar visibility
    isSmallDevice = false; // Tracks if it's a small device
@@ -75,19 +78,34 @@ console.log("version",this.versions)
          this.getWalletAmount()
          console.log("rendered")
          this.cdr.detectChanges();
+         this.searchSubject.pipe(
+            debounceTime(400), // wait 400ms after the last event
+            distinctUntilChanged(), // only emit if the value is different
+            filter(query => query.trim().length > 0 || query === '') // allow empty too for reset
+         ).subscribe(query => {
+            this.router.navigate([], {
+               relativeTo: this.activatedRoute,
+               queryParams: query ? { search: query } : {},
+               replaceUrl: true 
+            });
+         });
    }
 
-   handleGlobalSearch(query: string) {
-      console.log('Global Search:', query);
-      this.router.navigate(['/search'], { queryParams: { q: query } });
-   }
+   // handleGlobalSearch(query: string) {
+   //    console.log('Global Search:', query);
+   //    this.router.navigate(['/search'], { queryParams: { q: query } });
+   // }
    toggleSidebar() {
       this.isSidebarVisible = !this.isSidebarVisible;
    }
+   onSearch(): void {
+      this.searchSubject.next(this.searchQuery.trim());
+   }
    checkSearchBarVisibility() {
       const allowedUrls = [
-         '/dashboard',
+         'dashboard',
          '/settings',
+         // '/orders/new-order',
       //   '/contact-detail',
          // '/orders/new-order',
          '/orders/new-order/order-preview/779',
@@ -155,32 +173,23 @@ console.log("version",this.versions)
    cancel() {
 
    }
-   onSearch() {
-      if (this.searchQuery.trim()) {
-         this.router.navigate([], {
-            relativeTo: this.activatedRoute,
-            queryParams: this.searchQuery.trim() ? { search: this.searchQuery } : {},
-            // queryParams: { search: this.searchQuery }, // Add the search query as a query parameter
+   // onSearch() {
+   //    if (this.searchQuery.trim()) {
+   //       this.router.navigate([], {
+   //          relativeTo: this.activatedRoute,
+   //          queryParams: this.searchQuery.trim() ? { search: this.searchQuery } : {},
 
-         });
-         // console.log(this.searchQuery)
-      } else {
-         this.router.navigate([], {
-            relativeTo: this.activatedRoute,
-            queryParams: { search: '' }, // Add the search query as a query parameter
+   //       });
+       
+   //    } else {
+   //       this.router.navigate([], {
+   //          relativeTo: this.activatedRoute,
+   //          queryParams: { search: '' }, // Add the search query as a query parameter
 
-         });
-      }
-      // if (this.searchQuery.trim()) {
-      //    // Call the search service to get results based on the query
-      //    this.searchService.getSearchResults(this.searchQuery).subscribe((results: any[]) => {
-      //       this.searchResults = results;
-      //       console.log(this.searchResults)
-      //    });
-      // } else {
-      //    this.searchResults = [];
-      // }
-   }
+   //       });
+   //    }
+ 
+   // }
    @HostListener('document:click', ['$event'])
    handleClickOutside(event: Event) {
       const sidebarElement = document.querySelector('.sidebar');

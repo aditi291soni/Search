@@ -82,6 +82,8 @@ export class NewOrderComponent {
       this.dropLocation = this.apiService.getLocalValueInJSON(
          localStorage.getItem('selectedDrop')
       );
+      localStorage.removeItem('savedAddressForm');
+      localStorage.removeItem('selectedContact');
       this.businessDetails = this.apiService.getLocalValueInJSON(
          localStorage.getItem('bussinessDetails')
       );
