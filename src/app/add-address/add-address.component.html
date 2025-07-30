@@ -1,6 +1,8 @@
 <h2>Add Address</h2>
 <!-- <div class="thin">Search and add a new address location</div><br> -->
-
+<span class="icon mobile-only"  (click)="contactDetail()">
+   <i class="pi pi-user"></i>
+ </span>
 <div class="container">
    <div class="search-box-container" *ngIf="!isFormVisible">
       <input #searchBox type="text" pInputText placeholder="Search for an address..." class="search-box" />
