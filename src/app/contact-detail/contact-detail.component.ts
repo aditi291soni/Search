@@ -58,14 +58,24 @@ export class ContactDetailComponent {
    }
 
    // ✅ Search input update handler
+   // onSearchChange() {
+   //    this.router.navigate([], {
+   //       relativeTo: this.activatedRoute,
+   //       queryParams: { search: this.searchQuery || '' },
+   //       queryParamsHandling: 'merge',
+   //       replaceUrl: true,
+   //    });
+   // }
    onSearchChange() {
       this.router.navigate([], {
-         relativeTo: this.activatedRoute,
-         queryParams: { search: this.searchQuery || null },
-         queryParamsHandling: 'merge',
-         replaceUrl: true,
+        relativeTo: this.activatedRoute,
+        queryParams: { search: this.searchQuery || null },
+        queryParamsHandling: 'merge',
+        replaceUrl: true,
+      }).then(() => {
+        this.cdr.detectChanges(); // ✅ Force UI update
       });
-   }
+    }
 
    private clearSearchParam() {
       this.router.navigate([], {
