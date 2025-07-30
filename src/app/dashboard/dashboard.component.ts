@@ -83,28 +83,28 @@ export class DashboardComponent implements OnInit {
       this.cdr.detectChanges();
       this.cdr.detectChanges();
 
-      localStorage.setItem('contact', JSON.stringify([
-         {
-           "displayName": "Aditi Soni",
-           "phoneNumbers": ["9998887771"]
-         },
-         {
-           "displayName": "Rohan Mehra",
-           "phoneNumbers": ["9123456789", "9012345678"]
-         },
-         {
-           "displayName": "Sneha Kapoor",
-           "phoneNumbers": ["9988776655"]
-         },
-         {
-           "displayName": "Arjun Sharma",
-           "phoneNumbers": ["9876543210"]
-         },
-         {
-           "displayName": "Neha Gupta",
-           "phoneNumbers": ["9765432109"]
-         }
-       ]));
+      // localStorage.setItem('contact', JSON.stringify([
+      //    {
+      //      "displayName": "Aditi Soni",
+      //      "phoneNumbers": ["9998887771"]
+      //    },
+      //    {
+      //      "displayName": "Rohan Mehra",
+      //      "phoneNumbers": ["9123456789", "9012345678"]
+      //    },
+      //    {
+      //      "displayName": "Sneha Kapoor",
+      //      "phoneNumbers": ["9988776655"]
+      //    },
+      //    {
+      //      "displayName": "Arjun Sharma",
+      //      "phoneNumbers": ["9876543210"]
+      //    },
+      //    {
+      //      "displayName": "Neha Gupta",
+      //      "phoneNumbers": ["9765432109"]
+      //    }
+      //  ]));
 
 
 
