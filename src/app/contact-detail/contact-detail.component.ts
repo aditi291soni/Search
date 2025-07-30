@@ -113,7 +113,7 @@ export class ContactDetailComponent {
       return (
          this.selectedContact &&
          this.selectedContact.displayName == contact.displayName &&
-         JSON.stringify(this.selectedContact.phoneNumbers) === JSON.stringify(contact.phoneNumbers)
+         JSON.stringify(this.selectedContact.phoneNumbers) == JSON.stringify(contact.phoneNumbers)
       );
    }
 }
