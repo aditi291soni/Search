@@ -6,7 +6,7 @@
       type="text"
       placeholder="Search contact "
       [(ngModel)]="searchQuery"
-      (ngModelChange)="onSearchChange()"
+      (input)="onSearchChange()"
       style="padding: 8px; width: 100%; border-radius: 20px; border: 1px solid #ccc;;background-color: #ffffff;"
    />
    <button pButton icon="pi pi-search" class="search-btn"></button>

@@ -71,7 +71,7 @@ export class ContactDetailComponent {
         relativeTo: this.activatedRoute,
         queryParams: { search: this.searchQuery || null },
         queryParamsHandling: 'merge',
-        replaceUrl: true,
+      //   replaceUrl: true,
       }).then(() => {
         this.cdr.detectChanges(); // ✅ Force UI update
       });
