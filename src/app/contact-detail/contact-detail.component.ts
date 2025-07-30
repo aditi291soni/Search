@@ -74,6 +74,18 @@ export class ContactDetailComponent {
          replaceUrl: true,
       });
    }
+   // logDebug() {
+   //    const win = window.open('', '_blank');
+   //    if (win) {
+   //      win.document.write('<h2>🔍 Debug Info</h2>');
+   //      win.document.write('<pre>🔹 LocalStorage Contact:\n' + localStorage.getItem('contact') + '</pre>');
+   //      win.document.write('<pre>🔹 Parsed Contacts:\n' + JSON.stringify(this.contacts, null, 2) + '</pre>');
+   //      win.document.write('<pre>🔹 Filtered Contacts:\n' + JSON.stringify(this.filteredContacts, null, 2) + '</pre>');
+   //      win.document.write('<pre>🔹 Search Query:\n' + this.searchQuery + '</pre>');
+   //    } else {
+   //      alert('Popup blocked! Please allow popups for this site.');
+   //    }
+   // }
 
    get filteredContacts(): any[] {
       const query = this.searchQuery;

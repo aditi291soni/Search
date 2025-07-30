@@ -83,6 +83,28 @@ export class DashboardComponent implements OnInit {
       this.cdr.detectChanges();
       this.cdr.detectChanges();
 
+      localStorage.setItem('contact', JSON.stringify([
+         {
+           "displayName": "Aditi Soni",
+           "phoneNumbers": ["9998887771"]
+         },
+         {
+           "displayName": "Rohan Mehra",
+           "phoneNumbers": ["9123456789", "9012345678"]
+         },
+         {
+           "displayName": "Sneha Kapoor",
+           "phoneNumbers": ["9988776655"]
+         },
+         {
+           "displayName": "Arjun Sharma",
+           "phoneNumbers": ["9876543210"]
+         },
+         {
+           "displayName": "Neha Gupta",
+           "phoneNumbers": ["9765432109"]
+         }
+       ]));
 
 
 
@@ -98,7 +120,7 @@ export class DashboardComponent implements OnInit {
    //       this.apiService.refresh_token().subscribe({
    //          next: (data: any) => {
    //             if (data.status) {
-   //                let ApiResponse: any = data;  
+   //                let ApiResponse: any = data;
    //                console.log(data?.data.token)
    //                localStorage.setItem('authToken', data?.data.token);
    //             }
@@ -119,7 +141,7 @@ export class DashboardComponent implements OnInit {
          this.apiService.list_of_banner({ super_admin_id:  this.superAdminId }).subscribe({
             next: (data: any) => {
                if (data.status) {
-                  let ApiResponse: any = data;  
+                  let ApiResponse: any = data;
                   // this.listofBanner = ApiResponse.data;
 
                   this.listofBanner = ApiResponse.data
@@ -153,7 +175,7 @@ export class DashboardComponent implements OnInit {
    // tryTokenRefreshOnAppLoad() {
    //    const token = localStorage.getItem('authToken');
    //    const refreshToken = localStorage.getItem('refreshToken');
-   
+
    //    if (token ) {
    //      this.apiService.refresh_token().subscribe({
    //        next: (data) => {
@@ -170,7 +192,7 @@ export class DashboardComponent implements OnInit {
    //             localStorage.clear();
    //                     sessionStorage.clear();
    //                     }
-                   
+
    //                     this.router.navigate(['/auth/sign-in']);
    //          // Optionally logout
    //        }
@@ -247,15 +269,15 @@ export class DashboardComponent implements OnInit {
                // }
                this.cdr.detectChanges();
             } else {
-               
+
                console.error('Error fetching list of business:', response.message);
                this.loading = false;
             }
          },
          error: (err) => {
-            console.log("e",err) 
+            console.log("e",err)
             if(err =='Error: Token invalid.'){
-               console.log("e")  
+               console.log("e")
                // this.tryTokenRefreshOnAppLoad()
             }
             // console.error('Error fetching list of business:', err);

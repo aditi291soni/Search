@@ -13,6 +13,7 @@
 </div>
 <div class="header">
    <h2>Saved Contact</h2>
+   <!-- <button (click)="logDebug()">🔍 Log Debug Info</button> -->
 </div>
 
 <br />
@@ -25,6 +26,7 @@
 </div> -->
 <div class="recent-orders-container">
    <div *ngIf="filteredContacts.length > 0; else noContacts">
+      {{filteredContacts.length }}
       <div
          class="recent-order-item"
          *ngFor="let contact of filteredContacts"
